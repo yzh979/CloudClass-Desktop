@@ -47,10 +47,10 @@ export const Tools = observer(() => {
         boardStore.setTool('pencil')
         break;
       }
-      case 'text': {
-        boardStore.setTool('')
-        break;
-      }
+      // case 'text': {
+      //   boardStore.setTool('')
+      //   break;
+      // }
       case 'extension_tool': {
         boardStore.hideExtension()
         break;
