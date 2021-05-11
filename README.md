@@ -19,8 +19,8 @@ yarn bootstrap
 
 ## config
 ```bash
-# copy config template to agora-rte-demo project
-cp .env.example packages/agora-classroom-sdk/.env
+# copy config template to agora-classroom-sdk project
+cp packages/agora-classroom-sdk/env.example packages/agora-classroom-sdk/.env
 ```
 
 *Please do not put your certificate in client for production release. For sake of convenience we allow you to put certificate here and help you calculate tokens so that you can start easily. when you go production you should use your own server to sign the token.*
