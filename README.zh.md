@@ -20,7 +20,7 @@ yarn bootstrap
 ## 环境配置
 ```bash
 # 将示例配置文件放入agora-classroom-sdk
-cp .env.example packages/agora-classroom-sdk/.env
+cp packages/agora-classroom-sdk/env.example packages/agora-classroom-sdk/.env
 ```
 
 *为了容易启动应用，我们在内部提供了输入声网certificate的地方，若你的应用要上生产环境，建议使用你自己的服务器生成token后下发给客户端，不然会有比较大的安全风险*
