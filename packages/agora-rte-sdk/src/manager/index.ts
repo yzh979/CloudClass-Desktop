@@ -244,7 +244,7 @@ export class EduManager extends EventEmitter {
         rtmToken,
         appId: this.config.appId,
         uploadLog: true,
-        area: this.config.rtmArea
+        area: [this.config.rtmArea]
       })
       EduLogger.debug(`login userUuid: ${userUuid} success`)
       this._rtmWrapper = rtmWrapper
