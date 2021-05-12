@@ -93,10 +93,10 @@ export const getRegion = (region: string) => {
   }
 
   const rtmRegions: Record<string, string> = {
-    "CN": "GLOBAL",
-    "AP": "ASIA",
-    "EU": "EUROPE",
-    "NS": "NORTH_AMERICA",
+    "CN": "GLOB",
+    "AP": "AS",
+    "EU": "EU",
+    "NS": "NA",
   }
 
   return {

@@ -120,7 +120,7 @@ export class RTMWrapper extends EventEmitter {
   }
 
   async login(config: any) {
-    const client = this.agoraRtm.createInstance(config.appId, { enableLogUpload: config.uploadLog, logFilter: logFilter})
+    const client = this.agoraRtm.createInstance(config.appId, { enableLogUpload: config.uploadLog, logFilter: logFilter}, config.area)
     client.on('ConnectionStateChanged', (newState: string, reason: string) => {
       this.prevConnectionState = this.connectionState
       this.connectionState = newState
