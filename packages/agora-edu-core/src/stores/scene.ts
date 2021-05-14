@@ -419,7 +419,9 @@ export class SceneStore extends SimpleInterval {
               //@ts-ignore
               if (window.isMacOS()) {
                 //@ts-ignore
-                window.openPrivacyForCaptureScreen()
+                window.rtcEngine.getScreenDisplaysInfo();
+                //@ts-ignore
+                window.openPrivacyForCaptureScreen();
               }
             }
           }
