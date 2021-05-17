@@ -1,11 +1,13 @@
-import { IAgoraRTCRemoteUser, UID } from 'agora-rtc-sdk-ng';
+import { IAgoraRTCRemoteUser, LocalAudioTrackStats, UID } from 'agora-rtc-sdk-ng';
 import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import { GenericErrorWrapper } from '../../utils/generic-error';
-import {isEmpty} from 'lodash';
 import { convertUid, paramsConfig } from '../utils';
+import { AgoraWebStreamCoordinator } from './coordinator';
+
+type MediaSendPacketStats = Pick<LocalAudioTrackStats, 'sendPackets' | 'sendPacketsLost'>;
 
 export type AgoraWebVolumeResult = {
   level: number,
@@ -63,6 +65,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   public publishedAudio: boolean = false
   public publishedVideo: boolean = false
+  public streamCoordinator?: AgoraWebStreamCoordinator;
   private hasCamera?: boolean
   private hasMicrophone?: boolean
 
@@ -76,6 +79,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   constructor(options: WebRtcWrapperInitOption) {
     super();
     this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK
+    this.agoraWebSdk.setArea([options.area as any])
+    // this.agoraWebSdk.setArea(options.area)
     this.agoraWebSdk.setParameter("AUDIO_SOURCE_AVG_VOLUME_DURATION", 300)
     this.agoraWebSdk.setParameter("AUDIO_VOLUME_INDICATION_INTERVAL", 300)
     this.clientConfig = options.webConfig
@@ -92,6 +97,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this._localVideoStats = {
       videoLossRate: 0
     }
+    this.streamCoordinator = new AgoraWebStreamCoordinator()
   }
 
   clearAllInterval() {
@@ -128,6 +134,16 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   reset() {
+    this.stats = {
+      localAudioStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      },
+      localVideoStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      }
+    }
     this.publishedVideo = false
     this.publishedAudio = false
     this.hasCamera = undefined
@@ -151,6 +167,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.videoMuted = false
     this.audioMuted = false
     this.channelName = ''
+    this.streamCoordinator = undefined
   }
 
   get client(): IAgoraRTCClient {
@@ -170,51 +187,63 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   // TODO: not in used, need to refactor
   init () {
     this._client = this.agoraWebSdk.createClient(this.clientConfig)
+    this.streamCoordinator?.updateRtcClient(this._client)
     this.client.on('user-joined', (user) => {
       // this.fire('user-joined', user)
     })
     this.client.on('user-left', (user) => {
       // this.fire('user-left', user)
     })
+    this.streamCoordinator?.on('user-published', async (user, mediaType) => {
+      EduLogger.info("user-published", user)
+      this.fire('user-published', {
+        user,
+        mediaType,
+        channel: this.channelName
+      })
+    })
     this.client.on('user-published', async (user, mediaType) => {
         EduLogger.info("user-published ", user, mediaType)
         if (user.uid !== this.localScreenUid) {
-          if (mediaType === 'audio') {
-            if (!this.audioMuted) {
-              EduLogger.info("subscribeAudio, user", user)
-              await this.client.subscribe(user, 'audio')
-              // this.fire('user-published', {
-              //   user,
-              //   mediaType,
-              //   channel: this.channelName
-              // })
-              if (user.audioTrack) {
-                !user.audioTrack.isPlaying && user.audioTrack.play()
-              }
-            }
-          }
+          // if (mediaType === 'audio') {
+          //   if (!this.audioMuted) {
+          //     EduLogger.info("subscribeAudio, user", user)
+          //     await this.client.subscribe(user, 'audio')
+          //     if (user.audioTrack) {
+          //       !user.audioTrack.isPlaying && user.audioTrack.play()
+          //     }
+          //   }
+          // }
 
-          if (mediaType === 'video') {
-            if (!this.videoMuted) {
-              EduLogger.info("subscribeVideo, user", user)
-              // await this.subscribeVideo(user)
-              await this.client.subscribe(user, 'video')
-              this.fire('user-published', {
-                user,
-                mediaType,
-                channel: this.channelName
-              })
-            }
-          }
+          // if (mediaType === 'video') {
+          //   if (!this.videoMuted) {
+          //     EduLogger.info("subscribeVideo, user", user)
+          //     await this.client.subscribe(user, 'video')
+          //     this.fire('user-published', {
+          //       user,
+          //       mediaType,
+          //       channel: this.channelName
+          //     })
+          //   }
+          // }
+          this.streamCoordinator?.addRtcStream(user, mediaType)
       }
     })
-    this.client.on('user-unpublished', (user, mediaType) => {
-      if (user.uid === this.localScreenUid) return
+    this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
       this.fire('user-unpublished', {
         user,
         mediaType,
         channel: this.channelName,
       })
+    })
+    this.client.on('user-unpublished', (user, mediaType) => {
+      if (user.uid === this.localScreenUid) return
+      // this.fire('user-unpublished', {
+      //   user,
+      //   mediaType,
+      //   channel: this.channelName,
+      // })
+      this.streamCoordinator?.removeRtcStream(user, mediaType)
     })
     // this.client.on('user-info-updated', (uid, msg) => {
     //   this.fire('user-info-updated', {
@@ -286,6 +315,26 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.reset()
   }
 
+  private stats: {
+    localAudioStats: {
+     sendPackets: number;
+     sendPacketsLost: number;
+    },
+    localVideoStats: {
+      sendPackets: number;
+      sendPacketsLost: number;
+    }
+  } = {
+    localAudioStats: {
+      sendPackets: 0,
+      sendPacketsLost: 0,
+    },
+    localVideoStats: {
+      sendPackets: 0,
+      sendPacketsLost: 0,
+    }
+  }
+
   private channelName: string = ''
 
   async join(option: any): Promise<any> {
@@ -300,40 +349,54 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   registerClientByChannelName(channelName: string) {
     const client = this.agoraWebSdk.createClient(this.clientConfig);
+    this.streamCoordinator?.updateRtcClient(client)
     //@ts-ignore
     this.agoraWebSdk.setParameter(paramsConfig)
+    this.streamCoordinator?.on('user-published', async (user, mediaType) => {
+      EduLogger.info("user-published", user)
+      this.fire('user-published', {
+        user,
+        mediaType,
+        channel: this.channelName
+      })
+    })
     client.on('user-published', async (user, mediaType) => {
       EduLogger.info("user-published ", user, mediaType)
       if (user.uid !== this.localScreenUid) {
         if (mediaType === 'audio') {
-          await client.subscribe(user, 'audio')
+          // await client.subscribe(user, 'audio')
+          // if (user.audioTrack) {
+          //   !user.audioTrack.isPlaying && user.audioTrack.play()
+          // }
+          
+        }
+
+        if (mediaType === 'video') {
+          // await client.subscribe(user, 'video')
           // this.fire('user-published', {
           //   user,
           //   mediaType,
           //   channel: channelName
           // })
-          if (user.audioTrack) {
-            !user.audioTrack.isPlaying && user.audioTrack.play()
-          }
         }
-
-        if (mediaType === 'video') {
-          await client.subscribe(user, 'video')
-          this.fire('user-published', {
-            user,
-            mediaType,
-            channel: channelName
-          })
-        }
+        this.streamCoordinator?.addRtcStream(user, mediaType)
       }
     })
-    client.on('user-unpublished', (user, mediaType) => {
-      if (user.uid === this.localScreenUid) return
+    this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
       this.fire('user-unpublished', {
         user,
         mediaType,
-        channel: channelName
+        channel: this.channelName,
       })
+    })
+    client.on('user-unpublished', (user, mediaType) => {
+      if (user.uid === this.localScreenUid) return
+      this.streamCoordinator?.removeRtcStream(user, mediaType)
+      // this.fire('user-unpublished', {
+      //   user,
+      //   mediaType,
+      //   channel: channelName
+      // })
     })
     client.on('token-privilege-did-expire', () => {
       // this.fire('token-privilege-did-expire')
@@ -364,15 +427,86 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
+
+      const prevStats = this.stats
+
+      const prevAudioStats: MediaSendPacketStats = {
+        sendPackets: prevStats.localAudioStats.sendPackets,
+        sendPacketsLost: prevStats.localAudioStats.sendPacketsLost,
+      }
+
+      const prevVideoStats: MediaSendPacketStats = {
+        sendPackets: prevStats.localVideoStats.sendPackets,
+        sendPacketsLost: prevStats.localVideoStats.sendPacketsLost,
+      }
+      
       const localAudioStats = this.client.getLocalAudioStats()
       const localVideoStats = this.client.getLocalVideoStats()
-      this._localAudioStats = {
-        audioLossRate: localAudioStats.sendPacketsLost
+
+      const take = (stats: MediaSendPacketStats) => {
+        return {
+          sendPacketsLost: !isNaN(stats.sendPacketsLost) ? stats.sendPacketsLost : 0,
+          sendPackets: !isNaN(stats.sendPackets) ? stats.sendPackets : 0,
+        }
       }
-      this._localVideoStats = {
-        videoLossRate: localVideoStats.sendPacketsLost
+
+      const calcLostRate = (oldStats: MediaSendPacketStats, newStats: MediaSendPacketStats, type: string) => {
+
+        if (oldStats.sendPacketsLost <= newStats.sendPacketsLost
+          && oldStats.sendPackets <= newStats.sendPackets) {
+          const deltaSendPacketsLost = newStats.sendPacketsLost - oldStats.sendPacketsLost
+          const deltaSendPackets = newStats.sendPackets - oldStats.sendPackets
+          const res = (deltaSendPacketsLost / (deltaSendPacketsLost + deltaSendPackets)) * 100
+
+          if (type === 'video') {
+            this.stats.localVideoStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          } else {
+            this.stats.localAudioStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          }
+
+          if (isNaN(res)) {
+            return 0
+          }
+          return +res.toFixed(2)
+        } else {
+          // reset prevStats when current stats is smaller than prev stats
+          this.stats.localVideoStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          this.stats.localAudioStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          return 0
+        }
       }
-      // console.log("network quality ", videoStats, localVideoStats)
+
+      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(localAudioStats), 'audio')
+      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(localVideoStats), 'video')
+
+      // this.stats = {
+      //   localAudioStats: {
+      //     sendPackets: localAudioStats.sendPackets,
+      //     sendPacketsLost: localAudioStats.sendPacketsLost,
+      //   },
+      //   localVideoStats: {
+      //     sendPackets: localVideoStats.sendPackets,
+      //     sendPacketsLost: localVideoStats.sendPacketsLost,
+      //   }
+      // }
+      // const audioLossRate = localAudioStats.sendPacketsLost / (localAudioStats.sendPacketsLost + localAudioStats.sendPackets)
+      // const videoLossRate = localVideoStats.sendPacketsLost / (localVideoStats.sendPacketsLost + localVideoStats.sendPackets)
+      // this._localVideoStats = {
+      //   // TODO: handle NaN
+      //   videoLossRate: isNaN(videoLossRate) ? 0 : videoLossRate
+      // }
       this.fire('localVideoStats', {
         stats: {
           encoderOutputFrameRate: localVideoStats.captureFrameRate,
@@ -399,8 +533,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         channel: channelName,
         rtt: stats.RTT,
         localPacketLoss: {
-          audioStats: this._localAudioStats,
-          videoStats: this._localVideoStats
+          audioStats: {
+            audioLossRate: deltaAudioLostRate,
+          },
+          videoStats: {
+            videoLossRate: deltaVideoLostRate,
+          }
         },
         remotePacketLoss:{
           audioStats,
@@ -927,11 +1065,15 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     if (this.cameraTrack 
         && this.cameraTrack.getTrackId() === trackId) {
       await this.client.unpublish([this.cameraTrack])
+      this.stats.localVideoStats.sendPackets = 0
+      this.stats.localVideoStats.sendPacketsLost = 0
       EduLogger.info(`[agora-web] unpublish camera track [${trackId}] success`)
     }
     if (this.microphoneTrack 
       && this.microphoneTrack.getTrackId() === trackId) {
       await this.client.unpublish([this.microphoneTrack])
+      this.stats.localAudioStats.sendPackets = 0
+      this.stats.localAudioStats.sendPacketsLost = 0
       EduLogger.info(`[agora-web] unpublish microphone track [${trackId}] success`)
     }
     this.publishedTrackIds.splice(idx, 1)
@@ -986,6 +1128,19 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   private fireTrackEnd({resource, tag, trackId}: FireTrackEndedAction) {
+    // 加入房间的时候重置丢包率
+    if (this.joined) {
+      if (resource === 'audio') {
+        this.stats.localAudioStats.sendPackets = 0
+        this.stats.localAudioStats.sendPacketsLost = 0
+      }
+  
+      if (resource === 'video') {
+        this.stats.localVideoStats.sendPackets = 0
+        this.stats.localVideoStats.sendPacketsLost = 0
+      }
+    }
+
     this.fire("track-ended", {resource, tag, trackId})
   }
 

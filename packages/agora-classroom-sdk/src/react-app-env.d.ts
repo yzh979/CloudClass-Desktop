@@ -1,13 +1,25 @@
 /// <reference types="react-scripts" />
 /// <reference types="./sdk/education/interface/index.d.ts" />
 
+declare module '*.css';
+
+declare module '*.json';
+declare module '*.mp3';
+declare module '*.mp4';
+declare module '*.png';
+declare module '*.gif';
+declare module '*.jpg';
+
+declare const AGORA_APAAS_BRANCH_PATH: string;
+declare const REACT_APP_AGORA_APP_RECORD_URL: string;
 declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
 declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
 declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;
-declare const REACT_APP_AGORA_RECORDING_OSS_URL: string;
 declare const REACT_APP_BUILD_VERSION: string;
+declare const REACT_APP_PUBLISH_DATE: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;
+declare const REACT_APP_AGORA_APP_CERTIFICATE: string;
 declare const REACT_APP_NETLESS_APP_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_CERTIFICATE: string;

@@ -1,12 +1,13 @@
 import { IAgoraRTCClient, IAgoraRTCRemoteUser } from "agora-rtc-sdk-ng";
 import { EduStreamData } from "../../../interfaces";
-import { debounce, difference } from 'lodash'
+import { difference, throttle } from 'lodash'
 import { EventEmitter } from "events";
 
 type StreamSnapshot = {
     eduStreams: Map<string, EduStreamData>, 
     rtcVideoStreams: Map<string,IAgoraRTCRemoteUser>,
-    rtcAudioStreams:Map<string,IAgoraRTCRemoteUser>
+    rtcAudioStreams:Map<string,IAgoraRTCRemoteUser>,
+    subscribeOptions:StreamSubscribeOptions
 }
 
 type StreamUpdateTask = {
@@ -14,11 +15,19 @@ type StreamUpdateTask = {
     newSnapshot: StreamSnapshot
 }
 
+export type StreamSubscribeOptions = {
+    includeVideoStreams?: string[],
+    excludeVideoStreams?: string[],
+    includeAudioStreams?: string[],
+    excludeAudioStreams?: string[]
+}
+
 export class AgoraWebStreamCoordinator extends EventEmitter  {
 
     eduStreams: Map<string, EduStreamData> = new Map<string, EduStreamData>()
     rtcVideoStreams: Map<string,IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
     rtcAudioStreams: Map<string,IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
+    subscribeOptions: StreamSubscribeOptions = {}
 
     queueTasks: StreamUpdateTask[] = []
     currentTask?: StreamUpdateTask
@@ -67,11 +76,18 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
         this.endUpdate(snapshot)
     }
 
+    updateSubscribeOptions(options: StreamSubscribeOptions) {
+        let snapshot = this.beginUpdate()
+        this.subscribeOptions = Object.assign(this.subscribeOptions, options)
+        this.endUpdate(snapshot)
+    }
+
     makeSnapshot():StreamSnapshot {
         return {
             eduStreams: new Map<string, EduStreamData>(this.eduStreams), 
             rtcVideoStreams: new Map<string,IAgoraRTCRemoteUser>(this.rtcVideoStreams),
-            rtcAudioStreams:new Map<string,IAgoraRTCRemoteUser>(this.rtcAudioStreams)
+            rtcAudioStreams:new Map<string,IAgoraRTCRemoteUser>(this.rtcAudioStreams),
+            subscribeOptions: Object.assign({}, this.subscribeOptions)
         }
     }
 
@@ -95,6 +111,38 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
                 onlineAudioStreams.push(stream.stream.streamUuid)
             }
         })
+        let {
+            includeAudioStreams,
+            includeVideoStreams,
+            excludeAudioStreams,
+            excludeVideoStreams
+        } = snapshot.subscribeOptions
+        if(includeVideoStreams) {
+            let includeVideoStreamsMap:Map<string, boolean> = new Map()
+            includeVideoStreams.map(streamUuid => {
+                includeVideoStreamsMap.set(streamUuid, true)
+            })
+            onlineVideoStreams = onlineVideoStreams.filter(s => includeVideoStreamsMap.has(s))
+        } else if(excludeVideoStreams) {
+            let excludeVideoStreamsMap:Map<string, boolean> = new Map()
+            excludeVideoStreams.map(streamUuid => {
+                excludeVideoStreamsMap.set(streamUuid, true)
+            })
+            onlineVideoStreams = onlineVideoStreams.filter(s => !excludeVideoStreamsMap.has(s))
+        }
+        if(includeAudioStreams) {
+            let includeAudioStreamsMap:Map<string, boolean> = new Map()
+            includeAudioStreams.map(streamUuid => {
+                includeAudioStreamsMap.set(streamUuid, true)
+            })
+            onlineAudioStreams = onlineAudioStreams.filter(s => includeAudioStreamsMap.has(s))
+        } else if(excludeAudioStreams) {
+            let excludeAudioStreamsMap:Map<string, boolean> = new Map()
+            excludeAudioStreams.map(streamUuid => {
+                excludeAudioStreamsMap.set(streamUuid, true)
+            })
+            onlineAudioStreams = onlineAudioStreams.filter(s => !excludeAudioStreamsMap.has(s))
+        }
         return {onlineVideoStreams, onlineAudioStreams}
     }
 
@@ -117,7 +165,7 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
     }
 
     notifyTaskQueueUpdate() {
-        debounce(this.runNextTask, 50)()
+        this.runNextTask()
     }
 
     runNextTask = async () => {
@@ -199,6 +247,7 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
                     promises.push(new Promise(async (resolve) => {
                         try {
                             await this.client?.subscribe(user, "video")
+                            console.log('Agora-SDK client subscribe' , user)
                             this.emit('user-published', user, "video")
                             resolve(true)
                         } catch(e) {

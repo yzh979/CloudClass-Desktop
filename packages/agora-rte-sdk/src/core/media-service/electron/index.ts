@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
+import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
@@ -259,6 +259,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   cpuUsage: number = 0
   gatewayRtt: number = 0
+  lastMileDelay: number = 0
 
   constructor(options: ElectronWrapperInitOption) {
     super();
@@ -289,7 +290,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (this._cefClient) {
       ret = this.client.initialize(this._cefClient)
     } else {
-      ret = this.client.initialize(this.appId)
+      //@ts-ignore
+      ret = this.client.initialize(this.appId, convertNativeAreaCode(`${options.area}`))
     }
     if (ret < 0) {
       throw GenericErrorWrapper({
@@ -431,6 +433,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.subscribedList = []
     this.cpuUsage = 0
     this.gatewayRtt = 0
+    this.lastMileDelay = 0
     this.releaseSubChannels()
   }
 
@@ -515,7 +518,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
         cpuUsage: this.cpuUsage,
-        rtt: this.gatewayRtt,
+        //TODO: delay case need use last mile, not rtt
+        rtt: this.lastMileDelay,
         localPacketLoss: {
           audioStats: this._localAudioStats,
           videoStats: this._localVideoStats
@@ -621,6 +625,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('rtcStats', (evt: any) => {
       this.cpuUsage = evt.cpuTotalUsage
       this.gatewayRtt = evt.gatewayRtt
+      this.lastMileDelay = evt.lastmileDelay
       this.fire('rtcStats', evt)
     })
     this.client.on('localAudioStats', (evt: any) => {
@@ -640,6 +645,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         videoLossRate: evt.packetLossRate,
         videoReceiveDelay: evt.delay
       }
+
+      this.fire('remoteVideoStats', {
+        user: {
+          uid: convertUid(uid),
+        },
+        stats: {
+          uid: convertUid(uid),
+          ...evt
+        }
+      })
     })
     this.client.on('remoteAudioStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
@@ -939,6 +954,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = true;
+      this.client.setClientRole(1)
       return
     } catch(err) {
       throw GenericErrorWrapper(err)
@@ -1298,23 +1314,25 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
     })
 
-    return await Promise.race([startScreenPromise, wait(8000)])
+    return await Promise.race([startScreenPromise])
   }
 
   async stopScreenShare(): Promise<any> {
     const stopScreenSharePromise = new Promise((resolve, reject) => {
       const handleVideoSourceLeaveChannel = (evt: any) => {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
+        const release = this.client.videoSourceRelease()
+        EduLogger.info(' videoSourceLeave Channel', release)
         setTimeout(resolve, 1)
       }
       try {
         this.client.on('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         let ret = this.client.videoSourceLeave()
         EduLogger.info("stopScreenShare leaveSubChannel", ret)
-        wait(8000).catch((err: any) => {
-          this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-          reject(err)
-        })
+        // wait(8000).catch((err: any) => {
+        //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
+        //   reject(err)
+        // })
       } catch(err) {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         reject(err)

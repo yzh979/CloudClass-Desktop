@@ -41,6 +41,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         videoSourceLogPath: electronLogPath.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,
         appId: rtcProvider.appId,
+        area: rtcProvider.rtcArea
       })
       window.ipc && window.ipc.once("initialize", (events: any, args: any) => {
         const logPath = args[0]
@@ -60,7 +61,8 @@ export class MediaService extends EventEmitter implements IMediaService {
           codec: rtcProvider.codec,
           role: 'host',
         },
-        appId: rtcProvider.appId
+        appId: rtcProvider.appId,
+        area: rtcProvider.rtcArea
       })
     }
     this.sdkWrapper.on('network-quality', (quality: any) => {
@@ -131,10 +133,31 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.fire('rtcStats', evt)
     })
     this.sdkWrapper.on('localVideoStats', (evt: any) => {
-      this.fire('localVideoStats', evt)
+      let {stats = {}} = evt
+      let {encoderOutputFrameRate = 0} = stats
+      this.cameraRenderer?.setFPS(encoderOutputFrameRate)
+      this.fire('localVideoStats', {
+        renderState: this.cameraRenderer?.renderState,
+        renderFrameRate: this.cameraRenderer?.renderFrameRate,
+        freezeCount: this.cameraRenderer?.freezeCount,
+        ...evt
+      })
     })
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
-      this.fire('remoteVideoStats', evt)
+      let {stats = {}, user = {}} = evt
+      let {decoderOutputFrameRate = 0} = stats
+      let {uid} = user
+      let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
+      remoteUserRender?.setFPS(decoderOutputFrameRate)
+      this.fire('remoteVideoStats', {
+        user,
+        stats: {
+          renderState: remoteUserRender?.renderState,
+          renderFrameRate: remoteUserRender?.renderFrameRate,
+          freezeCount: remoteUserRender?.freezeCount,
+          ...stats
+        }
+      })
     })
     this.sdkWrapper.on('localVideoStateChanged', (evt: any) => {
       this.fire('localVideoStateChanged', evt)

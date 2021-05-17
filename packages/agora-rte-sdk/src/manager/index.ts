@@ -13,6 +13,10 @@ import { EduClassroomDataController } from '../room/edu-classroom-data-controlle
 import { GenericErrorWrapper } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
 import { reportService } from '../core/services/report-service';
+import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
+import { get } from 'lodash';
+import { AgoraWebRtcWrapper } from '../core/media-service/web';
+import { getSDKDomain } from '../core/media-service/utils';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -59,7 +63,9 @@ export class EduManager extends EventEmitter {
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
-      appId: this.config.appId
+      appId: this.config.appId,
+      rtcArea: this.config.rtcArea ?? "GLOBAL",
+      rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -77,7 +83,7 @@ export class EduManager extends EventEmitter {
         appId: this.config.appId,
         rtmToken: this.config.rtmToken,
         rtmUid: this.config.rtmUid,
-        sdkDomain: `${this.config.sdkDomain}`
+        sdkDomain: `${this.config.sdkDomain}`,
       }
     )
     Object.assign(
@@ -98,6 +104,7 @@ export class EduManager extends EventEmitter {
     rtmUid: string
     rtmToken: string
   }) {
+    console.log('updateRtmConfig: ', JSON.stringify(info))
     this.config.rtmUid = info.rtmUid
     this.config.rtmToken = info.rtmToken
     this.apiService.updateRtmConfig({
@@ -154,6 +161,14 @@ export class EduManager extends EventEmitter {
     return this._rtmConnectionState
   }
 
+  get streamCoordinator(): AgoraWebStreamCoordinator | undefined {
+    let sdkWrapper = this.mediaService.sdkWrapper
+    if(sdkWrapper instanceof AgoraWebRtcWrapper) {
+      return (this.mediaService.sdkWrapper as AgoraWebRtcWrapper).streamCoordinator
+    }
+    return undefined
+  }
+
 
   async login(userUuid: string) {
     try {
@@ -204,7 +219,7 @@ export class EduManager extends EventEmitter {
         switch(cmd) {
           case EduPeerMessageCmdType.peer: {
             EduLogger.info(`custom chat message, PeerMessage.${EduPeerMessageCmdType.peer}: `, data, requestId)
-            const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+            const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data)
             this.emit('user-chat-message', {
               message: textMessage
             })
@@ -270,6 +285,7 @@ export class EduManager extends EventEmitter {
     })
     this._classroomMap[params.roomUuid] = classroomManager
     this._dataBuffer[params.roomUuid] = new EduClassroomDataController(this._classroomMap[params.roomUuid])
+    classroomManager.syncStreamCoordinator()
     return this._classroomMap[params.roomUuid]
   }
 }

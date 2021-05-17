@@ -7,11 +7,14 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const path = require("path");
 
+const isProd = true
+// const isProd = process.env.NODE_ENV === 'production'
+
 module.exports = {
   entry: {
     ['agora-rte-sdk']: "./src/index.ts",
   },
-  mode: "production",
+  mode: isProd ? 'production' : 'development',
   output: {
     publicPath: '',
     // filename: '[name].js',
@@ -52,7 +55,7 @@ module.exports = {
   optimization: {
     minimizer: [
         new TerserPlugin({
-            parallel: true,
+            parallel: require('os').cpus().length,
         })
     ]
 },
