@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from '@/infra/monolithic/app';
 import { isElectron } from '@/infra/utils';
 import { EduManager } from 'agora-rte-sdk';
-import { eduSDKApi } from 'agora-edu-core';
+import { eduSDKApi, homeApi } from 'agora-edu-core';
 import {AgoraEduSDK} from './infra/api'
 import { GlobalStorage } from '@/infra/utils';
 
@@ -29,6 +29,12 @@ eduSDKApi.updateConfig({
   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
   appId: `${REACT_APP_AGORA_APP_ID}`,
 })
+
+homeApi.updateConfig({
+  sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+  appId: `${REACT_APP_AGORA_APP_ID}`,
+})
+
 
 ReactDOM.render(
   <App

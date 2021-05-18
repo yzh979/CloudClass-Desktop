@@ -35,7 +35,7 @@ export class EduSDKApi extends ApiBase {
     this.appId = params.appId
     this.sdkDomain = params.sdkDomain
     this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
-    homeApi.updateConfig(params)
+    // homeApi.updateConfig(params)
   }
 
   updateRtmInfo(info: {
