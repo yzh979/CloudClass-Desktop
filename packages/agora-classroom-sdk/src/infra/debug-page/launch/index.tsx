@@ -6,6 +6,8 @@ import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 import {generatePath} from 'react-router'
+//@ts-ignore
+import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 
 //@ts-ignore

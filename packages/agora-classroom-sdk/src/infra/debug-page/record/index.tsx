@@ -5,6 +5,8 @@ import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
+//@ts-ignore
+import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 import { EduRoomTypeEnum } from 'agora-rte-sdk'
 
