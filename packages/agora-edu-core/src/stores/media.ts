@@ -1,12 +1,12 @@
+import { BehaviorSubject } from 'rxjs';
 import {v4 as uuidv4} from 'uuid';
 import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction, autorun } from 'mobx';
-import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
+import { LocalUserRenderer, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
-import { LocalVideoRenderState } from 'agora-rte-sdk';
-
+import { MediaDeviceState } from './constants';
 
 const delay = 2000
 
@@ -169,6 +169,15 @@ export class MediaStore {
       return false
     }
   }
+  
+
+  get pretestNotice () {
+    return this.appStore.pretestNotice$
+  }
+
+  // get uiStore() {
+  //   return this.appStore.uiStore;
+  // }
 
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
@@ -195,60 +204,77 @@ export class MediaStore {
 
       if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
         this.appStore.pretestStore.resetMicrophoneTrack()
+        this.totalVolume = 0
       }
       if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
         this.appStore.sceneStore.resetMicrophoneTrack()
       }
+      const handleDevicePulled = (evt: any) => {
+        const notice = MediaDeviceState.getNotice(evt.resource)
+        if (notice) {
+          if (!this.pretestNotice.isStopped) {
+            this.pretestNotice.next({
+              type: 'error',
+              info: notice,
+              kind: 'toast',
+              id: uuidv4()
+            })
+          }
+          if (!this.appStore.roomStore.toast$.isStopped) {
+            this.appStore.roomStore.fireToast(notice)
+          }
+        }
+        switch(evt.resource) {
+          case 'video': {
+            this.appStore.pretestStore.muteCamera()
+            break;
+          }
+          case 'audio': {
+            this.appStore.pretestStore.muteMicrophone()
+            break;
+          }
+        }
+      }
+
+      if (evt.operation === 'pulled') {
+        handleDevicePulled(evt)
+      }
       BizLogger.info("track-ended", evt)
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
-      BizLogger.info("audio device changed")
+      BizLogger.info("audio device changed ", info)
       if (appStore.isNotInvisible) {
-        this.appStore.uiStore.fireToast('toast.audio_equipment_has_changed')
-        // Modal.show({
-        //   title: transI18n('aclass.device.audio_failed'),
-        //   // text: transI18n('aclass.device.audio_failed'),
-
-        //   showConfirm: true,
-        //   showCancel: true,
-        //   confirmText: transI18n('aclass.device.reload'),
-        //   visible: true,
-        //   cancelText: transI18n('aclass.device.cancel'),
-        //   onConfirm: () => {
-        //     window.location.reload()
-        //   },
-        //   onCancel: () => {
-        //   }
-        // })
+        this.pretestNotice.next({
+          type: 'audio',
+          info: 'device_changed',
+          id: uuidv4()
+        })
+        // this.appStore.uiStore.fireToast('toast.audio_equipment_has_changed')
       }
-
+      // const prevLength = this.appStore.pretestStore._microphoneList.length
       await this.appStore.pretestStore.init({ audio: true})
+      // const latestLength = this.appStore.pretestStore._microphoneList.length
+      // latestLength > prevLength && this.appStore.roomStore.joining && this.uiStore.fireToast('detect_new_device_in_room')
       // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
-      BizLogger.info("video device changed")
-      // appStore.isNotInvisible &&  dialogManager.show({
-      //   title: transI18n('aclass.device.video_failed'),
-      //   text: transI18n('aclass.device.video_failed'),
-      //   showConfirm: true,
-      //   showCancel: true,
-      //   confirmText: transI18n('aclass.device.reload'),
-      //   visible: true,
-      //   cancelText: transI18n('aclass.device.cancel'),
-      //   onConfirm: () => {
-      //     window.location.reload()
-      //   },
-      //   onCancel: () => {
-      //   }
-      // })
-      this.appStore.uiStore.fireToast('toast.video_equipment_has_changed')
-      // await this.appStore.deviceStore.init({ video: true })
+      BizLogger.info("video device changed ", info)
+      if (appStore.isNotInvisible) {
+        this.pretestNotice.next({
+          type: 'video',
+          info: 'device_changed',
+          id: uuidv4()
+        })
+      }
+      // const prevLength = this.appStore.pretestStore._cameraList.length
       await this.appStore.pretestStore.init({ video: true})
+      // const latestLength = this.appStore.pretestStore._cameraList.length
+      // latestLength > prevLength && this.appStore.roomStore.joining && this.uiStore.fireToast('detect_new_device_in_room')
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
         this.autoplay = true
-        this.appStore.uiStore.showAutoplayNotification()
+        this.appStore.roomStore.fireToast('toast.autoplay')
       }
     })
     this.mediaService.on('user-published', (evt: any) => {
@@ -302,7 +328,7 @@ export class MediaStore {
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
-      if (this.appStore.uiStore.isElectron) {
+      if (this.appStore.isElectron) {
         this.totalVolume = +Number(((totalVolume / 255) * 100)).toFixed(3)
       } else {
         this.totalVolume = totalVolume * 100;

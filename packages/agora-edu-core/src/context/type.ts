@@ -1,10 +1,11 @@
-import { UserRenderer, LocalUserRenderer, EduUser, EduStream } from 'agora-rte-sdk'
+import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum } from 'agora-rte-sdk'
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
-import { ScreenShareType } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { RosterUserInfo } from '../stores/small-class';
+import { ScreenShareType } from 'agora-rte-sdk';
 export type Resource = {
     file: {
         name: string,
@@ -43,6 +44,13 @@ export type DialogType = {
     component: any,
     props?: any,
 }
+
+export enum ControlTool {
+    offPodium = 0,
+    offPodiumAll = 1,
+    grantBoard = 2
+}
+
 export type ChatContext = {
     /**
      * 发送私聊聊天消息
@@ -122,15 +130,15 @@ export type ChatContext = {
      * 禁止聊天
      */
     unmuteChat: () => void,
-    /**
-     * @param chatCollapse 是否折叠
-     * ui使用，不应该提供
-     */
-    chatCollapse: boolean,
-    /**
-     * 切换最小化最大化聊天
-     */
-    toggleChatMinimize: () => void,
+    // /**
+    //  * @param chatCollapse 是否折叠
+    //  * ui使用，不应该提供
+    //  */
+    // chatCollapse: boolean,
+    // /**
+    //  * 切换最小化最大化聊天
+    //  */
+    // toggleChatMinimize: () => void,
     /**
      * 未读取消息数量
      */
@@ -143,6 +151,14 @@ export type ChatContext = {
      * 添加消息
      */
     addChatMessage: (args: any) => void
+    /**
+     * 操作指定用户聊天禁言
+     */
+    muteUserChat: (userUuid:string) => Promise<void>
+    /**
+     * 操作指定用户聊天解禁
+     */
+    unmuteUserChat: (userUuid:string) => Promise<void>
 }
 export type StreamListContext = {
     /**
@@ -200,6 +216,12 @@ export type StreamListContext = {
      */
     grantUserPermission: (userUuid: string) => void,
 }
+export type VolumeContext = {
+    /**
+     * 当前麦克风设备音量
+     */
+    microphoneLevel: number,
+}
 export type PretestContext = {
     /**
      * 摄像头是否错误
@@ -233,10 +255,6 @@ export type PretestContext = {
      * 当前选中的扬声器ID
      */
     speakerId: string,
-    /**
-     * 当前麦克风设备音量
-     */
-    microphoneLevel: number,
     /**
      * 当前摄像头画面是否镜
      */
@@ -290,6 +308,10 @@ export type PretestContext = {
      * 预置阶段摄像头渲染器
      */
     pretestCameraRenderer: LocalUserRenderer | undefined,
+    /**
+     * 设备频道通知
+     */
+    pretestNoticeChannel: Subject<any>;
 }
 export type ScreenShareContext = {
     /**
@@ -343,11 +365,11 @@ export type RoomContext = {
      * 加入房间
      */
     joinRoom: () => Promise<void>,
-    /**
-     * 移除对话框
-     * @param id 对话框ID
-     */
-    removeDialog: (id: string) => void,
+    // /**
+    //  * 移除对话框
+    //  * @param id 对话框ID
+    //  */
+    // removeDialog: (id: string) => void,
     // TO-REVIEW REMOVED in v1.1.1
     // /**
     //  * 屏幕分享
@@ -405,37 +427,63 @@ export type RoomContext = {
         duration: number;
     },
     /**
-     * 禁用视频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
+     * BehaviorSubject实例化的对象 toastEventObserver
+     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+     *  toastEventObserver.subscribe((evt)=>{
+     *   //观察者订阅的事件 evt   事件名称：evt.eventname
+     *   })
      */
-    muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+     toastEventObserver: BehaviorSubject<any>,
+     /**
+      * BehaviorSubject实例化的对象 dialogEventObserver
+      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+      *  dialogEventObserver.subscribe((evt)=>{
+      *   //观察者订阅的事件 evt   事件名称：evt.eventname
+      *   })
+      */
+     dialogEventObserver: BehaviorSubject<any>,
     /**
-     * 取消禁用视频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
+     * BehaviorSubject实例化的对象 sequenceEventObserver
+     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+     *  sequenceEventObserver.subscribe((evt)=>{
+     *   //观察者订阅的事件 evt   事件名称：evt.eventname
+     *   })
      */
-    unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 禁用音频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 取消禁用音频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 单个用户禁言
-     */
-    muteUserChat: (userUuid: string) => Promise<any>;
-    /**
-     * 取消单个用户禁言
-     */
-    unmuteUserChat: (userUuid: string) => Promise<any>;
+    sequenceEventObserver: BehaviorSubject<any>,
+    isJoiningRoom: boolean
+    // TO-REVIEW REMOVED in v1.1.1
+    // /**
+    //  * 禁用视频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 取消禁用视频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 禁用音频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 取消禁用音频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 单个用户禁言
+    //  */
+    // muteUserChat: (userUuid: string) => Promise<any>;
+    // /**
+    //  * 取消单个用户禁言
+    //  */
+    // unmuteUserChat: (userUuid: string) => Promise<any>;
 }
 export type RoomDiagnosisContext = {
     navigationState: {
@@ -450,71 +498,80 @@ export type RoomDiagnosisContext = {
     }
 }
 export type GlobalContext = {
-    /**
-     * 正在加载中
-     */
-    loading: boolean,
+    // /**
+    //  * 正在加载中
+    //  */
+    // loading: boolean,
+    // isLoading: boolean,
+    // /**
+    //  * 在房间内
+    //  */
+    // inRoom: boolean,
+    // /**
+    //  * 正在加载中
+    //  */
+    // loading: boolean,
     /**
      * 是否全屏
      */
     isFullScreen: boolean,
-    /**
-     * 向dialogQueue中新增一个dialog数据
-     * @param component 对话框组件
-     * @param this.props 对话框组件的props
-     */
-    addDialog: (component: any, props?: any) => any,
-    /**
-     * 移除dialogQueue中的一个dialog数据
-     * @param id 对话框的ID
-     */
-    removeDialog: (id: string) => void,
-    /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    toast$: BehaviorSubject<any>,
-    /**
-     * 触发toastEventObserver订阅的事件
-     * @param eventName 事件名称
-     * @param props 事件的参数
-     */
-    fireToast: (eventName: string, props?: any) => void,
-    /**
-     * 向toastQueue中新增一个toast数据
-     * @param desc toast内容
-     * @param type toast类型
-     */
-    addToast: (desc: string, type?: "success" | "error" | "warning" | undefined) => string,
-    /**
-     * 是否选中
-     */
-    checked: boolean,
+    // /**
+    //  * 向dialogQueue中新增一个dialog数据
+    //  * @param component 对话框组件
+    //  * @param this.props 对话框组件的props
+    //  */
+    // addDialog: (component: any, props?: any) => any,
+    // /**
+    //  * 移除dialogQueue中的一个dialog数据
+    //  * @param id 对话框的ID
+    //  */
+    // removeDialog: (id: string) => void,
+    // /**
+    //  * BehaviorSubject实例化的对象 toastEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  toastEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // toast$: BehaviorSubject<any>,
+    // /**
+    //  * 触发toastEventObserver订阅的事件
+    //  * @param eventName 事件名称
+    //  * @param props 事件的参数
+    //  */
+    // fireToast: (eventName: string, props?: any) => void,
+    // /**
+    //  * 向toastQueue中新增一个toast数据
+    //  * @param desc toast内容
+    //  * @param type toast类型
+    //  */
+    // addToast: (desc: string, type?: "success" | "error" | "warning" | undefined) => string,
+    // /**
+    //  * 是否选中
+    //  */
+    // checked: boolean,
     /**
      * appStore的参数
      */
     params: AppStoreInitParams,
-    /**
-     * 对话框的数据队列
-     */
-    dialogQueue: DialogType[],
-    /**
-     * 移出toastQueue中的一个toast数据
-     * @param id toast的ID
-     */
-    removeToast: (id: string) => string,
-    /**
-     * toast的数据队列
-     */
-    toastQueue: ToastType[],
-    /**
-     * 设置是否选中
-     * @param v 设置参数
-     */
-    updateChecked: (v: boolean) => void,
+    // /**
+    //  * 对话框的数据队列
+    //  */
+    // dialogQueue: DialogType[],
+    // /**
+    //  * 移出toastQueue中的一个toast数据
+    //  * @param id toast的ID
+    //  */
+    // removeToast: (id: string) => string,
+    // /**
+    //  * toast的数据队列
+    //  */
+    // toastQueue: ToastType[],
+    // /**
+    //  * 设置是否选中
+    //  * @param v 设置参数
+    //  */
+    // updateChecked: (v: boolean) => void,
     /**
      * 主路由
      */
@@ -523,31 +580,32 @@ export type GlobalContext = {
      * 语言
      */
     language: LanguageEnum,
-    /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    toastEventObserver: BehaviorSubject<any>,
-    /**
-     * BehaviorSubject实例化的对象 dialogEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  dialogEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    dialogEventObserver: BehaviorSubject<any>,
-    /** 触发dialogEventObserver订阅的事件
-     * @param eventName 事件名称
-     * @param props 事件的参数
-     */
-    fireDialog: (eventName: string, props?: any) => void,
+    // /**
+    //  * BehaviorSubject实例化的对象 toastEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  toastEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // toastEventObserver: BehaviorSubject<any>,
+    // /**
+    //  * BehaviorSubject实例化的对象 dialogEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  dialogEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // dialogEventObserver: BehaviorSubject<any>,
+    // /** 触发dialogEventObserver订阅的事件
+    //  * @param eventName 事件名称
+    //  * @param props 事件的参数
+    //  */
+    // fireDialog: (eventName: string, props?: any) => void,
     /**
      * 已经加入房间
      */
-    joined: boolean;
+    // joined: boolean;
+    isJoined: boolean;
 }
 export type BoardContext = {
     /**
@@ -566,10 +624,6 @@ export type BoardContext = {
      * 白板总页数
      */
     totalPage: number,
-    /**
-     * 课件列表
-     */
-    courseWareList: any[],
     /**
      * 当前画笔颜色
      */
@@ -649,25 +703,6 @@ export type BoardContext = {
      */
     changeSceneItem: (resourceUuid: string) => void,
     /**
-     * 可下载的云盘资源列表 
-     */
-    downloadList: StorageCourseWareItem[],
-    /**
-     * 打开课件资源
-     * @param uuid 资源uuid
-     */
-    openCloudResource: (uuid: string) => Promise<void>,
-    /**
-     * 下载课件资源
-     * @param taskUuid 课件taskUuid
-     */
-    startDownload: (taskUuid: string) => Promise<void>,
-    /**
-     * 删除课件资源
-     * @param taskUuid 课件taskUuid
-     */
-    deleteSingle: (taskUuid: string) => Promise<void>,
-    /**
      * 更新画笔
      * @param value 画笔名称 pen square circle line
      */
@@ -685,44 +720,10 @@ export type BoardContext = {
      */
     setLaserPoint: () => void,
     /**
-     * 所有云盘课件资源列
-     */
-    resourcesList: Resource[],
-    /**
-     * 活跃场景名称
-     */
-    activeSceneName: string,
-    /**
-     * 更新云盘资源列表
-     */
-    refreshCloudResources: () => Promise<void>,
-    /**
-     * 移除云盘课件资源
-     * @param resourceUuids 课件资源uuid
-     */
-    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
-    /**
-     * 取消上传
-     */
-    cancelUpload: () => Promise<void>,
-    /**
-     * 关闭课件资源
-     * @param resourceUuid 资源uuid
-     */
-    closeMaterial: (resourceUuid: string) => void,
-    /**
      * 安装白板工具
      * @param tools 白板工具列表 
      */
     installTools: (tools: any[]) => void,
-    /**
-     * 云盘个人资源列表
-     */
-    personalResources: MaterialDataResource[],
-    /**
-     * 云盘公共资源列表
-     */
-    publicResources: MaterialDataResource[],
     /**
      * 取消白板授权
      * @param userUuid 用户uuid
@@ -734,10 +735,9 @@ export type BoardContext = {
      */
     grantBoardPermission: (userUuid: string) => Promise<void>,
     /**
-     * 上传云盘课件资源
-     * @param payload 上传的资源参数
+     * 活跃场景名称
      */
-    doUpload: (payload: any) => Promise<void>,
+    activeSceneName: string,
 
     //v1.1.1
     //@internal
@@ -747,50 +747,54 @@ export type BoardContext = {
     //@internal
     isCurrentScenePathScreenShare: boolean;
 }
-export type StreamContext = {
-    /**
-     * 媒体数据流列表
-     */
-    streamList: EduStream[]
-}
+// TO-REVIEW removed in v1.1.1
+// export type StreamContext = {
+//     /**
+//      * 媒体数据流列表
+//      */
+//     streamList: EduStream[]
+// }
 export type UserListContext = {
-    /**
-     * 当前用户的uuid
-     */
-    localUserUuid: string,
-    /**
-     * 当前用户的角色
-     */
-    myRole: "teacher" | "assistant" | "student" | "invisible",
+    // TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 当前用户的uuid
+    //  */
+    // localUserUuid: string,
+    // /**
+    //  * 当前用户的角色
+    //  */
+    // myRole: "teacher" | "assistant" | "student" | "invisible",
     /**
      * 当前课堂内点名册上的用户列表（只有学生）
      */
     rosterUserList: any[],
-    /**
-     * 当前课堂的老师名称
-     */
-    teacherName: string,
-    /**
-     * 对用户的点击事件如上台、授权白板、打开摄像头麦克风
-     * @param actionType 动作类型 
-     * 上台：podium 
-     * 白板授权：whiteboard 
-     * 打开摄像头：camera 
-     * 打开麦克风：mic 
-     * 踢人：kick-out
-     * @param uid 用户的uid
-     */
-    handleRosterClick: (actionType: string, uid: string) => Promise<void>,
-    /**
-     * 关闭指定用户的摄像头
-     * @param userUuid 用户uid
-     */
-    revokeCoVideo: (userUuid: string) => Promise<void>,
-    /**
-     * 老师同意用户的举手 
-     * @param userUuid 用户uid
-     */
-    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    // /**
+    //  * 当前课堂的老师名称
+    //  */
+    // teacherName: string,
+    // /**
+    //  * 对用户的点击事件如上台、授权白板、打开摄像头麦克风
+    //  * @param actionType 动作类型 
+    //  * 上台：podium 
+    //  * 白板授权：whiteboard 
+    //  * 打开摄像头：camera 
+    //  * 打开麦克风：mic 
+    //  * 踢人：kick-out
+    //  * @param uid 用户的uid
+    //  */
+    // handleRosterClick: (actionType: string, uid: string) => Promise<void>,
+    //TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 使指定用户下麦
+    //  * @param userUuid 用户uid
+    //  */
+    // revokeCoVideo: (userUuid: string) => Promise<void>,
+    //TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 老师同意用户的举手 
+    //  * @param userUuid 用户uid
+    //  */
+    // teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
     /**
      * 当前课堂内的所有用户列表
      */
@@ -799,7 +803,18 @@ export type UserListContext = {
      * 同意举手的用户列表
      */
     acceptedUserList: any
+    //v1.1.1
+    localUserInfo: EduUser,
+    teacherInfo?: EduUser,
+    togglePodium: (userUuid:string, onPodium:boolean) => Promise<any>,
+    toggleWhiteboardPermission: (userUuid:string, whiteboardGranted: boolean) => Promise<any>,
+    toggleCamera: (userUuid:string) => Promise<any>,
+    toggleMic: (userUuid:string) => Promise<any>,
+    kick: (userUuid:string) => Promise<any>,
+    controlTools: ControlTool[],
+    isHost: boolean
 }
+
 export type RecordingContext = {
     /**
      * 是否正在录制
@@ -866,20 +881,26 @@ export type HandsUpContext = {
      * @param userUuid 用户uuid
      */
     teacherRejectHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 使指定用户下麦
+     * @param userUuid 用户uid
+     */
+    exitCoVideo: (userUuid: string) => Promise<void>,
+
 }
 export type VideoControlContext = {
-    /**
-     * 老师的媒体数据流
-     */
-    teacherStream: any,
-    /**
-     * 第一个学生的媒体数据流
-     */
-    firstStudent: EduMediaStream,
-    /**
-     * 学生的媒体数据流列
-     */
-    studentStreams: EduMediaStream[],
+    // /**
+    //  * 老师的媒体数据流
+    //  */
+    // teacherStream: any,
+    // /**
+    //  * 第一个学生的媒体数据流
+    //  */
+    // firstStudent: EduMediaStream,
+    // /**
+    //  * 学生的媒体数据流列
+    //  */
+    // studentStreams: EduMediaStream[],
     /**
      * 点击摄像头切换开关状态
      * @param userUuid 用户uuid
@@ -905,19 +926,19 @@ export type VideoControlContext = {
      * @param userUuid 用户uuid
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    /**
-     * 场景摄像头配置
-     */
-    sceneVideoConfig: {
-        hideOffPodium: boolean;
-        hideOffAllPodium: boolean;
-        isHost: boolean;
-        hideBoardGranted: boolean;
-    },
-    /**
-     * 是否为主持人
-     */
-    isHost: boolean,
+    // /**
+    //  * 场景摄像头配置
+    //  */
+    // sceneVideoConfig: {
+    //     hideOffPodium: boolean;
+    //     hideOffAllPodium: boolean;
+    //     isHost: boolean;
+    //     hideBoardGranted: boolean;
+    // },
+    // /**
+    //  * 是否为主持人
+    //  */
+    // isHost: boolean,
     /**
      * 击所有人下台（仅主持人可用）
      */
@@ -932,10 +953,10 @@ export type SmallClassVideoControlContext = {
      * 老师的媒体数据流
      */
     teacherStream: any,
-    /**
-     * 第一个学生的媒体数据流
-     */
-    firstStudent: EduMediaStream,
+    // /**
+    //  * 第一个学生的媒体数据流
+    //  */
+    // firstStudent: EduMediaStream,
     /**
      * 学生的媒体数据流列
      */
@@ -965,15 +986,15 @@ export type SmallClassVideoControlContext = {
      * @param userUuid 用户uuid
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    /**
-     * 场景摄像头配置
-     */
-    sceneVideoConfig: {
-        hideOffPodium: boolean;
-        hideOffAllPodium: boolean;
-        isHost: boolean;
-        hideBoardGranted: boolean;
-    },
+    // /**
+    //  * 场景摄像头配置
+    //  */
+    // sceneVideoConfig: {
+    //     hideOffPodium: boolean;
+    //     hideOffAllPodium: boolean;
+    //     isHost: boolean;
+    //     hideBoardGranted: boolean;
+    // },
     // videoStreamList,
 }
 export type PrivateChatContext = {
@@ -1046,10 +1067,6 @@ export type MediaContext = {
      */
     cameraRenderer: LocalUserRenderer | undefined,
     /**
-     * 当前麦克风设备音量
-     */
-    microphoneLevel: number,
-    /**
      * 切换媒体设备（摄像头、麦克风、扬声器）
      * @param deviceType 设备类型：camera microphone speaker
      * @param value 改变的值
@@ -1061,9 +1078,86 @@ export type MediaContext = {
      * @param value 改变的值
      */
     changeAudioVolume: (deviceType: string, value: any) => Promise<void>,
+    // /**
+    //  * 关闭对话框
+    //  * @param id 对话框id
+    //  */
+    // removeDialog: (id: string) => void
     /**
-     * 关闭对话框
-     * @param id 对话框id
+     * 切换摄像头
      */
-    removeDialog: (id: string) => void
+    changeCamera: (deviceId: string) => Promise<void>
+    /**
+     * 切换麦克风
+     */
+    changeMicrophone: (deviceId: string) => Promise<void>
+    /**
+     * 设置扬声器设备音量，仅electron
+     */
+    changeSpeakerVolume: (v: number) => Promise<void>
+    /**
+     * 设置麦克风设备音量，仅electron
+     */
+    changeMicrophoneVolume: (v: number) => Promise<void>
+}
+
+export type CloudDriveContext = {
+    /**
+     * 可下载的云盘资源列表 
+     */
+    downloadList: StorageCourseWareItem[],
+    /**
+     * 打开课件资源
+     * @param uuid 资源uuid
+     */
+    openCloudResource: (uuid: string) => Promise<void>,
+    /**
+     * 下载课件资源
+     * @param taskUuid 课件taskUuid
+     */
+    startDownload: (taskUuid: string) => Promise<void>,
+    /**
+     * 删除课件资源
+     * @param taskUuid 课件taskUuid
+     */
+    deleteSingle: (taskUuid: string) => Promise<void>,
+    /**
+     * 云盘个人资源列表
+     */
+    personalResources: MaterialDataResource[],
+    /**
+     * 云盘公共资源列表
+     */
+    publicResources: MaterialDataResource[],
+    /**
+     * 所有云盘课件资源列
+     */
+    resourcesList: Resource[],
+    /**
+     * 更新云盘资源列表
+     */
+    refreshCloudResources: () => Promise<void>,
+    /**
+     * 移除云盘课件资源
+     * @param resourceUuids 课件资源uuid
+     */
+    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
+    /**
+     * 取消上传
+     */
+    cancelUpload: () => Promise<void>,
+    /**
+     * 关闭课件资源
+     * @param resourceUuid 资源uuid
+     */
+    closeMaterial: (resourceUuid: string) => void,
+    /**
+     * 上传云盘课件资源
+     * @param payload 上传的资源参数
+     */
+    doUpload: (payload: any) => Promise<void>,
+    /**
+     * 课件列表
+     */
+    courseWareList: any[],
 }
