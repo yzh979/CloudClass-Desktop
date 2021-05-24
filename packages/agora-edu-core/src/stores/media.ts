@@ -197,6 +197,9 @@ export class MediaStore {
       if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
         this.appStore.sceneStore.resetMicrophoneTrack()
       }
+      if (evt.tag === 'screen-share') {
+        this.appStore.boardStore.closeMaterial('/screenShare')
+      }
       BizLogger.info("track-ended", evt)
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {

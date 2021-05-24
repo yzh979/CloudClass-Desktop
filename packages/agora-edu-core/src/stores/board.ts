@@ -622,13 +622,13 @@ export class BoardStore extends ZoomController {
       try {
         await this.appStore.sceneStore.stopRTCSharing()
       } catch (err) {
-        this.appStore.roomStore.fireToast('toast.stop_screen_share_failed')
+        this.appStore.uiStore.fireToast('toast.stop_screen_share_failed')
         throw err
       }
       try {
         this.removeScreenShareScene()
       } catch (err) {
-        this.appStore.roomStore.fireToast('toast.stop_screen_share_failed')
+        this.appStore.uiStore.fireToast('toast.stop_screen_share_failed')
         throw err
       }
     } else {

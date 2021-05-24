@@ -353,7 +353,7 @@ export type RoomContext = {
     //  * 屏幕分享
     //  * @param windowId 窗口ID
     //  */
-    // startNativeScreenShareBy: (windowId: number) => Promise<void>,
+    startNativeScreenShareBy: (windowId: number) => Promise<void>,
     /**
      * 关闭屏幕分享展示窗口
      */
@@ -363,20 +363,20 @@ export type RoomContext = {
     //  * 教师接受举手
     //  * @param userUuid 举手用户uuid
     //  */
-    // teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
-    // /**
-    //  * 教师拒绝举手
-    //  * @param userUuid 举手用户uuid
-    //  */
-    // teacherRejectHandsUp: (userUuid: string) => Promise<void>,
-    // /**
-    //  * 举手学生列表
-    //  */
-    // handsUpStudentList: any[],
-    // /**
-    //  * 打开使用用户总数
-    //  */
-    // processUserCount: number,
+    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 教师拒绝举手
+     * @param userUuid 举手用户uuid
+     */
+    teacherRejectHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 举手学生列表
+     */
+    handsUpStudentList: any[],
+    /**
+     * 打开使用用户总数
+     */
+    processUserCount: number,
     /**
      * 房间信息
      */
