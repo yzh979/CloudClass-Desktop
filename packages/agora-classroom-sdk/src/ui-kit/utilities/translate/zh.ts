@@ -4,7 +4,6 @@ export const zh = {
     'student': '学生',
     'assistant': '助教',
   },
-  'disabled': '禁用',
   'whiteboard': {
     'converting': '转换中',
   },
@@ -275,13 +274,7 @@ export const zh = {
   'pretest': {
     'title': '设备检测',
     'settingTitle': '设备设置',
-    'finishTest': '完成',
-    'detect_new_device': '检测到新设备，请使用！',
-    'camera_move_out': '摄像头被拔出，无法显示视频！',
-    'mic_move_out': '麦克风被拔出！',
-    'device_not_working': '设备未正常工作！',
-    'detect_new_device_in_room': '检测到新设备，请点击“设置”后，选择新设备。',
-    'teacher_device_may_not_work': '老师视频可能出现问题！',
+    'finishTest': '完成'
   },
   'biz-header': {
     'setting': '设置',

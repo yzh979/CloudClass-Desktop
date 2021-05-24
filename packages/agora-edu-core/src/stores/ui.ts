@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
@@ -83,11 +83,9 @@ export class UIStore {
 
   appStore: EduScenarioAppStore;
 
-  dialog$: BehaviorSubject<any> = new BehaviorSubject<any>({})
+  dialog$: BehaviorSubject<any>
 
-  toast$: BehaviorSubject<any> = new BehaviorSubject<any>({})
-
-  pretestNotice$: Subject<any> = new Subject<any>()
+  toast$: BehaviorSubject<any>
 
   /**
    * 
@@ -96,6 +94,8 @@ export class UIStore {
    */
   constructor(appStore: EduScenarioAppStore) {
     this.appStore = appStore
+    this.dialog$ = new BehaviorSubject<any>({})
+    this.toast$ = new BehaviorSubject<any>({})
     reaction(() => JSON.stringify([
       this.chatCollapse
     ]) , (data: string) => {

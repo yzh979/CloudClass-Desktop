@@ -12,11 +12,10 @@ import { MediaStore } from './media'
 import { PretestStore } from './pretest'
 import { RoomStore } from './room'
 import { SceneStore } from './scene'
-// import { UIStore } from './ui'
+import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
-import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo } from '../api/declare'
+import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
-import { Subject } from 'rxjs'
 
 export class EduScenarioAppStore {
   // stores
@@ -24,7 +23,7 @@ export class EduScenarioAppStore {
    * appStore类
    * 包含uiStore
    */
-  // uiStore!: UIStore;
+  uiStore!: UIStore;
   boardStore!: BoardStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
@@ -124,22 +123,6 @@ export class EduScenarioAppStore {
   
   @observable
   customScreenShareItems: any[] = []
-
-  @observable
-  allExtApps:IAgoraExtApp[]
-
-  @observable
-  activeExtAppIds:string[] = []
-
-  pretestNotice$: Subject<any> = new Subject<any>()
-
-  @computed
-  get activeExtApps():IAgoraExtApp[] {
-    return this.allExtApps.filter(app => this.activeExtAppIds.includes(app.appIdentifier))
-  }
-
-  @observable
-  language: string = 'zh'
 
   @action.bound
   resetStates() {
@@ -257,10 +240,10 @@ export class EduScenarioAppStore {
       EduManager.enableDebugLog(true);
     }
 
-    // this.uiStore = new UIStore(this)
+    this.uiStore = new UIStore(this)
 
     if (language) {
-      this.language = language
+      this.uiStore.setLanguage(language)
     }
 
     this.pretestStore = new PretestStore(this)
@@ -270,7 +253,6 @@ export class EduScenarioAppStore {
     this.mediaStore = new MediaStore(this)
     this.widgetStore = new WidgetStore()
     this.widgetStore.widgets = this.params.config.widgets || {}
-    this.allExtApps = this.params.config.extApps || []
 
     this._screenVideoRenderer = undefined
   }
@@ -442,4 +424,4 @@ export class EduScenarioAppStore {
 export { BoardStore } from './board';
 export { PretestStore } from './pretest';
 export { RoomStore } from './room';
-// export { UIStore } from './ui';
+export { UIStore } from './ui';

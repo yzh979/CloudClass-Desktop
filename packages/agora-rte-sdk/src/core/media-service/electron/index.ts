@@ -473,12 +473,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         speakers, speakerNumber: +speakerNumber, totalVolume: +totalVolume
       })
     })
-    // this.client.on('videoDeviceStateChanged', (evt: any) => {
-    //   console.log('videodevicestatechanged ', JSON.stringify(evt))
-    // })
-    // this.client.on('audioDeviceStateChanged', (evt: any) => {
-    //   console.log('audiodevicestatechanged ', JSON.stringify(evt))
-    // })
     // this.client.on('audio-device-changed', (deviceId: string, deviceType: number, deviceState: number) => {
     //   this.fire('audio-device-changed', {
     //     deviceId,
@@ -1304,7 +1298,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           frameRate: 5,
           minFrameRate: 5,
           bitrate: 1500,
-          minBitrate: 0,
+          minBitrate: 1500,
           degradationPreference: 0,
           orientationMode: 0,
           mirrorMode: 0

@@ -112,8 +112,7 @@ export enum EduRoleType {
   audience = 'audience',
   student = 'broadcaster',
   invisible = 'invisible',
-  assistant = 'assistant',
-  none = 'none'
+  assistant = 'assistant'
 }
 
 /**

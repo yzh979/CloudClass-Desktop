@@ -108,7 +108,6 @@ export enum QuickTypeEnum {
 
 export enum AgoraMediaDeviceEnum {
   Default = "",
-  Muted = "muted",
   Unknown = "unknown"
 }
 

@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useWidgetContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -13,15 +13,11 @@ import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
-import { useUIStore } from '@/infra/hooks'
 
 
 
 export const MidClassScenario = observer(() => {
-  const {
-    joinRoom,
-    isJoiningRoom
-  } = useRoomContext()
+  const {joinRoom} = useRoomContext()
 
   const {
     isFullScreen,
@@ -32,9 +28,7 @@ export const MidClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { 
-    chatCollapse 
-  }  = useUIStore()
+  const { chatCollapse }  = useChatContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -82,7 +76,7 @@ export const MidClassScenario = observer(() => {
         </Aside>
       </Layout>
       <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom} />
+      <LoadingContainer />
     </Layout>
   )
 })

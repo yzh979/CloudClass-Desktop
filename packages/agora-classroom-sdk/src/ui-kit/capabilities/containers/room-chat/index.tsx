@@ -4,26 +4,22 @@ import * as React from 'react';
 import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
 import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
-import { useUIStore } from '@/infra/hooks';
 
 export const RoomChat = observer(() => {
 
   const {
+    chatCollapse,
     canChatting,
     isHost,
     getHistoryChatMessage,
     unreadMessageCount,
     muteChat,
     unmuteChat,
+    toggleChatMinimize,
     messageList,
     sendMessage,
     addChatMessage
   } = useChatContext()
-
-  const {
-    chatCollapse,
-    toggleChatMinimize
-  } = useUIStore()
 
   const {
     roomInfo

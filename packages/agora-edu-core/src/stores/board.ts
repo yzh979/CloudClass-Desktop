@@ -914,10 +914,10 @@ export class BoardStore extends ZoomController {
   //   if (isTeacher) {
   //     if (this.online && this.room) {
   //       if (this.follow === true) {
-  //         this.appStore.roomStore.fireToast('toast.open_whiteboard_follow'))
+  //         this.appStore.uiStore.fireToast('toast.open_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Broadcaster)
   //       } else {
-  //         this.appStore.roomStore.fireToast('toast.close_whiteboard_follow'))
+  //         this.appStore.uiStore.fireToast('toast.close_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Freedom)
   //       }
   //     }
@@ -1412,9 +1412,9 @@ export class BoardStore extends ZoomController {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.appStore.roomStore.fireToast('toast.whiteboard_lock'))
+    //       this.appStore.uiStore.fireToast('toast.whiteboard_lock'))
     //     } else {
-    //       this.appStore.roomStore.fireToast('toast.whiteboard_unlock'))
+    //       this.appStore.uiStore.fireToast('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1425,7 +1425,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.roomStore.fireToast(notice)
+        this.appStore.uiStore.fireToast(notice)
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1679,9 +1679,9 @@ export class BoardStore extends ZoomController {
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      this.appStore.roomStore.fireToast(`toast.granted_board_success`)
+      this.appStore.uiStore.fireToast(`toast.granted_board_success`)
     } catch (err) {
-      this.appStore.roomStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.uiStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1689,9 +1689,9 @@ export class BoardStore extends ZoomController {
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      this.appStore.roomStore.fireToast(`toast.revoke_board_success`)
+      this.appStore.uiStore.fireToast(`toast.revoke_board_success`)
     } catch (err) {
-      this.appStore.roomStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.uiStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
