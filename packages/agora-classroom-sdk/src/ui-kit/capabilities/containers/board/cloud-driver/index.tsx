@@ -1,3 +1,4 @@
+import { BizLogger } from '@/infra/utils';
 import { useBoardContext, mapFileType, useGlobalContext, PPTKind } from 'agora-edu-core';
 import { EduLogger } from 'agora-rte-sdk';
 import MD5 from 'js-md5';
@@ -89,8 +90,12 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
 
   const onCancel = useCallback(() => {
     if (room) {
-      const tool = room.state.memberState.currentApplianceName
-      setTool(tool)
+      try {
+        const tool = room.state.memberState.currentApplianceName
+        setTool(tool)
+      } catch (err) {
+        BizLogger.info("error ", err)
+      }
     }
     removeDialog(id)
   }, [room])
