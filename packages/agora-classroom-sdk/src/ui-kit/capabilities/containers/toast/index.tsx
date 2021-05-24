@@ -73,6 +73,7 @@ export const ToastContainer = observer(() => {
     'toast.unmute_chat': (props: any) => toast('toast.unmute_chat', props),
     'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
+    'toast.stop_screen_share_failed': (props: any) => toast('toast.stop_screen_share_failed', props)
   }
 
   const roomRef = useRef<boolean>(isJoiningRoom)

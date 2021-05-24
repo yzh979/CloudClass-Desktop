@@ -984,7 +984,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       (this.screenVideoTrack as ILocalTrack).on('track-ended', () => {
         this.screenAudioTrack && this.closeScreenTrack(this.screenAudioTrack)
         this.screenVideoTrack && this.closeScreenTrack(this.screenVideoTrack)
-        this.fire('track-ended', {resource: 'screen', screen: true})
+        this.fire('track-ended', {resource: 'screen', screen: true, tag: 'screen-share'})
       })
 
       this._screenClient = screenClient

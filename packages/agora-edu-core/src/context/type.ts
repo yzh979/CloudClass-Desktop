@@ -433,7 +433,7 @@ export type RoomContext = {
      *   //观察者订阅的事件 evt   事件名称：evt.eventname
      *   })
      */
-     toastEventObserver: BehaviorSubject<any>,
+     toastEventObserver: Subject<any>,
      /**
       * BehaviorSubject实例化的对象 dialogEventObserver
       * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
@@ -441,7 +441,7 @@ export type RoomContext = {
       *   //观察者订阅的事件 evt   事件名称：evt.eventname
       *   })
       */
-     dialogEventObserver: BehaviorSubject<any>,
+     dialogEventObserver: Subject<any>,
     /**
      * BehaviorSubject实例化的对象 sequenceEventObserver
      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
@@ -449,7 +449,7 @@ export type RoomContext = {
      *   //观察者订阅的事件 evt   事件名称：evt.eventname
      *   })
      */
-    sequenceEventObserver: BehaviorSubject<any>,
+    sequenceEventObserver: Subject<any>,
     isJoiningRoom: boolean
     // TO-REVIEW REMOVED in v1.1.1
     // /**

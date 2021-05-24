@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import {v4 as uuidv4} from 'uuid';
 import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction, autorun } from 'mobx';
-import { LocalUserRenderer, EduLogger } from 'agora-rte-sdk';
+import { LocalUserRenderer, EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
@@ -239,6 +239,13 @@ export class MediaStore {
       if (evt.operation === 'pulled') {
         handleDevicePulled(evt)
       }
+      if (evt.tag === 'screen-share') {
+        this.appStore.boardStore.closeMaterial('/screenShare')
+          .catch((err: any) => {
+            BizLogger.info('err ', GenericErrorWrapper(err))
+          })
+        BizLogger.info('screen-share ', evt)
+      }
       BizLogger.info("track-ended", evt)
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
@@ -279,13 +286,13 @@ export class MediaStore {
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
-      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
+      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map(((e: any) => e.uid))}`)
       const uid = evt.user.uid
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
-      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
+      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map(((e: any) => e.uid))}`)
       const uid = evt.user.uid
       console.log('sdkwrapper update user-unpublished', evt)
     })

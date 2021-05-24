@@ -131,7 +131,7 @@ export class EduScenarioAppStore {
   @observable
   activeExtAppIds:string[] = []
 
-  pretestNotice$: Subject<any> = new Subject<any>({})
+  pretestNotice$: Subject<any> = new Subject<any>()
 
   @computed
   get activeExtApps():IAgoraExtApp[] {

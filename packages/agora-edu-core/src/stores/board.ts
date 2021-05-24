@@ -619,8 +619,18 @@ export class BoardStore extends ZoomController {
     const currentContextPath = currentSceneState.contextPath
 
     if (resourceUuid.match(/screenShare/i)) {
-      await this.appStore.sceneStore.stopRTCSharing()
-      this.removeScreenShareScene()
+      try {
+        await this.appStore.sceneStore.stopRTCSharing()
+      } catch (err) {
+        this.appStore.roomStore.fireToast('toast.stop_screen_share_failed')
+        throw err
+      }
+      try {
+        this.removeScreenShareScene()
+      } catch (err) {
+        this.appStore.roomStore.fireToast('toast.stop_screen_share_failed')
+        throw err
+      }
     } else {
       this.room.setGlobalState({
         roomScenes: {
