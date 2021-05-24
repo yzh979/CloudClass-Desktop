@@ -90,12 +90,8 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
 
   const onCancel = useCallback(() => {
     if (room) {
-      try {
-        const tool = room.state.memberState.currentApplianceName
-        setTool(tool)
-      } catch (err) {
-        BizLogger.info("error ", err)
-      }
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
     }
     removeDialog(id)
   }, [room])

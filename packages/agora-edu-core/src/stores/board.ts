@@ -4,7 +4,7 @@ import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
-import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
@@ -241,7 +241,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   changeScenePath(path: string) {
     this.activeScenePath = path
-    if (this.online && this.room) {
+    if (this.online && this.room && this.boardRoomIsAvailable) {
       this.room.setScenePath(this.activeScenePath)
     }
   }
@@ -904,38 +904,7 @@ export class BoardStore extends ZoomController {
       this.scale = this.room.state.zoomScale
     }
   }
-
-  // @action.bound
-  // setFollow(v: boolean) {
-  //   this.follow = v
-
-  //   const isTeacher = this.userRole === EduRoleTypeEnum.teacher
-
-  //   if (isTeacher) {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.appStore.uiStore.fireToast('toast.open_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Broadcaster)
-  //       } else {
-  //         this.appStore.uiStore.fireToast('toast.close_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //       }
-  //     }
-  //   } else {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.room.disableCameraTransform = true
-  //         this.room.setViewMode(ViewMode.Follower)
-  //         this.room.disableDeviceInputs = true
-  //       } else {
-  //         this.room.disableCameraTransform = false
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //         this.room.disableDeviceInputs = false
-  //       }
-  //     }
-  //   }
-  // }
-
+  
   @action.bound
   setGrantPermission(v: boolean) {
     this._grantPermission = v
@@ -1150,9 +1119,17 @@ export class BoardStore extends ZoomController {
   @observable
   laserPoint: boolean = false
 
+  @computed
+  get boardRoomIsAvailable() {
+    if (!this.room || this.room && this.room.phase !== RoomPhase.Connected) {
+      return false
+    }
+    return true
+  }
+
   @action.bound
   setLaserPoint() {
-    if (this.room) {
+    if (!this.boardRoomIsAvailable) {
       this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
@@ -1165,7 +1142,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   setTool(tool: string) {
-    if (!this.room) return
+    if (!this.boardRoomIsAvailable) return
 
     switch(tool) {
       case 'blank-page': {
