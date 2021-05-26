@@ -667,11 +667,19 @@ export class PretestStore {
   }
 
   async changeTestSpeakerVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if(this.mediaService.isElectron) {
+      await this.mediaService.changePlaybackVolume(value)
+    } else {
+      throw new Error('Not Supported.');
+    }
   }
 
   async changeTestMicrophoneVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if(this.mediaService.isElectron) {
+      await this.mediaService.changeRecordingVolume(value)
+    } else {
+      throw new Error('Not Supported.');
+    }
   }
 
 

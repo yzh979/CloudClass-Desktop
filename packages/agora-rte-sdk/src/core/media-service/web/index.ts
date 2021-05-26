@@ -1116,13 +1116,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     return list;
   }
 
-  changePlaybackVolume(volume: number) {
-    this.client?.localTracks?.forEach((t: ILocalTrack) => {
-      t.trackMediaType === 'audio' && (t as ILocalAudioTrack).setVolume(volume)
-    })
-    this.client?.remoteUsers?.forEach((user: IAgoraRTCRemoteUser) => {
-      user.audioTrack?.setVolume(volume)
-    })
+  changePlaybackVolume(volume: number): void {
+    throw new Error('Not Supported')
+  }
+
+  changeRecordingVolume(volume: number): void {
+    throw new Error('Not Supported')
   }
 
   private fireTrackEnd({resource, tag, trackId}: FireTrackEndedAction) {

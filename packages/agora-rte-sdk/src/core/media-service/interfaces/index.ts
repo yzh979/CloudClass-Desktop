@@ -134,6 +134,7 @@ export declare interface IAgoraRTCModule {
   stopScreenShare(): Promise<any>
 
   changePlaybackVolume(volume: number): void;
+  changeRecordingVolume(volume: number): void;
 
   // muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any>
 
@@ -256,9 +257,14 @@ export declare interface IMediaService extends IAgoraRTCModule {
   getMicrophoneLabel(): string
 
   /**
-   * 修改扬声器设备音量
+   * 修改扬声器设备音量 0 - 100
    */
   changePlaybackVolume(volume: number): void
+
+  /**
+   * 修改麦克风设备音量 0 - 100
+   */
+  changeRecordingVolume(volume: number): void
 
   /**
    * 初始化

@@ -378,6 +378,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     EduLogger.info("setAudioPlaybackVolume ret", ret)
   }
 
+  changeRecordingVolume(volume: number): void {
+    let decibel = +((volume / 100) * 255).toFixed(0)
+    let ret = this.client.setAudioRecordingVolume(decibel)
+    EduLogger.info("setAudioRecordingVolume ret", ret)
+  }
+
   async muteLocalVideo(val: boolean): Promise<any> {
     // let ret = this.client.muteLocalVideoStream(val)
     this.client.enableLocalVideo(!val)
