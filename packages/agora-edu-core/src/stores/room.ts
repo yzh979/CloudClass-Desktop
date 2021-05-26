@@ -1946,7 +1946,7 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  async updateFlexProperties(properties: any, cause: any) {
+  updateFlexProperties = async (properties: any, cause: any) => {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
 }
