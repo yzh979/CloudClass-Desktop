@@ -476,6 +476,18 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
+  async updateFlexProperties(roomId: string, properties: any, cause: any) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/properties`,
+      method: 'PUT',
+      data: {
+        properties,
+        cause
+      }
+    })
+    return res.data;
+  }
+
   async startPrivateChat(roomId: string, toUserUuid:string) {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/users/${toUserUuid}/privateSpeech`,

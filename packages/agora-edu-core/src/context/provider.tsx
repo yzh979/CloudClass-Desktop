@@ -206,7 +206,9 @@ export const useRoomContext = (): RoomContext => {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus
+    liveClassStatus,
+    updateFlexProperties,
+    flexProperties
   } = useRoomStore()
 
   return {
@@ -240,7 +242,9 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    updateFlexProperties,
+    flexProperties
   }
 }
 

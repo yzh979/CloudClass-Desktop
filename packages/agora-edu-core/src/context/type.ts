@@ -436,6 +436,14 @@ export type RoomContext = {
      * 取消单个用户禁言
      */
     unmuteUserChat: (userUuid: string) => Promise<any>;
+    /**
+     * 更新flexProps
+     */
+    updateFlexProperties: (properties: any, cause: any) => Promise<any>;
+    /**
+     * 获取flexProps
+     */
+    flexProperties: any;
 }
 export type RoomDiagnosisContext = {
     navigationState: {

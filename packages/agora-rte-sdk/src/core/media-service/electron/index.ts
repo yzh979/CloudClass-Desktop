@@ -1275,7 +1275,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         profile: 50,
         rect: {x: 0, y: 0, width: 0, height: 0},
         param: {
-          width: 0, height: 0, bitrate: 500, frameRate: 15
+          width: 0, height: 0, bitrate: 1500, frameRate: 5
         }
       }
       EduLogger.info('startScreenShare#options', options)
@@ -1291,18 +1291,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         // this.client.
         this.client.videoSourceSetChannelProfile(1)
         this.client.videoSourceEnableWebSdkInteroperability(true)
-        this.client.videoSourceSetVideoProfile(config && config.profile ? config.profile : 50, false)
-        this.client.videoSourceSetVideoEncoderConfiguration({
-          width: 640,
-          height: 480,
-          frameRate: 5,
-          minFrameRate: 5,
-          bitrate: 1500,
-          minBitrate: 1500,
-          degradationPreference: 0,
-          orientationMode: 0,
-          mirrorMode: 0
-        })
+        // this.client.videoSourceSetVideoProfile(config && config.profile ? config.profile : 50, false)
+
+        // this.client.videoSourceSetVideoEncoderConfiguration({
+        //   width: 640,
+        //   height: 480,
+        //   frameRate: 5,
+        //   minFrameRate: 5,
+        //   bitrate: 1500,
+        //   minBitrate: 1500,
+        //   degradationPreference: 0,
+        //   orientationMode: 0,
+        //   mirrorMode: 0
+        // })
         EduLogger.info(`[electron-log-path] checkout videoSourceLogPath: ${this.videoSourceLogPath}`)
         if (this.videoSourceLogPath) {
           this.client.videoSourceSetLogFile(this.videoSourceLogPath)

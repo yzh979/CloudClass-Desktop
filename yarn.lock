@@ -5950,7 +5950,26 @@ agora-classroom-sdk@1.1.0:
     workbox-range-requests "6.1.2"
     workbox-strategies "6.1.1"
 
-agora-electron-sdk@2.9.107-rc.136-build.517, agora-electron-sdk@apaas:
+agora-electron-sdk@2.9.107-rc.148:
+  version "2.9.107-rc.148"
+  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148.tgz#1ca54fb816a3c3c549313cc5dcc32ec3e11ec1a0"
+  integrity sha1-HKVPuBajw8VJMTzF3MMuw+EewaA=
+  dependencies:
+    bluebird "^3.7.1"
+    download "^7.1.0"
+    extract-zip "^1.6.7"
+    fs-extra "^8.1.0"
+    glob "^7.1.6"
+    just-task "^0.14.0"
+    lodash.isequal "^4.5.0"
+    nan "^2.14.0"
+    node-gyp "^5.1.0"
+    rimraf "^3.0.0"
+    shelljs "^0.8.3"
+    yuv-buffer "^1.0.0"
+    yuv-canvas "^1.2.1"
+
+agora-electron-sdk@apaas:
   version "2.9.107-rc.136-build.517"
   resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.136-build.517.tgz#87e30d8af0edefdde99247d4ee825cdc10c46ff0"
   integrity sha1-h+MNivDt793pkkfU7oJc3BDEb/A=
@@ -12438,7 +12457,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.nlark.com/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=

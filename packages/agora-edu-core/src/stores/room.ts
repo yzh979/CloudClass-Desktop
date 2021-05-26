@@ -296,6 +296,11 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  @computed
+  get flexProperties() {
+    return get(this.roomProperties, 'flexProps')
+  }
+
   @observable
   roomChatMessages: ChatMessage[] = []
 
@@ -1939,5 +1944,9 @@ export class RoomStore extends SimpleInterval {
         })
       }
     }
+  }
+
+  async updateFlexProperties(properties: any, cause: any) {
+    return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
 }
