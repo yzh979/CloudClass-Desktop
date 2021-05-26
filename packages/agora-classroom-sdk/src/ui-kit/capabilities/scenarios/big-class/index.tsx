@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -21,6 +21,8 @@ export const BigClassScenario = observer(() => {
     isFullScreen,
   } = useGlobalContext()
 
+  const { chatCollapse }  = useChatContext()
+
   useEffectOnce(() => {
     joinRoom()
   })
@@ -39,23 +41,31 @@ export const BigClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="bg-white" style={{ height: '100%' }}>
+      <Layout className="bg-white">
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
           </div>
-          <div className="pin-right">
+          <div 
+            className={classnames({
+              ['pin-right']: 1,
+              ['pin-right-full-not-collapse']: (isFullScreen && !chatCollapse),
+              ['pin-right-full-collapse']: (isFullScreen && chatCollapse)
+            })}
+          >
             <HandsUpContainer />
           </div>
         </Content>
-        <Aside>
-          <div style={{ height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }}>
-            <VideoPlayerTeacher />
-          </div>
-          <RoomChat />
-        </Aside>
+        {isFullScreen ? <RoomChat /> : (
+          <Aside className="big-class-aside">
+            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+              <VideoPlayerTeacher className="big-class-teacher"/>
+            </div>
+            <RoomChat />
+          </Aside>
+        )}
       </Layout>
       <DialogContainer />
       <LoadingContainer />

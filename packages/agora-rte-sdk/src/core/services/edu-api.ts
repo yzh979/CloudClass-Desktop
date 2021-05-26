@@ -1,3 +1,4 @@
+import { AREA_CODE } from './../media-service/interfaces/index';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import { get } from "lodash";
 import { EduUser, StreamType, DeleteStreamType, AgoraFetchParams, ClassroomStateParams, UserQueryParams, StreamQueryParams, EduStreamParams, EduStream, ChannelMessageParams, PeerMessageParams, EduUserData, EduStreamData, EduCourseState } from "../../interfaces";
@@ -116,7 +117,7 @@ export class AgoraEduApi extends ApiBase {
     this.latestTime = 0;
     this.lastUserListTime = 0;
     this.lastStreamListTime = 0;
-    this.prefix = `${params.sdkDomain}/scene/apps/%app_id`.replace('%app_id', this.appId)
+    this.prefix = `${this.sdkDomain}/scene/apps/%app_id`.replace('%app_id', this.appId)
   }
 
   // constructor(
@@ -624,7 +625,7 @@ export class AgoraEduApi extends ApiBase {
         userToken: get(entryRoomData, 'user.userToken'),
         rtmToken: get(entryRoomData, 'user.rtmToken'),
         rtcToken: get(entryRoomData, 'user.rtcToken'),
-        muteChat: get(entryRoomData, 'user.muteChat'),
+        // muteChat: get(entryRoomData, 'user.muteChat'),
         streams,
         properties: get(entryRoomData, 'user.userProperties', {}),
       }

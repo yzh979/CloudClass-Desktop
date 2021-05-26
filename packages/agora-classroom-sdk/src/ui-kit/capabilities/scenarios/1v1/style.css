@@ -1,7 +1,7 @@
 .zoom-position {
   position: absolute;
   left: 15px;
-  bottom: 8px;
+  bottom: 20px;
 }
 
 .whiteboard {
@@ -17,4 +17,49 @@
   bottom: 0;
   right: 0;
   margin: auto;
+}
+
+.full-teacher-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+  border-bottom: 2px solid white;
+}
+
+.edu-room .video-player.teacher-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+  border-bottom: 2px solid white;
+  margin-top: 0px !important
+}
+
+.full-student-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+
+.edu-room .video-player.student-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+  margin-top: -2px !important;
+}
+
+.bg-white {
+  height: 100%;
+  padding-top: 2px;
+  box-sizing: border-box;
+}
+
+.edu-room .video-player {
+  margin-top: 0px !important;
+}
+
+.full-screen-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 514px;
 }

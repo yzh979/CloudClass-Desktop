@@ -15,6 +15,9 @@ AgoraRTM.setParameter({
 })
 
 // const logFilter = ENABLE_LOG ? AgoraRTM.LOG_FILTER_DEBUG : AgoraRTM.LOG_FILTER_OFF;
+//@ts-ignore
+// const logFilter = AgoraRTM.LOG_FILTER_DEBUG
+//@ts-ignore
 const logFilter = AgoraRTM.LOG_FILTER_OFF
 
 export enum StepPhase {

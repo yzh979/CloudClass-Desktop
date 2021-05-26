@@ -22,6 +22,7 @@ import { BizLogger,
   transToolBar
 } from '../utilities/kit';
 import { ZoomController } from './zoom';
+import { Resource } from 'src/context/type';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -55,19 +56,7 @@ export type GlobalRoomScene = {
   }
 }
 
-export type Resource = {
-  file: {
-    name: string,
-    type: string,
-  },
-  resourceName: string,
-  resourceUuid: string,
-  taskUuid: string,
-  currentPage: number,
-  totalPage: number,
-  scenePath: string,
-  show: boolean,
-}
+export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -536,13 +525,13 @@ export class BoardStore extends ZoomController {
 
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
-    const resourceName = this.getResourcePath(currentSceneState.contextPath)
-    const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
+    const resourceUuid = this.getResourcePath(currentSceneState.contextPath)
+    const isRootDir = ["init", "/", "", "/init"].includes(resourceUuid)
     if (isRootDir) {
-      const taskUuidList = this.globalState?.dynamicTaskUuidList ?? []
-      const pptItem = taskUuidList.find((it) => it.resourceName === resourceName)
+      const materialList = this.globalState?.materialList ?? []
+      const pptItem = materialList.find((it) => it.resourceUuid === resourceUuid)
       if (pptItem) {
-        await this.startDownload(pptItem.taskUuid)
+        await this.startDownload(pptItem.resourceUuid)
       }
     }
   }
@@ -1808,7 +1797,7 @@ export class BoardStore extends ZoomController {
       const materialList = this.globalState?.materialList ?? []
       this.room.setGlobalState({
         materialList: uniqBy(materialList.concat([{
-          ...res
+          ...res,
         } as CourseWareItem]), 'resourceUuid')
       })
       this.fileLoading = false

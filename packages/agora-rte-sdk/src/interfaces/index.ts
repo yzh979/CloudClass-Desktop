@@ -1,7 +1,8 @@
+import { AREA_CODE } from './../core/media-service/interfaces/index';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { EnumOnlineState } from '../core/services/interface';
-import { isEmpty } from 'lodash';
+import { isEmpty, set, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
 
 export enum EduCourseState {
@@ -51,6 +52,7 @@ export enum EduChannelMessageCmdType {
   roomChatState = 3,
   roomPropertiesStateChanged = 4,
   roomPropertiesBatchUpdated = 5,
+  muteChatOperation = 6,
   userListChanged = 20,
   userStateUpdated = 21,
   userListBatchUpdated = 23,
@@ -166,6 +168,9 @@ export enum LogLevel {
 export interface EduConfiguration {
   appId: string;
   cefClient?: any;
+  // region: AREA_CODE;
+  rtcArea?: string;
+  rtmArea?: string;
   // agoraRestToken: string
   platform: 'web' | 'electron';
   agoraRtc?: any;
@@ -440,8 +445,9 @@ export interface EduUser {
   userUuid: string
   userName: string
   role: EduRoleType
-  isChatAllowed: boolean
+  // isChatAllowed: boolean
   userProperties: Record<any, any>
+  // muteChat: boolean
 }
 
 export interface EduUserAttrs extends EduUser {
@@ -531,6 +537,10 @@ export class EduUserData {
     this._screenRtcToken = v
   }
 
+  updateUserChatMute(v: boolean) {
+    setWith(this._user!, 'userProperties.mute.muteChat', !!v)
+  }
+
   get rtcToken(): string {
     return this._rtcToken as string;
   }
@@ -573,8 +583,9 @@ export class EduUserData {
         userUuid: item.userUuid,
         userName: item.userName,
         role: item.role,
+        // muteChat: item.muteChat,
         userProperties: item.userProperties,
-        isChatAllowed: item.isChatAllowed,
+        // isChatAllowed: item.isChatAllowed,
         streamUuid: item.streamUuid,
         type: item.type,
       }))

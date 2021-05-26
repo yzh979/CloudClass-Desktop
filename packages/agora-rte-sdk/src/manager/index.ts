@@ -16,6 +16,7 @@ import { reportService } from '../core/services/report-service';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
+import { getSDKDomain } from '../core/media-service/utils';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -62,7 +63,9 @@ export class EduManager extends EventEmitter {
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
-      appId: this.config.appId
+      appId: this.config.appId,
+      rtcArea: this.config.rtcArea ?? "GLOBAL",
+      rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -80,7 +83,7 @@ export class EduManager extends EventEmitter {
         appId: this.config.appId,
         rtmToken: this.config.rtmToken,
         rtmUid: this.config.rtmUid,
-        sdkDomain: `${this.config.sdkDomain}`
+        sdkDomain: `${this.config.sdkDomain}`,
       }
     )
     Object.assign(
@@ -216,7 +219,7 @@ export class EduManager extends EventEmitter {
         switch(cmd) {
           case EduPeerMessageCmdType.peer: {
             EduLogger.info(`custom chat message, PeerMessage.${EduPeerMessageCmdType.peer}: `, data, requestId)
-            const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+            const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data)
             this.emit('user-chat-message', {
               message: textMessage
             })
