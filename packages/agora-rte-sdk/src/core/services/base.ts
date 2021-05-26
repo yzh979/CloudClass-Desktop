@@ -1,4 +1,3 @@
-import { AREA_CODE } from './../media-service/interfaces/index';
 import { GenericErrorWrapper } from "../utils/generic-error";
 import { HttpClient } from "../utils/http-client";
 import { AgoraFetchParams } from "../../interfaces";

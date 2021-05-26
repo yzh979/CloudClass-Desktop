@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "outDir": "lib",
+    "rootDir": "src",
+    "outDir": ".code",
     "lib": ["dom", "es2017", "DOM.Iterable", "WebWorker"],
     "moduleResolution": "node",
     "importHelpers": true,
@@ -17,8 +18,11 @@
     "noEmitHelpers": true,
     "noEmitOnError": false,
     "emitDeclarationOnly": true,
-    "experimentalDecorators": true,
     "allowJs": false
   },
+  "files": [
+    "src/index.ts",
+    "src/declaration.d.ts"
+  ],
   "exclude": ["node_modules", "dist", "es", "lib", "build", "examples"]
 }

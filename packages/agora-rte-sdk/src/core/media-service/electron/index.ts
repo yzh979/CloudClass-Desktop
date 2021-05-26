@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode } from '../interfaces/index';
+import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
@@ -290,7 +290,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (this._cefClient) {
       ret = this.client.initialize(this._cefClient)
     } else {
-      //@ts-ignore
       ret = this.client.initialize(this.appId)
     }
     if (ret < 0) {
@@ -1314,25 +1313,23 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
     })
 
-    return await Promise.race([startScreenPromise])
+    return await Promise.race([startScreenPromise, wait(8000)])
   }
 
   async stopScreenShare(): Promise<any> {
     const stopScreenSharePromise = new Promise((resolve, reject) => {
       const handleVideoSourceLeaveChannel = (evt: any) => {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-        const release = this.client.videoSourceRelease()
-        EduLogger.info(' videoSourceLeave Channel', release)
         setTimeout(resolve, 1)
       }
       try {
         this.client.on('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         let ret = this.client.videoSourceLeave()
         EduLogger.info("stopScreenShare leaveSubChannel", ret)
-        // wait(8000).catch((err: any) => {
-        //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-        //   reject(err)
-        // })
+        wait(8000).catch((err: any) => {
+          this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
+          reject(err)
+        })
       } catch(err) {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         reject(err)
