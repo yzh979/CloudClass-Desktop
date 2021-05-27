@@ -13,6 +13,7 @@ import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
+import { get } from 'lodash'
 
 
 
@@ -29,6 +30,7 @@ export const MidClassScenario = observer(() => {
   const chatWidget = widgets['chat']
 
   const { chatCollapse }  = useChatContext()
+  const { roomProperties } = useRoomContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -38,6 +40,8 @@ export const MidClassScenario = observer(() => {
     'edu-room': 1,
     'fullscreen': !!isFullScreen
   })
+
+  const chatroomId = get(roomProperties, 'im.huanxin.chatroomId')
 
   return (
     <Layout
@@ -72,7 +76,7 @@ export const MidClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="mid-class-teacher"/>
           </div>
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />

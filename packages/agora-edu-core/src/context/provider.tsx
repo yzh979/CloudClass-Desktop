@@ -208,7 +208,8 @@ export const useRoomContext = (): RoomContext => {
     join,
     liveClassStatus,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
+    roomProperties
   } = useRoomStore()
 
   return {
@@ -244,7 +245,8 @@ export const useRoomContext = (): RoomContext => {
     muteUserChat,
     unmuteUserChat,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
+    roomProperties
   }
 }
 

@@ -444,6 +444,7 @@ export type RoomContext = {
      * 获取flexProps
      */
     flexProperties: any;
+    roomProperties: any;
 }
 export type RoomDiagnosisContext = {
     navigationState: {
