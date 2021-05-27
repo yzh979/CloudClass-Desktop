@@ -91,7 +91,10 @@ export type LaunchOption = {
   personalCourseWareList?: CourseWareList, // 个人课件列表
   recordUrl?: string, // 回放页地址
   extApps?: IAgoraExtApp[] // app插件
-  region?: AgoraRegion
+  region?: AgoraRegion,
+  videoEncoderConfigurationWidth: number,
+  videoEncoderConfigurationHeight: number,
+  frameRate: number
 }
 
 export type ReplayOption = {
@@ -249,6 +252,9 @@ export class AgoraEduSDK {
         mainPath: mainPath,
         roomPath: roomPath,
         pretest: option.pretest,
+        videoEncoderConfigurationWidth: option.videoEncoderConfigurationWidth,
+        videoEncoderConfigurationHeight: option.videoEncoderConfigurationHeight,
+        frameRate: option.frameRate,
       }
       controller.appController.create(
         <CoreContextProvider params={params} dom={dom} controller={controller.appController}>

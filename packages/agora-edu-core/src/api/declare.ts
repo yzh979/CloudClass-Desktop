@@ -117,7 +117,7 @@ export type AppStoreConfigParams = {
     endpoint: string,
   },
   recordUrl: string,
-  extApps?: IAgoraExtApp[]
+  extApps?: IAgoraExtApp[],
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -132,6 +132,9 @@ export type AppStoreInitParams = {
   mainPath?: string,
   roomPath?: string,
   resetRoomInfo: boolean,
+  videoEncoderConfigurationWidth: number,
+  frameRate: number,
+  videoEncoderConfigurationHeight: number,
 }
 
 export type RoomInfo = {

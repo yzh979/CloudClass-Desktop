@@ -162,6 +162,9 @@ export const HomePage = observer(() => {
           startTime: +startDate,
           region,
           duration: duration * 60,
+          videoEncoderConfigurationHeight: 480,
+          videoEncoderConfigurationWidth: 640,
+          frameRate: 30
         })
         history.push('/launch')
       }}

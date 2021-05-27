@@ -114,9 +114,9 @@ export class SceneStore extends SimpleInterval {
   @computed
   get videoEncoderConfiguration(): SceneVideoConfiguration {
     return {
-      width: 320,
-      height: 240,
-      frameRate: 15
+      width: this.appStore.params.videoEncoderConfigurationWidth,
+      height: this.appStore.params.videoEncoderConfigurationHeight,
+      frameRate: this.appStore.params.frameRate,
     }
   }
 

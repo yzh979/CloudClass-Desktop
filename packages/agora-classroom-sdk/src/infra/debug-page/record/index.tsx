@@ -79,6 +79,9 @@ export const RecordPage = observer(() => {
         duration,
         recordUrl,
         pretest: false,
+        videoEncoderConfigurationWidth: 640,
+        videoEncoderConfigurationHeight: 480,
+        frameRate: 30,
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)

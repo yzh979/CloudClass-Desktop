@@ -262,6 +262,9 @@ export class EduScenarioAppStore {
   @action.bound
   resetParams() {
     this.params = {
+      frameRate: this.params.frameRate,
+      videoEncoderConfigurationWidth: this.params.videoEncoderConfigurationWidth,
+      videoEncoderConfigurationHeight: this.params.videoEncoderConfigurationHeight,
       roomInfoParams: {
         roomName: '',
         roomType: 0,
@@ -470,7 +473,7 @@ export class EduScenarioAppStore {
           this.customScreenShareWindowVisible = true
           this.customScreenShareItems = items
         })
-      }).catch(err => {
+      }).catch((err: any) => {
         BizLogger.warn('show screen share window with items', err)
       })
     }
