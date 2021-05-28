@@ -6,16 +6,21 @@ import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { get } from 'lodash';
 
-const App = observer(() => {
+type AppProps = {
+  orgName: string;
+  appName: string;
+}
+
+const App: React.FC<AppProps> = observer((props) => {
   const pluginStore = usePluginStore()
   const {localUserInfo, roomInfo} = pluginStore.context
   const chatroomId = get(pluginStore.props, 'chatroomId')
-
-  const [org, apk] = `${REACT_APP_IM_APP_KEY}`.split('#')
+  const orgName = get(pluginStore.props, 'orgName')
+  const appName = get(pluginStore.props, 'appName')
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-      <iframe style={{width:'100%',height:'100%'}} src={`https://webdemo.agora.io/easemob/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=https://img2.baidu.com/it/u=1593081528,1330377059&fm=26&fmt=auto&gp=0.jpg&nickName=${localUserInfo.userName}&org=${org}&apk=${apk}`}></iframe>
+      <iframe style={{width:'100%',height:'100%'}} src={`https://webdemo.agora.io/easemob/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=https://img2.baidu.com/it/u=1593081528,1330377059&fm=26&fmt=auto&gp=0.jpg&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe>
     </div>
   )
 })
@@ -32,7 +37,7 @@ export class AgoraIFrameWidget implements IAgoraWidget {
     this.store = new PluginStore(ctx, props)
     ReactDOM.render((
       <Provider store={this.store}>
-        <App/>
+        <App {...props} />
       </Provider>
     ),
       dom
