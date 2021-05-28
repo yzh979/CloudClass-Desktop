@@ -41,7 +41,7 @@ export const MidClassScenario = observer(() => {
     'fullscreen': !!isFullScreen
   })
 
-  const chatroomId = get(roomProperties, 'im.huanxin.chatroomId')
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
 
   return (
     <Layout
