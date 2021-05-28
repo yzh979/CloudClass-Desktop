@@ -19,6 +19,7 @@ declare const REACT_APP_BUILD_VERSION: string;
 declare const REACT_APP_PUBLISH_DATE: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;
+declare const REACT_APP_IM_APP_KEY: string;
 declare const REACT_APP_AGORA_APP_CERTIFICATE: string;
 declare const REACT_APP_NETLESS_APP_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_ID: string;
