@@ -14,6 +14,7 @@ import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
+import { get } from 'lodash'
 
 
 
@@ -31,6 +32,11 @@ export const BigClassScenario = observer(() => {
   const chatWidget = widgets['chat']
 
   const { chatCollapse }  = useChatContext()
+
+  const { roomProperties } = useRoomContext()
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
 
   useEffectOnce(() => {
     joinRoom()
@@ -73,7 +79,7 @@ export const BigClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="big-class-teacher"/>
           </div>
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />
