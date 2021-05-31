@@ -9,6 +9,7 @@ import {generatePath} from 'react-router'
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
+import { homeApi } from 'agora-edu-core'
 
 //@ts-ignore
 window.controller = controller
@@ -39,6 +40,10 @@ export const LaunchPage = observer(() => {
         appId: `${REACT_APP_AGORA_APP_ID}`,
         region: launchOption.region ?? "CN",
       })
+      // homeApi.updateConfig({
+      //   appId: `${REACT_APP_AGORA_APP_ID}`,
+      //   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+      // })
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
       // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
       const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
