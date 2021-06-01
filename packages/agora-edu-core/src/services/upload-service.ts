@@ -121,6 +121,7 @@ export type HandleUploadType = {
 
 export class UploadService extends ApiBase {
   ossClient: OSS | null;
+  xhr: XMLHttpRequest;
   abortCheckpoint:{
     name?:string,
     uploadId?:string
@@ -128,6 +129,7 @@ export class UploadService extends ApiBase {
   constructor(params: ApiBaseInitializerParams) {
     super(params)
     this.ossClient = null
+    this.xhr = new XMLHttpRequest()
     this.abortCheckpoint = {
       name: '',
       uploadId: ''
@@ -313,13 +315,15 @@ export class UploadService extends ApiBase {
 
     const ossConfig = fetchResult.data
     const vendor = ossConfig.vendor
+    let result
     if (vendor === 1) {
       // aws
+      result = await this.handleUploadByAWS(ossConfig, payload)
     } else if (vendor === 2) {
       // ali
-      const result = await this.handleUploadByAli(ossConfig, payload)
-      return result
+      result = await this.handleUploadByAli(ossConfig, payload)
     }
+    return result
   }
   
   async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
@@ -472,9 +476,142 @@ export class UploadService extends ApiBase {
 
   }
 
+  async handleUploadByAWS (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
+    const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
+    
+    const resourceUuid = fetchCallbackBody.resourceUuid
+
+    if (payload.converting === true) {
+      const uploadResult: any = await this.addFileToAWS(
+        payload.file,
+        (...args: any) => {
+          payload.onProgress({
+            phase: 'finish',
+            progress: args[0]
+          })
+        },
+        {
+          callbackBody: ossConfig.callbackBody,
+          contentType: ossConfig.callbackContentType,
+          roomUuid: payload.roomUuid,
+          // userUuid: payload.userUuid,
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
+        }
+      )
+      const resp = createPPTTask({
+        uuid: uploadResult.taskUuid,
+        kind: payload.kind,
+        taskToken: uploadResult.taskToken,
+        region: this.region,
+        callbacks: {
+          onProgressUpdated: progress => {
+            console.log(' onProgressUpdated ', progress)
+              payload.onProgress({
+                phase: 'finish',
+                progress: progress.convertedPercentage,
+                isTransFile: true,
+              })
+            },
+            onTaskFail: () => {
+              console.log(' onTaskFail ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+            onTaskSuccess: () => {
+              console.log(' onTaskSuccess ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+        }
+      })
+  
+      const ppt = await resp.checkUtilGet();
+  
+      payload.onProgress({
+        phase: 'finish',
+        progress: 1,
+        isTransFile: true,
+        isLastProgress: true
+      })
+  
+      let materialResult = await this.createMaterial({
+        taskUuid: ppt.uuid,
+        url: uploadResult.ossURL,
+        roomUuid: payload.roomUuid,
+        // userUuid: payload.userUuid,
+        resourceName: payload.resourceName,
+        resourceUuid,
+        taskToken: uploadResult.taskToken,
+        ext: payload.ext,
+        size: uploadResult.size,
+        taskProgress: {
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
+          convertedPercentage: 100,
+          convertedFileList: ppt.scenes
+        }
+      })
+      return {
+        resourceUuid: resourceUuid,
+        resourceName: uploadResult.resourceName,
+        ext: uploadResult.ext,
+        size: fetchCallbackBody.size,
+        url: uploadResult.ossURL,
+        scenes: ppt.scenes,
+        taskProgress: {
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
+          convertedPercentage: 100,
+          convertedFileList: ppt.scenes
+        },
+        updateTime: materialResult.data.updateTime,
+        taskUuid: uploadResult.taskUuid,
+      }
+    } else {
+      const uploadResult: any = await this.addFileToAWS(
+        payload.file,
+        (...args: any) => {
+          payload.onProgress({
+            phase: 'finish',
+            progress: args[0],
+            isLastProgress: true
+          })
+        },
+        {
+          callbackBody: ossConfig.callbackBody,
+          contentType: ossConfig.callbackContentType,
+          roomUuid: payload.roomUuid,
+          // userUuid: payload.userUuid,
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
+        }
+      )
+      const result: CourseWareUploadResult = {
+        resourceUuid: resourceUuid,
+        resourceName: uploadResult.resourceName,
+        ext: uploadResult.ext,
+        size: fetchCallbackBody.size,
+        url: uploadResult.ossURL,
+        updateTime: uploadResult.updateTime,
+      }
+      return result
+    }
+
+  }
+
    cancelFileUpload() {
     if (this.ossClient) {
       (this.ossClient as any).cancel()
+    }
+    if (this.xhr) {
+      this.xhr.abort()
     }
     console.log('cancelFileUpload click cancel')
   }
@@ -535,6 +672,43 @@ export class UploadService extends ApiBase {
       console.log('error', err)
     }
 }
+
+  addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
+    const prefix = ossParams.callbackHost
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader()
+      reader.onload = (e: any) => {
+        this.xhr.open("put", ossParams.preSignedUrl, true)
+        this.xhr.onload = async () => {
+          // 请求callbackUrl拿到uploadResult
+          const uploadResult = await this.getAWSUploadResult(callbackUrl, ossParams.callbackBody, ossParams.contentType) 
+          resolve(uploadResult)
+        }
+        this.xhr.upload.addEventListener("progress", function (e) {
+          let percent = (e.loaded / e.total * 100).toFixed(0); // 0~100
+          if (onProgress) {
+            onProgress(percent)
+          }
+        })
+        this.xhr.send(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  getAWSUploadResult (url: string, body: string, contentType: string) {
+    return new Promise((resolve, reject) => {
+      this.xhr.open('post', url, true)
+      this.xhr.onload = () => {
+        resolve(this.xhr.responseText)
+      }
+      this.xhr.setRequestHeader('content-type', contentType);
+      // const bodyObj = JSON.parse(body)
+      // this.xhr.send(Object.keys(bodyObj).map(key => `${key}=${bodyObj[key]}`).join('&'))
+      this.xhr.send(body)
+    }) 
+  }
 
   async fetchImageInfo(file: File, x: number, y: number) {
     await new Promise(resolve => {
