@@ -99,6 +99,8 @@ export type FetchStsTokenResult = {
   accessKeySecret: string,
   securityToken: string,
   ossEndpoint: string,
+  vendor: number,
+  callbackHost: string,
 }
 
 export type HandleUploadType = {
@@ -310,6 +312,17 @@ export class UploadService extends ApiBase {
     })
 
     const ossConfig = fetchResult.data
+    const vendor = ossConfig.vendor
+    if (vendor === 1) {
+      // aws
+    } else if (vendor === 2) {
+      // ali
+      const result = await this.handleUploadByAli(ossConfig, payload)
+      return result
+    }
+  }
+  
+  async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
     const key = ossConfig.ossKey
     this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
@@ -319,15 +332,15 @@ export class UploadService extends ApiBase {
       secure: true,
       stsToken: ossConfig.securityToken,
     })
-
+  
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     const resourceUuid = fetchCallbackBody.resourceUuid
     // const taskUuid = fetchCallbackBody.taskUuid
     // const taskToken = fetchCallbackBody.taskToken
-
+  
     // console.log('fetchCallbackBody ', fetchCallbackBody)
-
+  
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
         this.ossClient,
@@ -344,11 +357,12 @@ export class UploadService extends ApiBase {
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           // userUuid: payload.userUuid,
-          appId: this.appId
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
         })
-
+  
       console.log('uploadResult', uploadResult)
-
+  
       const resp = createPPTTask({
         uuid: uploadResult.taskUuid,
         kind: payload.kind,
@@ -381,16 +395,16 @@ export class UploadService extends ApiBase {
             },
         }
       })
-
+  
       const ppt = await resp.checkUtilGet();
-
+  
       payload.onProgress({
         phase: 'finish',
         progress: 1,
         isTransFile: true,
         isLastProgress: true
       })
-
+  
       let materialResult = await this.createMaterial({
         taskUuid: ppt.uuid,
         url: uploadResult.ossURL,
@@ -441,9 +455,10 @@ export class UploadService extends ApiBase {
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           userUuid: payload.userUuid,
-          appId: this.appId
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
         })
-
+  
       const result: CourseWareUploadResult = {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
@@ -454,7 +469,9 @@ export class UploadService extends ApiBase {
       }
       return result
     }
+
   }
+
    cancelFileUpload() {
     if (this.ossClient) {
       (this.ossClient as any).cancel()
@@ -480,7 +497,7 @@ export class UploadService extends ApiBase {
   }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-    const prefix = this.uploadCallbackPrefix
+    const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
