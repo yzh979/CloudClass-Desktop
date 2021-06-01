@@ -53,9 +53,7 @@
   },
   "agora_electron": {
     "electron_version": "7.1.2",
-    "prebuilt": true,
-    "platform": "win32",
-    "arch": "x64"
+    "prebuilt": true
   },
   "dmg": {
     "compression": "store",
@@ -288,7 +286,7 @@
     "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.0.0",
-    "agora-electron-sdk": "education311",
+    "agora-electron-sdk": "3.4.2-rc.1-build.525",
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",

@@ -13,9 +13,7 @@
   },
   "agora_electron": {
     "electron_version": "7.1.2",
-    "prebuilt": true,
-    "platform": "win32",
-    "arch": "x64"
+    "prebuilt": true
   },
   "description": "[English](README.zh.md)*",
   "version": "1.0.0",
