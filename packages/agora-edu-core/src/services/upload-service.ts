@@ -5,6 +5,7 @@ import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
 import OSS, { MultipartUploadResult } from "ali-oss";
 import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
+import axios from 'axios';
 
 export const mapFileType = (type: string): any => {
   if (type.match(/ppt|pptx|pptx/i)) {
@@ -100,6 +101,7 @@ export type FetchStsTokenResult = {
   securityToken: string,
   ossEndpoint: string,
   vendor: number,
+  preSignedUrl: string,
   callbackHost: string,
 }
 
@@ -493,12 +495,14 @@ export class UploadService extends ApiBase {
         {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
+          preSignedUrl: ossConfig.preSignedUrl,
           roomUuid: payload.roomUuid,
           // userUuid: payload.userUuid,
           appId: this.appId,
           callbackHost: ossConfig.callbackHost
         }
       )
+      console.log('upload-service [12]', uploadResult)
       const resp = createPPTTask({
         uuid: uploadResult.taskUuid,
         kind: payload.kind,
@@ -587,12 +591,14 @@ export class UploadService extends ApiBase {
         {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
+          preSignedUrl: ossConfig.preSignedUrl,
           roomUuid: payload.roomUuid,
           // userUuid: payload.userUuid,
           appId: this.appId,
           callbackHost: ossConfig.callbackHost
         }
       )
+      console.log('upload-service [1]', uploadResult)
       const result: CourseWareUploadResult = {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
@@ -678,20 +684,34 @@ export class UploadService extends ApiBase {
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     return new Promise((resolve, reject) => {
       let reader = new FileReader()
-      reader.onload = (e: any) => {
-        this.xhr.open("put", ossParams.preSignedUrl, true)
-        this.xhr.onload = async () => {
-          // 请求callbackUrl拿到uploadResult
-          const uploadResult = await this.getAWSUploadResult(callbackUrl, ossParams.callbackBody, ossParams.contentType) 
-          resolve(uploadResult)
+      reader.onload = async (e: any) => {
+        const file = e.target.result
+        let config = {
+          onUploadProgress: (progressEvent: any) => {
+            let percentCompleted = Math.floor(progressEvent.loaded / progressEvent.total);
+            onProgress(percentCompleted)
+          }
         }
-        this.xhr.upload.addEventListener("progress", function (e) {
-          let percent = (e.loaded / e.total * 100).toFixed(0); // 0~100
-          if (onProgress) {
-            onProgress(percent)
+        const res = await axios.put(ossParams.preSignedUrl, file, config)
+        const res1 = await axios.post(callbackUrl, {callbackBody: ossParams.callbackBody}, {
+          headers: {
+            ['content-type']: ossParams.contentType
           }
         })
-        this.xhr.send(e.target.result)
+        resolve(res1)
+        // this.xhr.open("put", ossParams.preSignedUrl, true)
+        // this.xhr.onload = async () => {
+        //   // 请求callbackUrl拿到uploadResult
+        //   const uploadResult = await this.getAWSUploadResult(callbackUrl, ossParams.callbackBody, ossParams.contentType) 
+        //   resolve(uploadResult)
+        // }
+        // this.xhr.upload.addEventListener("progress", function (e) {
+        //   let percent = (e.loaded / e.total * 100).toFixed(0); // 0~100
+        //   if (onProgress) {
+        //     onProgress(percent)
+        //   }
+        // })
+        // this.xhr.send(e.target.result)
       }
       reader.readAsDataURL(file)
     })
