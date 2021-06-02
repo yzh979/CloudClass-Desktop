@@ -9,6 +9,7 @@ import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
 import { EduManager } from '../../manager';
+import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../interfaces'
 // import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
@@ -61,13 +62,22 @@ export class MediaService extends EventEmitter implements IMediaService {
         this.electron.enableLogPersist()
       })
     } else {
+      // 默认为观众 如果是1V1场景或者是老师角色 则设置为主播。
+      // debugger
+      // let role = "audience";
+      // if(rtcProvider.userRole === EduRoleTypeEnum.teacher || rtcProvider.scenarioType === EduRoomTypeEnum.Room1v1Class){
+      //   role = "host;"
+      // }
       this.sdkWrapper = new AgoraWebRtcWrapper({
         uploadLog: true,
         agoraWebSdk: rtcProvider.agoraSdk,
         webConfig: {
           mode: 'live',
           codec: rtcProvider.codec,
-          role: 'host',
+          role: (rtcProvider.userRole === EduRoleTypeEnum.teacher || rtcProvider.scenarioType === EduRoomTypeEnum.Room1v1Class) ? 'host': 'audience',
+          clientRoleOptions: {
+            level: 1
+          }
         },
         appId: rtcProvider.appId,
         area: rtcProvider.rtcArea
@@ -204,6 +214,30 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
       AgoraRTC.onAudioAutoplayFailed = () => {
         this.fire('audio-autoplay-failed')
+      }
+    }
+  }
+  
+  async setRtcRole(roleType: string){
+    if(this.isElectron){
+      if(roleType === 'host'){
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(1, {
+          audienceLatencyLevel: 1
+        })
+      }else{
+        (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
+          audienceLatencyLevel: 1
+        })
+      }
+    }else{
+      if(roleType === 'host'){
+        (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
+      }else{
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
+          level: 1
+        })
       }
     }
   }
@@ -545,37 +579,6 @@ export class MediaService extends EventEmitter implements IMediaService {
       // REPORT
       reportService.startTick('joinRoom', 'rtc', 'joinChannel')
       await this._join(option);
-      let reportUserParams = {
-        vid: this.eduManager.vid,
-        // ver: packageJson.apaas_version,
-        scenario: 'education',
-        uid: option.data?.user.uuid,
-        userName: option.data?.user.name,
-        /**
-         * rtc流id
-         */
-        streamUid: +option.data?.user.streamUuid,
-        /**
-         * rtc流id
-         */
-        streamSuid: option.data?.user.streamUuid,
-        /**
-         * apaas角色
-         */
-        role: option.data?.user.role,
-        /**
-         * rtc sid
-         */
-        streamSid: this.eduManager.rtcSid,
-        /**
-         * rtm sid
-         */
-        rtmSid: this.eduManager.rtmSid,
-        /**
-         * apaas房间id，与rtc/rtm channelName相同
-         */
-        roomId: option.data?.room.uuid
-      };
       reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
     } catch (e) {
       reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
