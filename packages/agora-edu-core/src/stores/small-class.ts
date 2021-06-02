@@ -187,7 +187,7 @@ export class SmallClassStore {
       userUuid,
       userName,
       coVideo: false,
-    }))
+    }));
   }
 
   @computed
