@@ -682,52 +682,31 @@ export class UploadService extends ApiBase {
   addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
     const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-    return new Promise((resolve, reject) => {
-      let reader = new FileReader()
-      reader.onload = async (e: any) => {
-        const file = e.target.result
+    return new Promise(async (resolve, reject) => {
         let config = {
+          headers: {
+            'Content-Type': file.type,
+          },
           onUploadProgress: (progressEvent: any) => {
-            let percentCompleted = Math.floor(progressEvent.loaded / progressEvent.total);
-            onProgress(percentCompleted)
+            let percentCompleted = Math.floor(progressEvent.loaded * 100 / progressEvent.total);
+            onProgress(percentCompleted / 100)
           }
         }
-        const res = await axios.put(ossParams.preSignedUrl, file, config)
-        const res1 = await axios.post(callbackUrl, {callbackBody: ossParams.callbackBody}, {
-          headers: {
-            ['content-type']: ossParams.contentType
-          }
-        })
-        resolve(res1)
-        // this.xhr.open("put", ossParams.preSignedUrl, true)
-        // this.xhr.onload = async () => {
-        //   // 请求callbackUrl拿到uploadResult
-        //   const uploadResult = await this.getAWSUploadResult(callbackUrl, ossParams.callbackBody, ossParams.contentType) 
-        //   resolve(uploadResult)
-        // }
-        // this.xhr.upload.addEventListener("progress", function (e) {
-        //   let percent = (e.loaded / e.total * 100).toFixed(0); // 0~100
-        //   if (onProgress) {
-        //     onProgress(percent)
-        //   }
-        // })
-        // this.xhr.send(e.target.result)
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
-  getAWSUploadResult (url: string, body: string, contentType: string) {
-    return new Promise((resolve, reject) => {
-      this.xhr.open('post', url, true)
-      this.xhr.onload = () => {
-        resolve(this.xhr.responseText)
-      }
-      this.xhr.setRequestHeader('content-type', contentType);
-      // const bodyObj = JSON.parse(body)
-      // this.xhr.send(Object.keys(bodyObj).map(key => `${key}=${bodyObj[key]}`).join('&'))
-      this.xhr.send(body)
-    }) 
+        try {
+          await axios.put(ossParams.preSignedUrl, file, config)
+          const result = await axios.post(callbackUrl, JSON.parse(ossParams.callbackBody), {
+            headers: {
+              ['content-type']: ossParams.contentType
+            }
+          })
+          resolve({
+            ...result.data.data,
+            ossURL: result.data.data.url
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
   }
 
   async fetchImageInfo(file: File, x: number, y: number) {
