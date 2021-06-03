@@ -91,6 +91,8 @@ export class LogUpload {
       }
     })
     return {
+      vendor: data.vendor,
+      presignedUrl: data.preSignedUrl,
       bucketName: data.bucketName as string,
       callbackBody: data.callbackBody as string,
       callbackContentType: data.callbackContentType as string,
@@ -167,7 +169,9 @@ export class LogUpload {
         accessKeyId,
         accessKeySecret,
         securityToken,
-        ossKey
+        ossKey,
+        vendor,
+        presignedUrl
       } = await this.fetchStsToken(roomId, ext);
       const ossParams = {
         bucketName,
