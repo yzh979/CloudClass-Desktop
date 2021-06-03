@@ -41,9 +41,13 @@ export interface PretestProps extends BaseProps {
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
     onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
-    videoComponent?: React.ReactElement,
-    volumeComponent?: React.ReactElement,
-    pretestChannel: Subject<any>
+    videoComponent?: React.ReactElement;
+    volumeComponent?: React.ReactElement;
+    pretestChannel: Subject<any>;
+    whitening?: number; // 美白
+    buffing?: number; // 磨皮
+    ruddy?: number; // 红润
+    onChangeBeauty?: (beautyType: string, value: number) => void;
 }
 
 const PretestComponent: React.FC<PretestProps> = ({
@@ -71,6 +75,10 @@ const PretestComponent: React.FC<PretestProps> = ({
     onChangeAudioVolume = (deviceType, value) => { },
     onSelectDevice = (deviceType, value) => { },
     pretestChannel,
+    whitening = 70,
+    buffing = 50,
+    ruddy = 10,
+    onChangeBeauty = (beautyType, value) => {},
     ...restProps
 }) => {
 
@@ -124,6 +132,8 @@ const PretestComponent: React.FC<PretestProps> = ({
     const removeMessages = (id: any) => setMessage(list => list.filter((it: any) => it.id !== id))
 
     const [toastQueue, setToastQueue] = useState<any[]>([])
+
+    const [activeBeauty, setActiveBeauty] = useState<'whitening' | 'buffing' | 'ruddy'>('whitening')
 
     const removeToast = (id: any) => {
         setToastQueue(oldArray => oldArray.filter((it: any) => it.id !== id))
@@ -215,7 +225,7 @@ const PretestComponent: React.FC<PretestProps> = ({
             <div className="pretest-left" style={{ width: 318 }}>
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.camera')}</span>
+                        <span className="device-title-text">{transI18n('media.camera')}</span>
                         <div style={{
                             display: 'flex'
                         }}>
@@ -228,7 +238,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                             onSelectBeauty(e.target.checked)
                                         }}
                                     />
-                                    <span className="beauty-text" style={{ marginLeft: 5 }}>{t('media.beauty')}</span>
+                                    <span className="beauty-text" style={{ marginLeft: 5 }}>{transI18n('media.beauty')}</span>
                                 </span>
                             ) : null}
                             <span className="device-mirror-box">
@@ -239,7 +249,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                         onSelectMirror(e.target.checked)
                                     }}
                                 />
-                                <span className="camera-mode" style={{ marginLeft: 5 }}>{t('media.mirror')}</span>
+                                <span className="camera-mode" style={{ marginLeft: 5 }}>{transI18n('media.mirror')}</span>
                             </span>
                         </div>
                     </div>
@@ -254,13 +264,84 @@ const PretestComponent: React.FC<PretestProps> = ({
                         >
                         </Select>
                     </div>
-                    {videoComponent && React.cloneElement(videoComponent, {}, null)}
+                    <div style={{
+                        position: 'relative',
+                        width: 320,
+                        height: 180,
+                    }}>
+                        {videoComponent && React.cloneElement(videoComponent, {}, null)}
+                        {isNative && isBeauty ? (
+                            <div className="beauty-operation-wrap">
+                                <div className="beauty-operation-top">
+                                    {activeBeauty === 'whitening' ? (
+                                        <>
+                                            <Slider
+                                                min={0}
+                                                max={100}
+                                                defaultValue={whitening}
+                                                step={1}
+                                                onChange={async value => {
+                                                    await onChangeBeauty('whitening', value)
+                                                }}
+                                            ></Slider>
+                                            <span className='beauty-show-number'>+{whitening}</span>
+                                        </>
+                                    ) : null}
+                                    {activeBeauty === 'buffing' ? (
+                                        <>
+                                            <Slider
+                                                min={0}
+                                                max={100}
+                                                defaultValue={buffing}
+                                                step={1}
+                                                onChange={async value => {
+                                                    await onChangeBeauty('buffing', value)
+                                                }}
+                                            ></Slider>
+                                            <span className='beauty-show-number'>+{buffing}</span>
+                                        </>
+                                    ) : null}
+                                    {activeBeauty === 'ruddy' ? (
+                                        <>
+                                            <Slider
+                                                min={0}
+                                                max={100}
+                                                defaultValue={ruddy}
+                                                step={1}
+                                                onChange={async value => {
+                                                    await onChangeBeauty('ruddy', value)
+                                                }}
+                                            ></Slider>
+                                            <span className='beauty-show-number'>+{ruddy}</span>
+                                        </>
+                                    ) : null}
+                                </div>
+                                <div className="beauty-operation-bottom">
+                                    {['whitening', 'buffing', 'ruddy'].map((item, index) => (
+                                        <div 
+                                            className="beauty-operation-item" 
+                                            key={index}
+                                            style={{
+                                                opacity: activeBeauty === item ? 1 : 0.5
+                                            }}
+                                            onClick={() => {
+                                                setActiveBeauty(item as any)
+                                            }}
+                                        >
+                                            <Icon type={item as any} useSvg size={18}/>
+                                            <div className='operation-item-desc'>{transI18n(`media.${item}`)}</div>
+                                        </div>   
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             </div>
             <div className="pretest-right">
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.microphone')}</span>
+                        <span className="device-title-text">{transI18n('media.microphone')}</span>
                     </div>
                     <div className="select-section">
                         <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'audio')} removeMessages={removeMessages} />
@@ -273,7 +354,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         >
                         </Select>
                     </div>
-                    {isNative ? (
+                    {/* {isNative ? (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('media.microphone_volume')}</span>
                             <Slider
@@ -286,7 +367,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                 }}
                             ></Slider>
                         </div>
-                    ) : ""}
+                    ) : ""} */}
                     <div className="device-volume-test">
                         <Icon type="microphone-on-outline" color="#0073FF" />
                         {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
@@ -294,32 +375,30 @@ const PretestComponent: React.FC<PretestProps> = ({
                 </div>
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.speaker')}</span>
+                        <span className="device-title-text">{transI18n('media.speaker')}</span>
                     </div>
-                    {isNative ? (
-                        <>
-                            <Select
-                                value={speakerId}
+                    <Select
+                        value={speakerId}
+                        onChange={async value => {
+                            await onChangeDevice('speaker', value)
+                        }}
+                        options={speakerOptions}
+                    >
+                    </Select>
+                    {/* {isNative ? (
+                        <div className="device-volume">
+                            <span className="device-text">{transI18n('media.volume')}</span>
+                            <Slider
+                                min={0}
+                                max={100}
+                                defaultValue={speakerVolume}
+                                step={1}
                                 onChange={async value => {
-                                    await onChangeDevice('speaker', value)
+                                    await onChangeAudioVolume('speaker', value)
                                 }}
-                                options={speakerOptions}
-                            >
-                            </Select>
-                            <div className="device-volume">
-                                <span className="device-text">{t('media.volume')}</span>
-                                <Slider
-                                    min={0}
-                                    max={100}
-                                    defaultValue={speakerVolume}
-                                    step={1}
-                                    onChange={async value => {
-                                        await onChangeAudioVolume('speaker', value)
-                                    }}
-                                ></Slider>
-                            </div>
-                        </>
-                    ) : ""}
+                            ></Slider>
+                        </div>
+                    ) : ""} */}
                     <div className="device-volume-test">
                         <Icon type="speaker" color="#0073FF" />
                         <Volume
@@ -327,7 +406,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                             maxLength={33}
                             style={{ marginLeft: 6 }}
                         />
-                        <Button disabled={disable} type="secondary" style={{ marginLeft: 10 }} onClick={handleTestSpeakerClick}>{t('media.test_speaker')}</Button>
+                        <Button disabled={disable} type="secondary" style={{ marginLeft: 10 }} onClick={handleTestSpeakerClick}>{transI18n('media.test_speaker')}</Button>
                     </div>
                 </div>
             </div>
