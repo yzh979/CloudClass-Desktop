@@ -12,6 +12,10 @@ import {v4 as uuidv4} from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 
 export interface BaseVideoPlayerProps {
+  /**
+   * 是否镜像
+   */
+  isMirror?: boolean;
   isHost?: boolean;
   /**
    * 用户的唯一标识
@@ -137,6 +141,7 @@ interface AnimSvga {
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
+  isMirror = false,
   uid,
   children,
   className,
@@ -200,6 +205,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
+    [`mirror`]: !!isMirror,
     [`${className}`]: !!className,
   });
   const micStateCls = classnames({

@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select'
 import { Slider } from '~components/slider'
 import './index.css';
-import { t } from '~components/i18n';
+import { t, transI18n } from '~components/i18n';
 import { CheckBox } from '~ui-kit/components/table';
 interface DeviceProps {
     deviceId: string;
@@ -12,6 +12,7 @@ interface DeviceProps {
 }
 
 export interface SettingProps extends BaseProps {
+    isMirror?: boolean; // 是否镜像
     cameraList?: DeviceProps[]; // 摄像头设备数组
     cameraId?: string; // 选中的摄像头Id
     microphoneList?: DeviceProps[]; // 麦克风设备数组
@@ -32,6 +33,7 @@ export interface SettingProps extends BaseProps {
     onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onSelectBeauty?: (isBeauty: boolean) => void;
     onChangeBeauty?: (beautyType: string, value: number) => void;
+    onSelectMirror?: (isMirror: boolean) => void;
 }
 
 export const Setting: FC<SettingProps> = ({
@@ -46,15 +48,17 @@ export const Setting: FC<SettingProps> = ({
     hasSpeakerVolume = true,
     speakerVolume = 50,
     isNative = true,
-    isBeauty = true,
-    whitening = 50,
+    isBeauty = false,
+    isMirror = false,
+    whitening = 70,
     buffing = 50,
-    ruddy = 50,
+    ruddy = 10,
     onChangeDevice = (deviceType, value) => {},
     onChangeAudioVolume = (deviceType, value) => {},
     onSelectDevice = (deviceType, value) => {},
     onSelectBeauty = (isBeauty) => {},
     onChangeBeauty = (beautyType, value) => {},
+    onSelectMirror = (isMirror) => { },
     className,
     ...restProps
 }) => {
@@ -75,22 +79,38 @@ export const Setting: FC<SettingProps> = ({
                         justifyContent: 'space-between'
                     }}
                 >
-                    <div>{t('device.camera')}</div>
-                    {isNative ? (
+                    <div>{transI18n('device.camera')}</div>
+                    <div style={{display: 'flex'}}>
+                        {isNative ? (
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginRight: 7
+                            }}>
+                                <CheckBox
+                                    style={{ width: 12, height: 12 }}
+                                    checked={isBeauty}
+                                    onChange={(e: any) => {
+                                        onSelectBeauty(e.target.checked)
+                                    }}
+                                />
+                                <span className="beauty-desc" style={{ marginLeft: 5 }}>{transI18n('media.beauty')}</span>
+                            </div>
+                        ) : null}
                         <div style={{
-                            display: 'flex',
-                            alignItems: 'center'
+                                display: 'flex',
+                                alignItems: 'center'
                         }}>
                             <CheckBox
                                 style={{ width: 12, height: 12 }}
-                                checked={isBeauty}
+                                checked={isMirror}
                                 onChange={(e: any) => {
-                                    onSelectBeauty(e.target.checked)
+                                    onSelectMirror(e.target.checked)
                                 }}
                             />
-                            <span className="beauty-desc" style={{ marginLeft: 5 }}>{t('media.beauty')}</span>
+                            <span className="beauty-desc" style={{ marginLeft: 5 }}>{transI18n('media.mirror')}</span>
                         </div>
-                    ) : null}
+                    </div>
                 </div>
                 <Select 
                     value={cameraId}
@@ -103,7 +123,7 @@ export const Setting: FC<SettingProps> = ({
                 {isNative && isBeauty ? (
                     <>
                         <div className="beauty-value">
-                            <span className="beauty-text">{t('media.whitening')}</span>
+                            <span className="beauty-text">{transI18n('media.whitening')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -112,10 +132,12 @@ export const Setting: FC<SettingProps> = ({
                                 onChange={async value => {
                                     await onChangeBeauty('whitening', value)
                                 }}
+                                tooltipPosition={''}
                             ></Slider>
+                            <span className='beauty-show-number'>+{whitening}</span>
                         </div>
                         <div className="beauty-value">
-                            <span className="beauty-text">{t('media.buffing')}</span>
+                            <span className="beauty-text">{transI18n('media.buffing')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -124,10 +146,12 @@ export const Setting: FC<SettingProps> = ({
                                 onChange={async value => {
                                     await onChangeBeauty('buffing', value)
                                 }}
+                                tooltipPosition={''}
                             ></Slider>
+                            <span className='beauty-show-number'>+{buffing}</span>
                         </div>
                         <div className="beauty-value">
-                            <span className="beauty-text">{t('media.ruddy')}</span>
+                            <span className="beauty-text">{transI18n('media.ruddy')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -136,13 +160,15 @@ export const Setting: FC<SettingProps> = ({
                                 onChange={async value => {
                                     await onChangeBeauty('ruddy', value)
                                 }}
+                                tooltipPosition={''}
                             ></Slider>
+                            <span className='beauty-show-number'>+{ruddy}</span>
                         </div>
                     </>
                 ) : null}
             </div>
             <div className="device-choose">
-                <div className="device-title">{t('device.microphone')}</div>
+                <div className="device-title">{transI18n('device.microphone')}</div>
                 <Select 
                     value={microphoneId}
                     onChange={async value => {
@@ -156,7 +182,7 @@ export const Setting: FC<SettingProps> = ({
                 hasMicrophoneVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">{t('device.microphone_volume')}</span>
+                            <span className="device-text">{transI18n('device.microphone_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -173,7 +199,7 @@ export const Setting: FC<SettingProps> = ({
 
             </div>
             <div className="device-choose">
-                <div className="device-title">{t('device.speaker')}</div>
+                <div className="device-title">{transI18n('device.speaker')}</div>
                 <Select
                     value={speakerId}
                     onChange={async value => {
@@ -186,7 +212,7 @@ export const Setting: FC<SettingProps> = ({
                     hasSpeakerVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">{t('device.speaker_volume')}</span>
+                            <span className="device-text">{transI18n('device.speaker_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
