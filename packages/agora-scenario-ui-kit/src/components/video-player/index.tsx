@@ -98,6 +98,8 @@ export interface BaseVideoPlayerProps {
   cameraDevice?: number;
   micDevice?: number;
   showGranted?: boolean;
+  hideMaxiumn?: boolean; // 是否隐藏tool 全屏icon 默认隐藏
+  isMaxiumn?: boolean; // 是否全屏，默认状态非全屏
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -134,6 +136,10 @@ export interface VideoPlayerProps extends VideoPlayerType {
    * 私密语音聊天
    */
   onPrivateChat?: (uid:string | number) => Promise<any>;
+  /**
+   * 点击全屏或还原
+   */
+   onMaxiumnClick?: (uid:string | number) => Promise<any>;
 }
 
 interface AnimSvga {
@@ -178,6 +184,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hidePrivateChat = true,
   showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  hideMaxiumn = true,
+  isMaxiumn = false,
+  onMaxiumnClick = (uid: string | number) => console.log('onMaxiumnClick', uid),
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
@@ -296,6 +305,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
+              }}></div>
+          </Tooltip>
+          )}
+          {hideMaxiumn ? null : (
+            <Tooltip title={isMaxiumn ? t('Restore') : t('Maximize')} placement={placement}>
+              <div className={isMaxiumn ? 'maxiumn-active' : 'maxiumn-default'} onClick={() => {
+                onMaxiumnClick(uid)
               }}></div>
           </Tooltip>
           )}

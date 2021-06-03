@@ -13,13 +13,15 @@ import { RoomChat } from '~capabilities/containers/room-chat'
 import './style.css'
 import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
 
 
 export const BigClassScenario = observer(() => {
+
+  const [isMaxiumn, setIsMaxiumn] = useState<boolean>(false)
 
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
 
@@ -89,7 +91,14 @@ export const BigClassScenario = observer(() => {
           "big-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="big-class-teacher"/>
+            <VideoPlayerTeacher 
+              className="big-class-teacher" 
+              hideMaxiumn={false}
+              isMaxiumn={isMaxiumn}
+              onMaxiumnClick={() => {
+                setIsMaxiumn(!isMaxiumn)
+              }}
+            />
           </div>
           <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>
