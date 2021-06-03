@@ -16,6 +16,8 @@ export {
   useStorageSWContext
 } from './utilities/kit'
 
+export * from './utilities/config'
+
 export * from './api/declare'
 
 export type {

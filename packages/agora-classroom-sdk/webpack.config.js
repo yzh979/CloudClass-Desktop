@@ -189,12 +189,15 @@ module.exports = {
       REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
 
       REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(""),
-      // 'process': 'utils'
+      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME),
+      REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
+      AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
+      REACT_APP_REPORT_URL: config.hasOwnProperty('REACT_APP_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_REPORT_URL}`) : JSON.stringify(""),
+      REACT_APP_REPORT_QOS: config.hasOwnProperty('REACT_APP_REPORT_QOS') ? JSON.stringify(`${config.REACT_APP_REPORT_QOS}`) : JSON.stringify(""),  
     }),
     new HardSourceWebpackPlugin({
       root: process.cwd(),

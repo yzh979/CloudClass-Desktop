@@ -9,7 +9,6 @@ import {generatePath} from 'react-router'
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
-import { homeApi } from 'agora-edu-core'
 
 //@ts-ignore
 window.controller = controller
@@ -33,9 +32,11 @@ export const LaunchPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
-      // AgoraEduSDK.setParameters(JSON.stringify({
-      //   'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
-      // }))
+      AgoraEduSDK.setParameters(JSON.stringify({
+        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+        'reportUrl': `${REACT_APP_REPORT_URL}`,
+        'reportQos': `${REACT_APP_REPORT_QOS}`,
+      }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
         region: launchOption.region ?? "CN",

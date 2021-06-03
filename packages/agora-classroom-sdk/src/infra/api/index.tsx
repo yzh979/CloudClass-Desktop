@@ -1,6 +1,5 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { globalConfigs } from '@/ui-kit/utilities';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp } from 'agora-edu-core';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, globalConfigs } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement } from 'react';
@@ -165,7 +164,15 @@ export class AgoraEduSDK {
       let json = JSON.parse(params)
       if(json["edu.apiUrl"]) {
         globalConfigs.setSDKDomain(json["edu.apiUrl"])
-      } 
+      }
+      if(json["reportUrl"] && json["reportQos"]) {
+        globalConfigs.setReportConfig({
+          sdkDomain: json['reportUrl'],
+          qos: +(json['reportQos'])
+        })
+      }else{
+        globalConfigs.setReportConfig();
+      }
       console.info(`setParameters ${params}`)
     }catch(e) {
       console.error(`parse private params failed ${params}`)
