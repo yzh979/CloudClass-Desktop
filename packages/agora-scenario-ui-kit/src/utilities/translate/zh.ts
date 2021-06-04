@@ -276,7 +276,8 @@ export const zh = {
     'beauty': '美颜',
     'whitening': '美白',
     'buffing': '磨皮',
-    'ruddy': '红润'
+    'ruddy': '红润',
+    'maximize_live_model': '以“最大化”模式直播'
   },
   'pretest': {
     'title': '设备检测',

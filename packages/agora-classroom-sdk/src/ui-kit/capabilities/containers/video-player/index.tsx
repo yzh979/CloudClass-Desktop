@@ -6,7 +6,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
 
-export const VideoPlayerTeacher = observer(({style, className}: any) => {
+export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = true, isMaxiumn = false, onMaxiumnClick = () => {}}: any) => {
   const {
     // teacherStream: userStream,
     onCameraClick,
@@ -68,21 +68,29 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
       userType={eduRole2UIRole(roomInfo.userRole)}
+      hideMaxiumn={hideMaxiumn}
+      isMaxiumn={isMaxiumn}
+      onMaxiumnClick={onMaxiumnClick}
       className={className}
       style={style}
     >
       {
-
-        <>
-          {
-            userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
-          }
-          <CameraPlaceHolder state={userStream.holderState} />
-        </>
+        isMaxiumn ? 
+        (
+          <CameraPlaceHolder state={userStream.holderState} isMaxiumn={true}/>
+        ) : 
+        (
+          <>
+            {
+              userStream.renderer && userStream.video ?
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+              />
+              : null
+            }
+            <CameraPlaceHolder state={userStream.holderState} />
+          </>
+        )
       }
     </VideoPlayer>)
 })

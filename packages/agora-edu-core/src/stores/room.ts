@@ -145,6 +145,7 @@ type RoomProperties = {
     selected: number,
   },
   students: Record<string, ProcessType>,
+  flexProps: any
 }
 
 type MinimizeType = {
@@ -267,7 +268,8 @@ export class RoomStore extends SimpleInterval {
         streamUuid: '',
         userUuid: '',
         selected: 0
-      }
+      },
+      flexProps: {}
     }
   }
 
@@ -297,7 +299,8 @@ export class RoomStore extends SimpleInterval {
       streamUuid: '',
       userUuid: '',
       selected: 0
-    }
+    },
+    flexProps: {}
   }
 
   @computed
@@ -2046,6 +2049,7 @@ export class RoomStore extends SimpleInterval {
     this.isJoiningRoom = false
   }
 
+  @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
