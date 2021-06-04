@@ -240,7 +240,8 @@ export class ReportService extends ApiBase {
 }
 
 export const reportService = new ReportService({
-  sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
+//   sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
+  sdkDomain: 'https://api.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
   appId: '',
   rtmToken: '',
   rtmUid: ''
