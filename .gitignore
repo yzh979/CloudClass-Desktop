@@ -32,6 +32,7 @@ packages/agora-rte-demo/vendor/dev.git/
 .ts.back.txt
 *.ts.back.txt
 *.sh
+*.txt
 packages/agora-rte-demo/env.test.local
 ManyCamSetup.exe
 packages/agora-rte-demo/alcass/
@@ -43,3 +44,4 @@ main_land
 mac
 win
 .log
+packages/agora-edu-core/src/protobuf/index.*
