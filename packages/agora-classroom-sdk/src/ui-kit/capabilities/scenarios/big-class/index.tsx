@@ -50,7 +50,7 @@ export const BigClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { chatCollapse }  = useUIStore()
+  const { chatCollapse } = useUIStore()
 
   useEffectOnce(() => {
     joinRoom()
@@ -74,10 +74,32 @@ export const BigClassScenario = observer(() => {
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
+            {isMaxiumn ? (
+              <div 
+                className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}
+                style={{
+                  width: '100%',
+                  height: '100%'
+                }}
+              >
+                <VideoPlayerTeacher
+                  style={{
+                    width: '100%',
+                    height: '100%'
+                  }}
+                  className="big-class-teacher"
+                  hideMaxiumn={false}
+                  isMaxiumn={isMaxiumn}
+                  onMaxiumnClick={() => {
+                    setIsMaxiumn(!isMaxiumn)
+                  }}
+                />
+              </div>
+            ) : null}
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
           </div>
-          <div 
+          <div
             className={classnames({
               'pin-right': 1
             })}
@@ -90,17 +112,19 @@ export const BigClassScenario = observer(() => {
           "big-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
           "big-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
-          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher 
-              className="big-class-teacher" 
-              hideMaxiumn={false}
-              isMaxiumn={isMaxiumn}
-              onMaxiumnClick={() => {
-                setIsMaxiumn(!isMaxiumn)
-              }}
-            />
-          </div>
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
+          {isMaxiumn ? null : (
+            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+              <VideoPlayerTeacher
+                className="big-class-teacher"
+                hideMaxiumn={false}
+                isMaxiumn={isMaxiumn}
+                onMaxiumnClick={() => {
+                  setIsMaxiumn(!isMaxiumn)
+                }}
+              />
+            </div>
+          )}
+          <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
         </Aside>
       </Layout>
       <DialogContainer />
