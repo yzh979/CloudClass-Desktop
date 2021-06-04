@@ -144,7 +144,8 @@ export class EduManager extends EventEmitter {
   }
   
   static async uploadLog(roomUuid: string): Promise<any> {
-    return await EduLogger.enableUpload(roomUuid, this.isElectron)
+    throw 'not implemented'
+    // return await EduLogger.enableUpload(roomUuid, this.isElectron)
   }
 
   private async prepareLogin(userUuid: string) {

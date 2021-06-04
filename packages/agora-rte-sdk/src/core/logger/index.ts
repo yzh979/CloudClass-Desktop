@@ -140,6 +140,7 @@ export class EduLogger {
     return +Date.now()
   }
 
+  // NOT Implemented
   static async enableUpload(roomUuid: string, isElectron: boolean, vendor: number = 2) {
     const ids = [];
     // Upload Electron log
