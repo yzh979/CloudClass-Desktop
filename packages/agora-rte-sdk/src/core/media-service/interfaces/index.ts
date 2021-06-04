@@ -129,6 +129,7 @@ export declare interface CameraOption {
     width: number,
     height: number,
     frameRate: number,
+    mirrorMode: number
   }
 }
 

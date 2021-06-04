@@ -131,6 +131,17 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type VideoEncoderConfiguration = {
+  width: number,
+  height: number,
+  frameRate: number,
+  mirrorMode: number
+}
+
+export type MediaOption = {
+  videoEncoderConfiguration: VideoEncoderConfiguration
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -154,7 +165,8 @@ export type AppStoreConfigParams = {
   },
   recordUrl: string,
   extApps?: IAgoraExtApp[],
-  widgets?: {[key:string]: IAgoraWidget}
+  widgets?: {[key:string]: IAgoraWidget},
+  mediaOptions?: MediaOption
 }
 
 export type LanguageEnum = "en" | "zh"

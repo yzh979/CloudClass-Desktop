@@ -1271,7 +1271,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         encoderConfig: {
           width: 320,
           height: 240,
-          frameRate: 15
+          frameRate: 15,
+          mirrorMode: 0
         }
       })
     }

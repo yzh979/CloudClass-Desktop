@@ -13,6 +13,7 @@ import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
 import { EduMediaStream } from "../context/type"
+import { MediaOption } from '../api/declare';
 
 const delay = 2000
 
@@ -21,7 +22,8 @@ const ms = 500
 export type SceneVideoConfiguration = {
   width: number,
   height: number,
-  frameRate: number
+  frameRate: number,
+  mirrorMode: number
 }
 
 export enum EduClassroomStateEnum {
@@ -100,10 +102,13 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get videoEncoderConfiguration(): SceneVideoConfiguration {
-    return {
-      width: 320,
-      height: 240,
-      frameRate: 15
+    let mediaOptions = this.appStore.params.config.mediaOptions
+    
+    return   {
+      width: mediaOptions?.videoEncoderConfiguration.width || 320,
+      height: mediaOptions?.videoEncoderConfiguration.height || 240,
+      frameRate: mediaOptions?.videoEncoderConfiguration.frameRate || 15,
+      mirrorMode: mediaOptions?.videoEncoderConfiguration.mirrorMode || 0
     }
   }
 
@@ -696,7 +701,7 @@ export class SceneStore extends SimpleInterval {
     this.setOpeningCamera(true, this.roomInfo.userUuid)
     try {
       await Promise.all([
-        this.openCamera(),
+        this.openCamera(this.videoEncoderConfiguration),
         this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
       this.setOpeningCamera(false, this.roomInfo.userUuid)

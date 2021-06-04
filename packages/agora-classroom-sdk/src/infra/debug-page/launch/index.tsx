@@ -51,7 +51,14 @@ export const LaunchPage = observer(() => {
           0
         )
       }
-
+      launchOption.mediaOptions = {
+        videoEncoderConfiguration: {
+          width: 1080,
+          height: 720,
+          frameRate: 15,
+          mirrorMode: 0
+        }
+      }
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  这里需要传递开发者自己发布的录制页面地址

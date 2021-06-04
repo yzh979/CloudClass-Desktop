@@ -1037,14 +1037,20 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         }
         // TODO: cef configuration
         //@ts-ignore
-        option.encoderConfig && (ret = this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
-          new CEFVideoDimensions(
-            option.encoderConfig.width,
-            option.encoderConfig.height
-          ),
-          option.encoderConfig.frameRate
-          )
-        ))
+        // option.encoderConfig && (ret = this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
+        //   new CEFVideoDimensions(
+        //     option.encoderConfig.width,
+        //     option.encoderConfig.height
+        //   ),
+        //   option.encoderConfig.frameRate
+        //   )
+        // ))
+        option.encoderConfig && (ret = this.client.setVideoEncoderConfiguration({
+          width: option.encoderConfig.width,
+          height: option.encoderConfig.height,
+          frameRate: option.encoderConfig.frameRate,
+          mirrorMode: option.encoderConfig.mirrorMode
+        }))
         if (ret < 0) {
           throw GenericErrorWrapper({
             message: `setVideoEncoderConfiguration failure`,
@@ -1253,7 +1259,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if(params.type === ScreenShareType.Screen){
         return items.map((it: any, idx:number) => ({
           ownerName: it.ownerName,
-          name: `Screen ${idx+1}`,
+          name: `屏幕 ${idx+1}`,
           windowId: it.displayId,
           image: CustomBtoa(it.image),
         }))

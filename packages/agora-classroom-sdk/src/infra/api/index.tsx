@@ -1,6 +1,6 @@
 import { getLiveRoomPath } from '@/infra/router/index';
 import { globalConfigs } from '@/ui-kit/utilities';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget } from 'agora-edu-core';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, MediaOption } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement } from 'react';
@@ -71,6 +71,7 @@ const sdkConfig: SDKConfig = {
 export type LanguageEnum = "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
 
+
 /**
  * LaunchOption 接口
  */
@@ -94,6 +95,7 @@ export type LaunchOption = {
   extApps?: IAgoraExtApp[] // app插件
   region?: AgoraRegion
   widgets?: {[key: string]: IAgoraWidget}
+  mediaOptions?: MediaOption
 }
 
 export type ReplayOption = {
@@ -240,7 +242,8 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat':new AgoraIFrameWidget()}, ...option.widgets}
+          widgets: {...{'chat':new AgoraIFrameWidget()}, ...option.widgets},
+          mediaOptions: option.mediaOptions
         },
         language: option.language,
         startTime: option.startTime,
