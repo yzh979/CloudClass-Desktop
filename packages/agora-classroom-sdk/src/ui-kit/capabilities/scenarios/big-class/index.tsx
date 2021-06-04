@@ -18,12 +18,14 @@ import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
 
+export enum TeacherRenderMode {
+  smallMode = 0,
+  largeMode = 1
+}
 
 export const BigClassScenario = observer(() => {
 
-  const [isMaxiumn, setIsMaxiumn] = useState<boolean>(false)
-
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom, updateFlexRoomProperties, flexRoomProperties } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
@@ -72,7 +74,7 @@ export const BigClassScenario = observer(() => {
       <NavigationBar />
       <Layout className="horizontal">
         <Content className="column">
-          {isMaxiumn ? (
+          {flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? (
             <div 
               className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}
               style={{
@@ -115,9 +117,9 @@ export const BigClassScenario = observer(() => {
             <VideoPlayerTeacher
               className="big-class-teacher"
               hideMaxiumn={false}
-              isMaxiumn={isMaxiumn}
-              onMaxiumnClick={() => {
-                setIsMaxiumn(!isMaxiumn)
+              isMaxiumn={flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode}
+              onMaxiumnClick={async () => {
+                await updateFlexRoomProperties({"teacherRenderMode": flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? TeacherRenderMode.smallMode : TeacherRenderMode.largeMode}, {"cause":0})
               }}
             />
           </div>
