@@ -121,14 +121,15 @@ export class EduLogger {
     window.console = console;
   }
 
-  static async uploadElectronLog(roomId: any) {
+  static async uploadElectronLog(roomId: any, vendor: number) {
     //@ts-ignore
     if (window.doGzip) {
       //@ts-ignore
       let file = await window.doGzip();
       const res = await this.logUploader.uploadZipLogFile(
         roomId,
-        file
+        file,
+        vendor
       )
       return res;
     }
@@ -139,14 +140,14 @@ export class EduLogger {
     return +Date.now()
   }
 
-  static async enableUpload(roomUuid: string, isElectron: boolean) {
+  static async enableUpload(roomUuid: string, isElectron: boolean, vendor: number = 2) {
     const ids = [];
     // Upload Electron log
     if (isElectron) {
-      ids.push(await this.uploadElectronLog(roomUuid))
+      ids.push(await this.uploadElectronLog(roomUuid, vendor))
     }
     // Web upload log
-    ids.push(await this.uploadLog(roomUuid))
+    ids.push(await this.uploadLog(roomUuid, vendor))
     return ids.join("#")
   }
 
@@ -154,7 +155,7 @@ export class EduLogger {
 
   }
 
-  static async uploadLog(roomId: string) {
+  static async uploadLog(roomId: string, vendor: number) {
     console.log('[LOG] [upload] roomId: ', roomId)
     let logs: any[] = []
     await db.logs.each((e: any) => logs.push(e))
@@ -170,6 +171,7 @@ export class EduLogger {
     let res: any = await this.logUploader.uploadLogFile(
       roomId,
       file,
+      vendor,
     )
 
     // TODO: check cef bridge

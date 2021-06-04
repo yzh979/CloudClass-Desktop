@@ -91,6 +91,8 @@ export class LogUpload {
       }
     })
     return {
+      vendor: data.vendor,
+      presignedUrl: data.preSignedUrl,
       bucketName: data.bucketName as string,
       callbackBody: data.callbackBody as string,
       callbackContentType: data.callbackContentType as string,
@@ -103,14 +105,15 @@ export class LogUpload {
 
   async uploadZipLogFile(
     roomId: string,
-    file: any
+    file: any,
+    vendor: number
   ) {
-    const res = await this.uploadToOss(roomId, file, 'zip')
+    const res = await this.uploadToOss(roomId, file, 'zip', vendor)
     return res;
   }
 
   //TODO: only work in agora cef platform
-  private async uploadCefLogFile(roomId: string) {
+  private async uploadCefLogFile(roomId: string, vendor: number) {
     // if (window.getCachePath) {
     //   await new Promise((resolve) => {
     //     window.getCachePath((path: string) => {
@@ -124,49 +127,114 @@ export class LogUpload {
     const contentType = blob.type
     const fileName = `${roomId}-cef.log`
     const file = new File([blob], fileName, {type: contentType})
-    await this.uploadToOss(roomId, file, 'log')
+    await this.uploadToOss(roomId, file, 'log', vendor)
   }
 
   // upload log
   async uploadLogFile(
     roomId: string,
-    file: any
+    file: any,
+    vendor: number
   ) {
-    const res = await this.uploadToOss(roomId, file, 'log')
-    await this.uploadCefLogFile(roomId)
+    const res = await this.uploadToOss(roomId, file, 'log', vendor)
+    await this.uploadCefLogFile(roomId, vendor)
     return res;
   }
 
-  async uploadToOss(roomId: string, file: any, ext: string) {
-    let {
-      bucketName,
-      callbackBody,
-      callbackContentType,
-      accessKeyId,
-      accessKeySecret,
-      securityToken,
-      ossKey
-    } = await this.fetchStsToken(roomId, ext);
-    const ossParams = {
-      bucketName,
-      callbackBody,
-      callbackContentType,
-      accessKeyId,
-      accessKeySecret,
-      securityToken,
-    }
-    const ossClient = new OSS({
-      accessKeyId: ossParams.accessKeyId,
-      accessKeySecret: ossParams.accessKeySecret,
-      stsToken: ossParams.securityToken,
-      bucket: ossParams.bucketName,
-      secure: true,
-      // TODO: 请传递你自己的oss endpoint
-      // TODO: Please use your own oss endpoint
-      endpoint: 'oss-accelerate.aliyuncs.com',
-    })
-
+  async uploadToOss(roomId: string, file: any, ext: string, vendor: number) {
     try {
+      let res
+      switch(vendor) {
+        case 2: {
+          res = await this.uploadToOssAli(roomId, file, ext);
+          break;
+        }
+        case 1: {
+          res = await this.uploadToOssAWS(roomId, file, ext);
+          break;
+        }
+      }
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async uploadToOssAWS(roomId: string, file: any, ext: string) {
+    try {
+      let {
+        bucketName,
+        callbackBody,
+        callbackContentType,
+        accessKeyId,
+        accessKeySecret,
+        securityToken,
+        ossKey,
+        vendor,
+        presignedUrl
+      } = await this.fetchStsToken(roomId, ext);
+      const ossParams = {
+        bucketName,
+        callbackBody,
+        callbackContentType,
+        accessKeyId,
+        accessKeySecret,
+        securityToken,
+      }
+      const ossClient = new OSS({
+        accessKeyId: ossParams.accessKeyId,
+        accessKeySecret: ossParams.accessKeySecret,
+        stsToken: ossParams.securityToken,
+        bucket: ossParams.bucketName,
+        secure: true,
+        // TODO: 请传递你自己的oss endpoint
+        // TODO: Please use your own oss endpoint
+        endpoint: 'oss-accelerate.aliyuncs.com',
+      })
+      const ossCallbackUrl = `${this.sdkDomain}/monitor/v1/log/oss/callback`
+      console.log("log: ossCallbackUrl ", ossCallbackUrl, " body ", JSON.stringify(callbackBody))
+      let res = await ossClient.put(ossKey, file, {
+        callback: {
+          url: `${this.sdkDomain}/monitor/v1/log/oss/callback`,
+          body: callbackBody,
+          contentType: 'application/json',
+        }
+      });
+      return get(res, 'data.data', -1)
+    } catch(err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  async uploadToOssAli(roomId: string, file: any, ext: string) {
+    try {
+      let {
+        bucketName,
+        callbackBody,
+        callbackContentType,
+        accessKeyId,
+        accessKeySecret,
+        securityToken,
+        ossKey
+      } = await this.fetchStsToken(roomId, ext);
+      const ossParams = {
+        bucketName,
+        callbackBody,
+        callbackContentType,
+        accessKeyId,
+        accessKeySecret,
+        securityToken,
+      }
+      const ossClient = new OSS({
+        accessKeyId: ossParams.accessKeyId,
+        accessKeySecret: ossParams.accessKeySecret,
+        stsToken: ossParams.securityToken,
+        bucket: ossParams.bucketName,
+        secure: true,
+        // TODO: 请传递你自己的oss endpoint
+        // TODO: Please use your own oss endpoint
+        endpoint: 'oss-accelerate.aliyuncs.com',
+      })
       const ossCallbackUrl = `${this.sdkDomain}/monitor/v1/log/oss/callback`
       console.log("log: ossCallbackUrl ", ossCallbackUrl, " body ", JSON.stringify(callbackBody))
       let res = await ossClient.put(ossKey, file, {
