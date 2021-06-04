@@ -75,17 +75,22 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
       style={style}
     >
       {
-
-        <>
-          {
-            userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
-          }
-          <CameraPlaceHolder state={userStream.holderState} />
-        </>
+        isMaxiumn ? 
+        (
+          <CameraPlaceHolder state={userStream.holderState} isMaxiumn={true}/>
+        ) : 
+        (
+          <>
+            {
+              userStream.renderer && userStream.video ?
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+              />
+              : null
+            }
+            <CameraPlaceHolder state={userStream.holderState} />
+          </>
+        )
       }
     </VideoPlayer>)
 })

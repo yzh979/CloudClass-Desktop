@@ -280,7 +280,8 @@ export const en = {
     'beauty': 'beauty',
     'whitening': 'Whitening',
     'buffing': 'Buffing',
-    'ruddy': 'Ruddy'
+    'ruddy': 'Ruddy',
+    'maximize_live_model': 'Maximize live model',
   },
   'tool': {
     'board_name': 'Whiteboard',

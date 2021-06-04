@@ -9,6 +9,7 @@ import noBody from './assets/no-body.png';
 import noFile from './assets/no-file.png';
 import cameraDisabled from './assets/camera-disabled.png';
 import noQuestion from './assets/noquestion.svg';
+import {transI18n} from '~components/i18n'
 
 type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
 
@@ -51,12 +52,14 @@ export const Placeholder: FC<PlaceholderProps> = ({
 
 export interface CameraPlaceHolderProps extends BaseProps {
   state?: 'loading' | 'broken' | 'muted' | 'disabled',
+  isMaxiumn?: boolean;
   children?: React.ReactNode;
 }
 
 export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   children,
   state = 'loading',
+  isMaxiumn = false,
   className,
 }) => {
   const cls = classnames({
@@ -67,7 +70,11 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
 
   return (
     <div className={cls}>
-      {children}
+      {isMaxiumn ? (
+        <div className="maxiumn-wrap">
+          <div>{transI18n('media.maximize_live_model')}</div>
+        </div>
+      ) : children}
     </div>
   )
 }
