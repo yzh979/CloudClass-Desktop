@@ -257,7 +257,7 @@
   background: url('../icon/assets/svg/granted-active-icon.svg') no-repeat center / 22px 22px;
 }
 
-.private-call-active, .private-call-default {
+.private-call-active, .private-call-default, .maxiumn-active, .maxiumn-default {
   width: 22px;
   height: 22px;
   border-radius: 50%;
@@ -267,4 +267,12 @@
 
 .private-call-default {
   background-image: url('../icon/assets/svg/private-call-default.svg');
+}
+
+.maxiumn-active {
+  background-image: url('../icon/assets/svg/restore.svg');
+}
+
+.maxiumn-default {
+  background-image: url('../icon/assets/svg/maximize.svg');
 }

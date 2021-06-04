@@ -28,6 +28,8 @@ const resources = {
       "Star": 'star',
       "Open Private Call": "open private call",
       "Close Private Call": "close private call",
+      'Maximize': 'Maximize',
+      'Restore': 'Restore',
       ...en
     }
   },
@@ -46,6 +48,8 @@ const resources = {
       "Star": '奖励',
       "Open Private Call": "开启私密语音",
       "Close Private Call": "关闭私密语音",
+      'Maximize': '全屏',
+      'Restore': '还原',
       ...zh
     }
   }
@@ -157,7 +161,9 @@ export const I18nProvider: React.FC<I18nProvider> = ({children, language}) => {
   
   return (
     <I18nextProvider i18n={i18n}>
-      {children}
+      <div className={`${language}`}>
+        {children}
+      </div>
     </I18nextProvider>
   )
 }

@@ -1,4 +1,4 @@
-import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, usePretestContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -6,7 +6,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
 
-export const VideoPlayerTeacher = observer(({style, className}: any) => {
+export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = true, isMaxiumn = false, onMaxiumnClick = () => {}}: any) => {
   const {
     // teacherStream: userStream,
     onCameraClick,
@@ -34,8 +34,11 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
     eduRole2UIRole
   } = useUIStore()
 
+  const {isMirror} = usePretestContext()
+
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -65,21 +68,29 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
       userType={eduRole2UIRole(roomInfo.userRole)}
+      hideMaxiumn={hideMaxiumn}
+      isMaxiumn={isMaxiumn}
+      onMaxiumnClick={onMaxiumnClick}
       className={className}
       style={style}
     >
       {
-
-        <>
-          {
-            userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
-          }
-          <CameraPlaceHolder state={userStream.holderState} />
-        </>
+        isMaxiumn ? 
+        (
+          <CameraPlaceHolder state={userStream.holderState} isMaxiumn={true}/>
+        ) : 
+        (
+          <>
+            {
+              userStream.renderer && userStream.video ?
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+              />
+              : null
+            }
+            <CameraPlaceHolder state={userStream.holderState} />
+          </>
+        )
       }
     </VideoPlayer>)
 })
@@ -117,9 +128,12 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
   const {
     isHost
   } = useUserListContext()
+
+  const {isMirror} = usePretestContext()
   
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -188,7 +202,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
   const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
       isHost: isHost,
-      hideOffPodium: !controlTools.includes(ControlTool.offPodium),
       username: stream.account,
       stars: stream.stars,
       uid: stream.userUuid,

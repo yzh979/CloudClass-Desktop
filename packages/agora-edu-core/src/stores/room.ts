@@ -145,6 +145,7 @@ type RoomProperties = {
     selected: number,
   },
   students: Record<string, ProcessType>,
+  flexProps: any
 }
 
 type MinimizeType = {
@@ -267,7 +268,8 @@ export class RoomStore extends SimpleInterval {
         streamUuid: '',
         userUuid: '',
         selected: 0
-      }
+      },
+      flexProps: {}
     }
   }
 
@@ -297,7 +299,8 @@ export class RoomStore extends SimpleInterval {
       streamUuid: '',
       userUuid: '',
       selected: 0
-    }
+    },
+    flexProps: {}
   }
 
   @computed
@@ -1241,6 +1244,8 @@ export class RoomStore extends SimpleInterval {
             BizLogger.error(`${error}`)
           }
         })
+        // todo 当前移出本地流，说明已经不是主播了，则RTC角色应设置为audience
+        await this.appStore.mediaService.setRtcRole('audience');
       })
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
@@ -1257,6 +1262,8 @@ export class RoomStore extends SimpleInterval {
             if (this.isAssistant) {
               return
             }
+            //todo 这里已加入RTC，监测到本地流发生流变化，说明当前用户的RCT角色应设置为host
+            await this.appStore.mediaService.setRtcRole('host');
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             const causeCmd = cause?.cmd ?? 0
@@ -2042,6 +2049,7 @@ export class RoomStore extends SimpleInterval {
     this.isJoiningRoom = false
   }
 
+  @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }

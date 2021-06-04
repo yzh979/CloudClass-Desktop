@@ -13,15 +13,19 @@ import { RoomChat } from '~capabilities/containers/room-chat'
 import './style.css'
 import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
 
+export enum TeacherRenderMode {
+  smallMode = 0,
+  largeMode = 1
+}
 
 export const BigClassScenario = observer(() => {
 
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom, updateFlexRoomProperties, flexRoomProperties } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
@@ -48,7 +52,7 @@ export const BigClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { chatCollapse }  = useUIStore()
+  const { chatCollapse } = useUIStore()
 
   useEffectOnce(() => {
     joinRoom()
@@ -70,12 +74,33 @@ export const BigClassScenario = observer(() => {
       <NavigationBar />
       <Layout className="horizontal">
         <Content className="column">
+          {flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? (
+            <div 
+              className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                top: 0,
+                left: 0,
+                zIndex: 999
+              }}
+            >
+              <VideoPlayerTeacher
+                className="big-class-teacher"
+                style={{
+                  width: '100%',
+                  height: '100%'
+                }}
+              />
+            </div>
+          ) : null}
           <VideoMarqueeStudentContainer />
           <div className="board-box">
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
           </div>
-          <div 
+          <div
             className={classnames({
               'pin-right': 1
             })}
@@ -89,9 +114,16 @@ export const BigClassScenario = observer(() => {
           "big-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="big-class-teacher"/>
+            <VideoPlayerTeacher
+              className="big-class-teacher"
+              hideMaxiumn={false}
+              isMaxiumn={flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode}
+              onMaxiumnClick={async () => {
+                await updateFlexRoomProperties({"teacherRenderMode": flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? TeacherRenderMode.smallMode : TeacherRenderMode.largeMode}, {"cause":0})
+              }}
+            />
           </div>
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
+          <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
         </Aside>
       </Layout>
       <DialogContainer />
