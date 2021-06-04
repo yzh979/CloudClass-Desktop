@@ -3,7 +3,7 @@ import md5 from "js-md5";
 import { GenericErrorWrapper } from "agora-rte-sdk";
 import { HttpClient } from "../utilities/net";
 import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../protobuf';
-import { reportService } from './report';
+// import { reportService } from './report';
 type ReportParams = {
     /**
      * 当前通话的cid

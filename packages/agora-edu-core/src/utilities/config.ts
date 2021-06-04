@@ -40,15 +40,15 @@ export const getRegion = (region: string) => {
   }
 
   const rtmRegions: Record<string, string> = {
-    "CN": "GLOBAL",
-    "AP": "ASIA",
-    "EU": "EUROPE",
-    "NS": "NORTH_AMERICA",
+    "CN": "GLOB",
+    "AP": "AS",
+    "EU": "EU",
+    "NS": "NA",
   }
 
   return {
-    rtcArea: rtcRegions[region] ?? rtcRegions["cn"],
-    rtmArea: rtmRegions[region] ?? rtmRegions["cn"],
+    rtcArea: rtcRegions[region] ?? rtcRegions["CN"],
+    rtmArea: rtmRegions[region] ?? rtmRegions["CN"],
   }
 }
 
