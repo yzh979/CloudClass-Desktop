@@ -32,9 +32,9 @@ export const LaunchPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
-      AgoraEduSDK.setParameters(JSON.stringify({
-        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
-      }))
+      // AgoraEduSDK.setParameters(JSON.stringify({
+      //   'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+      // }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
         region: launchOption.region ?? "CN",
