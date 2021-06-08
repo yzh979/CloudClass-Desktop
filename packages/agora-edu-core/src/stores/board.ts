@@ -1992,14 +1992,16 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
+    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[this.room.state.sceneState.index].ppt) {
       this.room.scalePptToFit()
     } else {
-      this.room.moveCamera({
-        centerX: 0,
-        centerY: 0,
-        scale: 1,
-      })
+      if(this.room.state.broadcastState.mode === ViewMode.Freedom) {
+        this.room.moveCamera({
+          centerX: 0,
+          centerY: 0,
+          scale: 1,
+        })
+      }
     }
   }
 
