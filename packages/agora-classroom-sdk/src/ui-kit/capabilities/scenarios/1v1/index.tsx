@@ -1,21 +1,20 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useAppPluginContext, useGlobalContext, useRoomContext, useWidgetContext } from 'agora-edu-core'
+import { useGlobalContext, useRoomContext, useWidgetContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
 import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoList } from '~capabilities/containers/video-player'
+import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import { ToastContainer } from "~capabilities/containers/toast"
 import { Widget } from '~capabilities/containers/widget'
-import { useLayoutEffect } from 'react'
 
 
 export const OneToOneScenario = observer(() => {
-  
+
   const {
     isFullScreen,
   } = useGlobalContext()
@@ -25,27 +24,7 @@ export const OneToOneScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { 
-    joinRoom,
-    roomProperties,
-    isJoiningRoom
-  } = useRoomContext()
-
-  const {
-    onLaunchAppPlugin,
-    onShutdownAppPlugin
-  } = useAppPluginContext()
-
-
-  useLayoutEffect(() => {
-    if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 1) {
-      // 开启倒计时
-      onLaunchAppPlugin('io.agora.countdown')
-    } else if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 0) {
-      // 关闭倒计时
-      onShutdownAppPlugin('io.agora.countdown')
-    }
-  }, [roomProperties])
+  const { joinRoom } = useRoomContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -57,6 +36,10 @@ export const OneToOneScenario = observer(() => {
 
   const className = 'normal'
 
+  const fullscreenCls = classnames({
+    [`layout-aside-${className}`]: 1,
+  })
+
 
   return (
     <Layout
@@ -67,23 +50,21 @@ export const OneToOneScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="horizontal">
+      <Layout className="bg-white">
         <Content>
-          <WhiteboardContainer>
-            <ScreenSharePlayerContainer />
-          </WhiteboardContainer>
+          <ScreenSharePlayerContainer />
+          <WhiteboardContainer />
         </Content>
         <Aside className={classnames({
           "one-class-aside": 1,
           "one-class-aside-full": isFullScreen,
         })}>
           <VideoList />
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
         </Aside>
       </Layout>
       <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom}/>
-      <ToastContainer />
+      <LoadingContainer />
     </Layout>
   )
 })

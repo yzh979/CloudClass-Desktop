@@ -1,5 +1,5 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
-import { ZoomItemType } from '~ui-kit/components'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext } from 'agora-edu-core'
+import { ZoomItemType } from '@/ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback, useMemo } from 'react'
@@ -11,20 +11,12 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 import classnames from 'classnames'
-import { useUIStore } from '@/infra/hooks'
 
 export const allTools: ToolItem[] = [
   {
-    // clicker use selector icon
-    value: 'clicker',
-    label: 'scaffold.clicker',
-    icon: 'select'
-  },
-  {
-    // selector use clicker icon
     value: 'selection',
     label: 'scaffold.selector',
-    icon: 'clicker'
+    icon: 'select'
   },
   {
     value: 'pen',
@@ -104,17 +96,14 @@ export type WhiteBoardState = {
 const TabsContainer = observer(() => {
 
   const {
+    resourcesList,
     changeSceneItem,
     activeSceneName,
   } = useBoardContext()
 
   const {
-    resourcesList
-  } = useCloudDriveContext()
-
-  const {
     addDialog,
-  } = useUIStore()
+  } = useGlobalContext()
 
 
   const {
@@ -154,7 +143,7 @@ const TabsContainer = observer(() => {
   }, [isScreenSharing])
 
   return (
-    <Tabs className="material-menu" activeKey={activeSceneName} type="editable-card"
+    <Tabs activeKey={activeSceneName} type="editable-card"
       onChange={changeSceneItem}>
       {resourcesList.map((item: Resource, key: number) => (
         <TabPane
@@ -179,14 +168,12 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer = observer(({children}: any) => {
-
-  const {
-    addDialog
-  } = useUIStore()
+export const WhiteboardContainer = observer(() => {
 
   const {
     isFullScreen,
+    addDialog,
+    removeDialog
   } = useGlobalContext()
 
   const {
@@ -281,15 +268,12 @@ export const WhiteboardContainer = observer(({children}: any) => {
 
   return (
     <div className="whiteboard">
+      {
+        ready ? 
+        <div id="netless" ref={mountToDOM} ></div> : null
+      }
       {showTab ? 
       <TabsContainer /> : null}
-      <div className="board-section">
-        {children}
-        {
-          ready ? 
-          <div id="netless" ref={mountToDOM} ></div> : null
-        }
-      </div>
       {showToolBar ?
         <Toolbar 
           active={currentSelector} 

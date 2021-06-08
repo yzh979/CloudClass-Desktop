@@ -4,26 +4,22 @@ import * as React from 'react';
 import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
 import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
-import { useUIStore } from '@/infra/hooks';
 
 export const RoomChat = observer(() => {
 
   const {
+    chatCollapse,
     canChatting,
     isHost,
     getHistoryChatMessage,
     unreadMessageCount,
     muteChat,
     unmuteChat,
+    toggleChatMinimize,
     messageList,
     sendMessage,
     addChatMessage
   } = useChatContext()
-
-  const {
-    chatCollapse,
-    toggleChatMinimize
-  } = useUIStore()
 
   const {
     roomInfo
@@ -46,7 +42,7 @@ export const RoomChat = observer(() => {
   const isMounted = React.useRef<boolean>(true)
 
 
-  const refreshMessageList = useCallback(async (args: any) => {
+  const refreshMessageList = useCallback(async () => {
     const res = nextId !== 'last' && await getHistoryChatMessage({ nextId, sort: 0 })
     if (isMounted.current) {
       setNextID(get(res, 'nextId', 'last'))
@@ -87,7 +83,7 @@ export const RoomChat = observer(() => {
       uid={roomInfo.userUuid}
       messages={messageList}
       chatText={text}
-      onText={(_, textValue: string) => {
+      onText={(textValue: string) => {
         setText(textValue)
       }}
       onCollapse={() => {
@@ -95,11 +91,11 @@ export const RoomChat = observer(() => {
       }}
       onSend={handleSendText}
       showCloseIcon={isFullScreen}
-      onPullRefresh={refreshMessageList}
+      onPullFresh={refreshMessageList}
       unreadCount={unreadMessageCount}
-      // onConversationPullFresh={() => {}}
-      // onConversationText={() => {}}
-      // onConversationSend={() => {}}
+      onConversationPullFresh={() => {}}
+      onConversationText={() => {}}
+      onConversationSend={() => {}}
     />
   )
 })

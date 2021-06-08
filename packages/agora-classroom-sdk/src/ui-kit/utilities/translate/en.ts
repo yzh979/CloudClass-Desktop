@@ -4,7 +4,6 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
-  'disabled': 'Disabled',
   'whiteboard': {
     'converting': 'Converting',
   },
@@ -80,7 +79,6 @@ export const en = {
   'placeholder': {
     'muted_chat': 'Muted Chat',
     'empty_chat': 'Empty Message',
-    'empty_quiz': 'Empty Quiz',
     'enable_chat_muted': 'Student Chat Muted',
     'input_message': 'Please Input Message',
   },
@@ -99,10 +97,10 @@ export const en = {
     'room_is_full': 'The room is full',
   },
   'toast': {
-    'mute_chat': 'You were silenced by {hostName}',
-    'unmute_chat': 'Your were allowed to chat by {hostName}',
-    'remote_mute_chat': '{studentName} was silenced by {hostName}',
-    'remote_unmute_chat': '{studentName} was allowed to chat by {hostName}',
+    'mute_chat': 'You have been muted chat by teacher',
+    'unmute_chat': 'Your have been unmuted chat by teacher',
+    'remote_mute_chat': '{reason} muted chat by teacher',
+    'remote_unmute_chat': '{reason} unmuted chat by teacher',
     'add_screen_share': 'Teacher starts to the screen share',
     'remove_screen_share': 'Teacher stops the screen share',
     'granted_board_success': 'Grant Permission success',
@@ -230,7 +228,6 @@ export const en = {
     'circle': 'circle',
     'rectangle': 'rectangle',
     'selector': 'selector',
-    'clicker':'mouse',
     'eraser': 'eraser',
     'color': 'color',
     'blank_page': 'add page',
@@ -305,13 +302,7 @@ export const en = {
   'pretest': {
     'title': 'Device Test',
     'settingTitle': 'Device Setting',
-    'finishTest': 'Finish',
-    'detect_new_device': 'The device has installed, Please try it!',
-    'camera_move_out': 'Camera is pulled out, unable to display video!',
-    'mic_move_out': 'Microphone is pulled out!',
-    'device_not_working': 'The device is not working properly!',
-    'detect_new_device_in_room': 'The device has installed, Please click setting and select the new device.',
-    'teacher_device_may_not_work': "There is something wrong with the teacher's device",
+    'finishTest': 'Finish'
   },
   'biz-header': {
     'setting': 'Setting',
@@ -390,11 +381,5 @@ export const en = {
     'content-a': `Agora Live ("this product") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as "software") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.`,
     'content-b': `This product is provided "as is" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.`,
     'content-c': `You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.`,
-  },
-  'countdown': {
-    'appName': 'Countdown',
-    'seconds': 'seconds',
-    'start': 'Start',
-    'restart': 'Restart'
   }
 }

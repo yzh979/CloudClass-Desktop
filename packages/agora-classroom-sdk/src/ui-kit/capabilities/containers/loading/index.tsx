@@ -1,24 +1,18 @@
-import { BaseProps } from '~ui-kit/components/interface/base-props'
+import { useGlobalContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { Card, Loading } from '~ui-kit'
-import { FC } from 'react'
 
-export interface LoadingProps extends BaseProps {
-  loading: boolean
-}
+export const LoadingContainer = observer(() => {
 
-export const LoadingContainer: FC<LoadingProps> = observer(({
-  loading
-}) => {
+  const {loading} = useGlobalContext()
+
   return loading ? <PageLoading /> : null
 })
 
 const PageLoading = () => {
   return (
-    <div className="page-loading">
-      <Card width={90} height={90} className="card-loading-position">
-        <Loading></Loading>
-      </Card>
-    </div>
+    <Card width={90} height={90} className="card-loading-position">
+      <Loading></Loading>
+    </Card>
   )
 }

@@ -12,15 +12,12 @@ export const PensContainer = observer((props: PensContainerProps) => {
     lineSelector,
     boardPenIsActive,
     setTool,
-    updatePen,
-    currentColor,
-    changeHexColor
+    updatePen
   } = useBoardContext()
 
   const onClick = (pen: any) => {
     setTool(pen)
     updatePen(pen)
-    changeHexColor(currentColor)
   }
   
   return (

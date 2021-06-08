@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
@@ -8,8 +8,6 @@ import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
-import { EduManager } from '../../manager';
-// import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
@@ -28,15 +26,9 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   readonly _id!: string
 
-  private eduManager: EduManager
-
-  encoderConfig: any;
-
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
-    this.eduManager = rtcProvider.eduManager;
     this._id = uuidv4()
-    this.encoderConfig = undefined
     this.cameraRenderer = undefined
     this.screenRenderer = undefined
     this.remoteUsersRenderer = []
@@ -57,7 +49,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         window.videoSourceLogPath = videoSourceLogPath;
         window.logPath = logPath
         EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`)
-        this.electron.setAddonLogPath({ logPath, videoSourceLogPath })
+        this.electron.setAddonLogPath({logPath, videoSourceLogPath})
         this.electron.enableLogPersist()
       })
     } else {
@@ -78,7 +70,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     })
     this.sdkWrapper.on('connection-state-change', (curState: any) => {
       EduLogger.info("[media-service] connection-state-change ", curState)
-      this.fire('connection-state-change', { curState })
+      this.fire('connection-state-change', {curState})
     })
     this.sdkWrapper.on('volume-indication', (evt: any) => {
       this.fire('volume-indication', evt)
@@ -141,8 +133,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.fire('rtcStats', evt)
     })
     this.sdkWrapper.on('localVideoStats', (evt: any) => {
-      let { stats = {} } = evt
-      let { encoderOutputFrameRate = 0 } = stats
+      let {stats = {}} = evt
+      let {encoderOutputFrameRate = 0} = stats
       this.cameraRenderer?.setFPS(encoderOutputFrameRate)
       this.fire('localVideoStats', {
         renderState: this.cameraRenderer?.renderState,
@@ -152,9 +144,9 @@ export class MediaService extends EventEmitter implements IMediaService {
       })
     })
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
-      let { stats = {}, user = {} } = evt
-      let { decoderOutputFrameRate = 0 } = stats
-      let { uid } = user
+      let {stats = {}, user = {}} = evt
+      let {decoderOutputFrameRate = 0} = stats
+      let {uid} = user
       let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
       remoteUserRender?.setFPS(decoderOutputFrameRate)
       this.fire('remoteVideoStats', {
@@ -175,26 +167,15 @@ export class MediaService extends EventEmitter implements IMediaService {
     //     volumes
     //   })
     // })
-    if (this.isElectron) {
-      //@ts-ignore
-      if (window.agoraBridge) {
-        this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
-          this.fire('audio-device-changed', (evt))
-        })
-  
-        this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
-          this.fire('video-device-changed', (evt))
-        })
-      } else {
-        this.electron.client.on('audiodevicestatechanged', (...evt: any[]) => {
-          const [deviceId, type, state] = evt
-          this.fire('audio-device-changed', {deviceId, type, state})
-        })
-        this.electron.client.on('videodevicestatechanged', (...evt: any) => {
-          const [deviceId, type, state] = evt
-          this.fire('video-device-changed', {deviceId, type, state})
-        })
-      }
+    //@ts-ignore
+    if (window.agoraBridge) {
+      this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
+        this.fire('audio-device-changed', (evt))
+      })
+
+      this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
+        this.fire('video-device-changed', (evt))
+      })
     } else {
       AgoraRTC.onCameraChanged = (info) => {
         this.fire('video-device-changed', (info))
@@ -206,109 +187,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         this.fire('audio-autoplay-failed')
       }
     }
-  }
 
-  async muteLocalVideo(val: boolean, deviceId?: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.muteLocalVideo(val, deviceId)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.muteLocalVideo(val, deviceId)
-    }
-    if (val) {
-      if (this.cameraRenderer) {
-        this.cameraRenderer.stop()
-        this.cameraRenderer = undefined
-      }
-    } else {
-      this.cameraRenderer = new LocalUserRenderer({
-        context: this,
-        uid: 0,
-        channel: 0,
-        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
-        sourceType: 'default',
-      })
-    }
-  }
-
-  async muteLocalAudio(val: boolean, deviceId?: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.muteLocalAudio(val, deviceId)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.muteLocalAudio(val, deviceId)
-    }
-  }
-
-  disableLocalAudio() {
-    if (this.isWeb) {
-      this.sdkWrapper.disableLocalAudio()
-    }
-    if (this.isElectron) {
-      this.sdkWrapper.disableLocalAudio()
-    }
-  }
-
-  disableLocalVideo() {
-    if (this.isWeb) {
-      this.sdkWrapper.disableLocalVideo()
-    }
-    if (this.isElectron) {
-      this.sdkWrapper.disableLocalVideo()
-    }
-    this.cameraRenderer = undefined
-  }
-
-  async enableLocalVideo(val: boolean): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.enableLocalVideo(val)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.enableLocalVideo(val)
-    }
-    if (val) {
-      this.cameraRenderer = new LocalUserRenderer({
-        context: this,
-        uid: 0,
-        channel: 0,
-        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
-        sourceType: 'default',
-      })
-    } else {
-      if (this.cameraRenderer) {
-        if (this.cameraRenderer._playing) {
-          this.cameraRenderer.stop()
-        }
-        this.cameraRenderer = undefined
-      }
-    }
-  }
-
-  async enableLocalAudio(val: boolean): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.enableLocalAudio(val)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.enableLocalAudio(val)
-    }
-  }
-
-  async setCameraDevice(deviceId: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.setCameraDevice(deviceId)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.setCameraDevice(deviceId)
-    }
-  }
-
-  async setMicrophoneDevice(deviceId: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.setMicrophoneDevice(deviceId)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.setMicrophoneDevice(deviceId)
-    }
   }
 
   private fire(...params: any[]) {
@@ -319,16 +198,14 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.emit(message, ...args)
   }
 
-  get isWeb(): boolean {
+  get isWeb (): boolean {
     return this.sdkWrapper instanceof AgoraWebRtcWrapper
   }
 
-  get isElectron(): boolean {
+  get isElectron (): boolean {
     return this.sdkWrapper instanceof AgoraElectronRTCWrapper
   }
-  get sessionId(): string {
-    return this.isElectron ? (this.sdkWrapper.client as any).getCallId() : (this.sdkWrapper.client as any)._sessionId;
-  }
+
   private getNativeCurrentVideoDevice() {
     if (this.electron._cefClient) {
       //@ts-ignore
@@ -377,8 +254,8 @@ export class MediaService extends EventEmitter implements IMediaService {
   getTestCameraLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
-      if (this.web.cameraTrack) {
-        return this.web.cameraTrack.getTrackLabel()
+      if (this.web.cameraTestTrack) {
+        return this.web.cameraTestTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -395,8 +272,8 @@ export class MediaService extends EventEmitter implements IMediaService {
   getTestMicrophoneLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
-      if (this.web.microphoneTrack) {
-        return this.web.microphoneTrack.getTrackLabel()
+      if (this.web.microphoneTestTrack) {
+        return this.web.microphoneTestTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -414,8 +291,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.cameraTrack) {
-        //@ts-ignore
-        return this.web.cameraTrack._deviceName || this.web.cameraTrack.getTrackLabel()
+        return this.web.cameraTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -436,9 +312,9 @@ export class MediaService extends EventEmitter implements IMediaService {
         return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo().deviceName
       }
       //@ts-ignore
-      const deviceName = this.electron.client.getPlaybackDeviceInfo()[0]?.devicename ?? ''
+      const deviceItem = this.electron.client.getPlaybackDeviceInfo()[0]
       //@ts-ignore
-      return deviceName
+      return deviceItem.devicename
     }
     return ''
   }
@@ -455,8 +331,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.microphoneTrack) {
-        //@ts-ignore
-        return this.web.microphoneTrack._deviceName || this.web.microphoneTrack.getTrackLabel()
+        return this.web.microphoneTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -476,6 +351,24 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
     if (this.isElectron) {
       this.sdkWrapper.changePlaybackVolume(volume)
+    }
+  }
+  
+  async muteLocalVideo(val: boolean): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.muteLocalVideo(val)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.muteLocalVideo(val)
+    }
+  }
+
+  async muteLocalAudio(val: boolean): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.muteLocalAudio(val)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.muteLocalAudio(val)
     }
   }
 
@@ -512,11 +405,11 @@ export class MediaService extends EventEmitter implements IMediaService {
   //   }
   // }
 
-  get web(): AgoraWebRtcWrapper {
+  get web (): AgoraWebRtcWrapper {
     return (this.sdkWrapper as AgoraWebRtcWrapper)
   }
 
-  get electron(): AgoraElectronRTCWrapper {
+  get electron (): AgoraElectronRTCWrapper {
     return (this.sdkWrapper as AgoraElectronRTCWrapper)
   }
 
@@ -530,7 +423,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  release() {
+  release () {
     if (this.isWeb) {
       this.sdkWrapper.release()
     }
@@ -544,41 +437,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     try {
       // REPORT
       reportService.startTick('joinRoom', 'rtc', 'joinChannel')
-      await this._join(option);
-      let reportUserParams = {
-        vid: this.eduManager.vid,
-        // ver: packageJson.apaas_version,
-        scenario: 'education',
-        uid: option.data?.user.uuid,
-        userName: option.data?.user.name,
-        /**
-         * rtc流id
-         */
-        streamUid: +option.data?.user.streamUuid,
-        /**
-         * rtc流id
-         */
-        streamSuid: option.data?.user.streamUuid,
-        /**
-         * apaas角色
-         */
-        role: option.data?.user.role,
-        /**
-         * rtc sid
-         */
-        streamSid: this.eduManager.rtcSid,
-        /**
-         * rtm sid
-         */
-        rtmSid: this.eduManager.rtmSid,
-        /**
-         * apaas房间id，与rtc/rtm channelName相同
-         */
-        roomId: option.data?.room.uuid
-      };
-      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
-    } catch (e) {
-      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
+      await this._join(option)
+      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: true})
+    } catch(e) {
+      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: false, errCode: `${e.code || e.message}`})
       throw e
     }
   }
@@ -659,23 +521,185 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  // async publish(): Promise<any> {
-  //   if (this.isWeb) {
-  //     await this.sdkWrapper.publish()
-  //   }
-  //   if (this.isElectron) {
-  //     await this.sdkWrapper.publish()
-  //   }
-  // }
+  async publish(): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.publish()
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.publish()
+    }
+  }
 
-  // async unpublish(): Promise<any> {
-  //   if (this.isWeb) {
-  //     await this.sdkWrapper.unpublish()
-  //   }
-  //   if (this.isElectron) {
-  //     await this.sdkWrapper.unpublish()
-  //   }
-  // }
+  async unpublish(): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.unpublish()
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.unpublish()
+    }
+  }
+
+  async openCamera(option?: CameraOption): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.openCamera(option)
+      if (!this.web.cameraTrack) return
+
+      if (!this.cameraRenderer) {
+        this.cameraRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          sourceType: 'default',
+          videoTrack: this.web.cameraTrack
+        })
+      } else {
+        if (this.cameraRenderer._playing) {
+          this.cameraRenderer.stop()
+        }
+        this.cameraRenderer.videoTrack = this.web.cameraTrack
+      }
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.openCamera(option)
+
+      if (!this.cameraRenderer) {
+        this.cameraRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          sourceType: 'default',
+        })
+      }
+    }
+  }
+
+  async changeCamera(deviceId: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.changeCamera(deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.changeCamera(deviceId)
+    }
+  }
+
+  async closeCamera() {
+    if (this.isWeb) {
+      await this.sdkWrapper.closeCamera()
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.closeCamera()
+    }
+    if (this.cameraRenderer) {
+      this.cameraRenderer.stop()
+      this.cameraRenderer = undefined
+    }
+  }
+
+  async openMicrophone(option?: MicrophoneOption): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.openMicrophone(option)
+      this.microphoneTrack = this.web.microphoneTrack
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.openMicrophone(option)
+      //@ts-ignore
+      this.microphoneTrack = {}
+    }
+  }
+
+  async changeMicrophone(deviceId: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.changeMicrophone(deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.changeMicrophone(deviceId)
+    }
+  }
+
+  async closeMicrophone() {
+    await this.sdkWrapper.closeMicrophone()
+    this.microphoneTrack = undefined
+  }
+
+  async openTestCamera(option: CameraOption): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.openTestCamera(option)
+      if (!this.web.cameraTestTrack) return
+
+      if (!this.cameraTestRenderer) {
+        this.cameraTestRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          sourceType: 'default',
+          videoTrack: this.web.cameraTestTrack
+        })
+      } else {
+        this.cameraTestRenderer.videoTrack = this.web.cameraTestTrack
+      }
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.openTestCamera()
+
+      if (!this.cameraTestRenderer) {
+        this.cameraTestRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          sourceType: 'default',
+        })
+      }
+    }
+  }
+
+  closeTestCamera() {
+    this.sdkWrapper.closeTestCamera()
+    if (this.cameraTestRenderer) {
+      this.cameraTestRenderer.stop()
+      this.cameraTestRenderer = undefined
+    }
+  }
+
+  async changeTestCamera(deviceId: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.changeTestCamera(deviceId)
+      if (!this.cameraTestRenderer) {
+        this.cameraTestRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          sourceType: 'default',
+          videoTrack: this.web.cameraTestTrack
+        })
+      } else {
+        this.cameraTestRenderer.videoTrack = this.web.cameraTestTrack
+      }
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.changeTestCamera(deviceId)
+    }
+  }
+
+  async changeTestResolution(config: any) {
+    if (this.isWeb) {
+      await this.web.changeTestResolution(config)
+    }
+    if (this.isElectron) {
+      await this.electron.changeTestResolution(config)
+    }
+  }
+
+  async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
+    await this.sdkWrapper.openTestMicrophone(option)
+  }
+
+  closeTestMicrophone() {
+    this.sdkWrapper.closeTestMicrophone()
+  }
+
+  async changeTestMicrophone(id: string): Promise<any> {
+    await this.sdkWrapper.changeTestMicrophone(id)
+  }
 
   async getCameras(): Promise<any> {
     if (this.isWeb) {
@@ -715,35 +739,27 @@ export class MediaService extends EventEmitter implements IMediaService {
   }
 
   async startScreenShare(option: StartScreenShareParams): Promise<any> {
-    try {
-      if (this.isWeb) {
-        await this.sdkWrapper.startScreenShare(option)
-      }
-      if (this.isElectron) {
-        await this.sdkWrapper.startScreenShare(option)
-        this.screenRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          videoTrack: undefined,
-          sourceType: 'screen',
-        })
-      }
-    } catch (error) {
-      throw error
+    if (this.isWeb) {
+      await this.sdkWrapper.startScreenShare(option)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.startScreenShare(option)
+      this.screenRenderer = new LocalUserRenderer({
+        context: this,
+        uid: 0,
+        channel: 0,
+        videoTrack: undefined,
+        sourceType: 'screen',
+      })
     }
   }
 
   async stopScreenShare(): Promise<any> {
-    try {
-      if (this.isWeb) {
-        await this.sdkWrapper.stopScreenShare()
-      }
-      if (this.isElectron) {
-        await this.sdkWrapper.stopScreenShare()
-      }
-    } catch (error) {
-      throw error
+    if (this.isWeb) {
+      await this.sdkWrapper.stopScreenShare()
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.stopScreenShare()
     }
   }
 
@@ -758,7 +774,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   getPlaybackVolume(): number {
     if (this.isElectron) {
-      return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1)
+      return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1) 
     }
     return 100;
   }

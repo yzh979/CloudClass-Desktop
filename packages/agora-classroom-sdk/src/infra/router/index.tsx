@@ -1,13 +1,16 @@
 import { BizPagePath, BizPageRouter } from '@/infra/types';
 import { HomePage } from '@/infra/debug-page/home';
 import { LaunchPage } from '@/infra/debug-page/launch';
-import { OneToOneScenario } from '~capabilities/scenarios/1v1';
-import { PretestScenarioPage } from '~capabilities/scenarios/pretest';
+// import { OneToOne } from '@/ui-components/one-to-one';
+// import { PretestPage } from '@/ui-components/pretest';
+// import { SmallClassRoom } from '@/ui-components/small-class-room';
+import { OneToOneScenario } from '@/ui-kit/capabilities/scenarios/1v1';
+import { PretestScenarioPage } from '@/ui-kit/capabilities/scenarios/pretest';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import * as React from 'react';
 import { scenarioRoomPath } from '@/infra/api';
-import { MidClassScenario } from '~capabilities/scenarios/mid-class';
-import {BigClassScenario} from '~capabilities/scenarios/big-class';
+import { MidClassScenario } from '@/ui-kit/capabilities/scenarios/mid-class';
+import {BigClassScenario} from '@/ui-kit/capabilities/scenarios/big-class';
 import { RecordPage } from '../debug-page/record';
 
 export type AppRouteComponent = {

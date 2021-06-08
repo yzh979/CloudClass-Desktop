@@ -1,17 +1,14 @@
 import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
-import { useGlobalContext, useRoomContext } from 'agora-edu-core'
-import { useEffect, useRef } from 'react'
-import { transI18n } from '~ui-kit/components'
+import { useGlobalContext } from 'agora-edu-core'
+import { useEffect } from 'react'
+import { transI18n } from '@/ui-kit/components'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useUIStore } from '@/infra/hooks'
 
 type ToastType = any
 
 export const ToastContainer = observer(() => {
-  const {toastQueue, addToast, removeToast} = useUIStore()
-  const {isJoiningRoom} = useRoomContext()
-  const {toastEventObserver} = useGlobalContext()
+  const {toastQueue, addToast, removeToast, toastEventObserver} = useGlobalContext()
 
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
@@ -40,12 +37,8 @@ export const ToastContainer = observer(() => {
     'error.send_co_video_limit': (props: any) => toast('error.send_co_video_limit', props),
     'error.cannot_join': (props: any) => toast('error.cannot_join', props),
     'error.unknown': (props: any) => toast('error.unknown', props),
-    'pretest.camera_move_out': (props: any) => toast('pretest.camera_move_out', props, 'error'),
-    'pretest.mic_move_out': (props: any) => toast('pretest.mic_move_out', props, 'error'),
-    'pretest.teacher_device_may_not_work': (props: any) => toast('pretest.teacher_device_may_not_work', props, 'error'),
-    'pretest.detect_new_device_in_room': (props: any) => toast('pretest.detect_new_device_in_room', props, 'success'),
-    // 'toast.audio_equipment_has_changed': (props: any) => toast('toast.audio_equipment_has_changed', props),
-    // 'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
+    'toast.audio_equipment_has_changed': (props: any) => toast('toast.audio_equipment_has_changed', props),
+    'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
     'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)},'error'),
@@ -75,13 +68,8 @@ export const ToastContainer = observer(() => {
     'toast.unmute_chat': (props: any) => toast('toast.unmute_chat', props),
     'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
+    'toast.stop_screen_share_failed': (props: any) => toast('toast.stop_screen_share_failed', props)
   }
-
-  const roomRef = useRef<boolean>(isJoiningRoom)
-
-  useEffect(() => {
-    roomRef.current = isJoiningRoom
-  }, [isJoiningRoom])
   
 
   useEffect(() => {
@@ -90,9 +78,6 @@ export const ToastContainer = observer(() => {
       const toastOperation = toastMap[evt.eventName]
 
       if (toastOperation) {
-        if (evt.eventName === 'pretest.detect_new_device_in_room' && !roomRef.current) {
-          return
-        }
         toastOperation(evt.props)
       }
     })

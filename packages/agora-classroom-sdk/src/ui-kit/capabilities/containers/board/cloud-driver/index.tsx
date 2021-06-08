@@ -1,4 +1,5 @@
-import { useBoardContext, mapFileType, PPTKind, useCloudDriveContext } from 'agora-edu-core';
+import { BizLogger } from '@/infra/utils';
+import { useBoardContext, mapFileType, useGlobalContext, PPTKind } from 'agora-edu-core';
 import { EduLogger } from 'agora-rte-sdk';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
@@ -13,7 +14,6 @@ import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
 import { UploadContainer } from './upload';
-import { useUIStore } from '@/infra/hooks/'
 
 export const calcUploadFilesMd5 = async (file: File) => {
   return new Promise(resolve => {
@@ -43,22 +43,19 @@ export type CloudDriveContainerProps = {
 
 export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer(({id}: any) => {
   const {
-    setTool,
-    room,
-  } = useBoardContext()
-
-  const {
     openCloudResource,
+    setTool,
     refreshCloudResources,
     cancelUpload,
     removeMaterialList,
+    room,
     doUpload,
-  } = useCloudDriveContext()
+  } = useBoardContext()
 
   const {
     checked,
     removeDialog
-  } = useUIStore()
+  } = useGlobalContext()
 
   const checkList$ = new BehaviorSubject<string[]>([])
 
@@ -251,7 +248,6 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
                   <Loading
                     onClick={handleClick}
                     hasLoadingGif={false}
-                    noCloseBtn={true}
                     uploadItemList={
                       [
                         { ...uploadFileInfo, currentProgress }

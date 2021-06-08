@@ -1,4 +1,4 @@
-import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet'
+import { CabinetItem } from '@/ui-kit/components/toolbar/tool-cabinet'
 import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext, useScreenShareContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
@@ -11,10 +11,10 @@ export const ToolCabinetContainer = observer(() => {
     const {
         setLaserPoint,
         currentSelector,
+        canSharingScreen,
     } = useBoardContext()
 
     const {
-        canSharingScreen,
         startOrStopSharing
     } = useScreenShareContext()
 
@@ -35,9 +35,6 @@ export const ToolCabinetContainer = observer(() => {
                 setLaserPoint()
                 break;
             }
-            case 'countdown':
-                onLaunchAppPlugin('io.agora.countdown')
-                break;
             default: {
                 onLaunchAppPlugin(itemType)
                 break;
@@ -52,7 +49,7 @@ export const ToolCabinetContainer = observer(() => {
     const getCabinetList = useCallback(() => {
         const screenShareTool: CabinetItem[] = [{
             id: 'screenShare',
-            icon: <Icon type="share-screen" useSvg size={24} />,
+            icon: <Icon type="share-screen" useSvg />,
             name: t('scaffold.screen_share'),
         }]
 
@@ -65,7 +62,7 @@ export const ToolCabinetContainer = observer(() => {
             ...appPlugins.map((p:IAgoraExtApp) => {
                 return {
                     id: p.appIdentifier,
-                    icon:<Icon type="countdown" useSvg size={24}/>,
+                    icon:<Icon type="share-screen" />,
                     name: p.appName
                 }
             })

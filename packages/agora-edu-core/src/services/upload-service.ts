@@ -29,9 +29,6 @@ export const mapFileType = (type: string): any => {
   if (type.match(/pdf/i)) {
     return 'pdf'
   }
-  if (type.match(/h5/i)) {
-    return 'h5'
-  }
 
   return 'excel'
 }
@@ -51,23 +48,6 @@ export type MaterialDataResource = {
 }
 
 export const transDataToResource = (data: CourseWareItem): MaterialDataResource => {
-
-  if (data.ext === 'h5') {
-    return {
-      id: data.resourceUuid,
-      name: data.resourceName,
-      ext: data.ext,
-      type: mapFileType(data.ext),
-      size: fileSizeConversionUnit(data.size) || 0,
-      url: data.url,
-      taskUuid: '',
-      taskProgress: data.taskProgress,
-      convertedPercentage: 100,
-      updateTime: data.updateTime,
-      scenes: data.scenes,
-    }
-  }
-
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
@@ -484,8 +464,8 @@ export class UploadService extends ApiBase {
 
   get uploadCallbackPrefix() {
     const getDomain: Record<string, string> = {
-      'https://api.agora.io': 'https://api-solutions.agoralab.co/',
-      'https://api-test.agora.io/preview': 'https://api-solutions-pre.bj2.agoralab.co/',
+      'https://api.agora.io': 'https://api-solutions.agoralab.co',
+      'https://api-test.agora.io/preview': 'https://api-solutions-pre.bj2.agoralab.co',
       'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
     }
 

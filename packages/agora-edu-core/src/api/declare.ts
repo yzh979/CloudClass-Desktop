@@ -22,12 +22,11 @@ export type AgoraExtAppContext = {
 }
 
 export type AgoraExtAppHandle = {
-  updateRoomProperty: (properties:any, common: any ,cause: any) => Promise<void>
+  updateRoomProperty: (properties:any, cause: any) => Promise<void>
   deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
 }
 
 export interface IAgoraExtApp {
-  language: string
   appIdentifier: string
   appName: string
   width: number
@@ -132,6 +131,17 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type VideoEncoderConfiguration = {
+  width: number,
+  height: number,
+  frameRate: number,
+  mirrorMode: number
+}
+
+export type MediaOption = {
+  videoEncoderConfiguration: VideoEncoderConfiguration
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -145,7 +155,6 @@ export type AppStoreConfigParams = {
   rtcArea?: string,
   rtmArea?: string,
   personalCourseWareList?: CourseWareList,
-  vid?: number,
   oss?: {
     region: string,
     bucketName: string,
@@ -157,7 +166,7 @@ export type AppStoreConfigParams = {
   recordUrl: string,
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
-  userFlexProperties?: {[key: string]: any}
+  mediaOptions?: MediaOption
 }
 
 export type LanguageEnum = "en" | "zh"

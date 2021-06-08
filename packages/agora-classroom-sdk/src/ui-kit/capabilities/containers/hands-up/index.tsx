@@ -1,8 +1,9 @@
 import { EduRoleTypeEnum} from 'agora-rte-sdk';
 import { useHandsUpContext, useRoomContext } from 'agora-edu-core'
 import { observer } from 'mobx-react';
-import { HandsUpManager, HandsUpSender, StudentInfo, transI18n } from '~ui-kit';
-import { useUIStore } from '@/infra/hooks';
+import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit';
+import { useGlobalContext } from 'agora-edu-core';
+import { transI18n } from '@/ui-kit/components';
 
 export const HandsUpManagerContainer = observer(() => {
 
@@ -45,7 +46,7 @@ export const HandsUpReceiverContainer = observer(() => {
 
     const {
         addToast
-    } = useUIStore()
+    } = useGlobalContext()
 
     const {
         handsUpState,

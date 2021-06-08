@@ -8,7 +8,7 @@ import { ApplianceNames, Room } from "agora-edu-core"
 import { agoraCaches } from "./web-download.file"
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '@/ui-kit/components/i18n';
 
 export enum TimeFormatType {
   Timeboard,
@@ -395,7 +395,7 @@ export type BytesType = number | string
 
 export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
   const bytes = +fileBytes
-  if(bytes == 0) return '- -';
+  if(bytes == 0) return '0 Bytes';
   const k = 1000,
     dm = decimalPoint || 2,
     units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
@@ -629,7 +629,6 @@ export const transToolBar = {
   'text': ApplianceNames.text,
   'hand': ApplianceNames.hand,
   'eraser': ApplianceNames.eraser,
-  'clicker': ApplianceNames.clicker,
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,

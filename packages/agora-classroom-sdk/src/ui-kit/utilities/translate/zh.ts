@@ -4,7 +4,6 @@ export const zh = {
     'student': '学生',
     'assistant': '助教',
   },
-  'disabled': '禁用',
   'whiteboard': {
     'converting': '转换中',
   },
@@ -74,7 +73,6 @@ export const zh = {
   'placeholder': {
     'muted_chat': '禁言中',
     'empty_chat': '还没有消息',
-    'empty_quiz': '暂无提问',
     'enable_chat_muted': '已开启学生禁言',
     'input_message': '请输入消息',
   },
@@ -100,8 +98,8 @@ export const zh = {
   'toast': {
     'mute_chat': '你已被老师禁言了',
     'unmute_chat': '你被解除禁言了',
-    'remote_mute_chat': '{studentName}被老师禁言了',
-    'remote_unmute_chat': '{studentName}被老师解除禁言了',
+    'remote_mute_chat': '{reason}被老师禁言了',
+    'remote_unmute_chat': '{reason}被老师解除禁言了',
     'add_screen_share': '老师开启了屏幕共享',
     'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',
@@ -205,7 +203,7 @@ export const zh = {
     'failed_to_initiate_a_raise_of_hand_application': '发起举手申请失败',
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
-    'stop_screen_share_failed': '停止屏幕共享失败',
+    'stop_screen_share_failed': '屏幕共享停止失败',
     'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason}`,
     'time_interval_between_end': `课程还有{reason}结束`,
@@ -228,7 +226,6 @@ export const zh = {
     'straight': '直线',
     'circle': '圆圈',
     'rectangle': '矩形',
-    'clicker':'鼠标',
     'selector': '选择',
     'eraser': '橡皮擦',
     'color': '颜色',
@@ -277,13 +274,7 @@ export const zh = {
   'pretest': {
     'title': '设备检测',
     'settingTitle': '设备设置',
-    'finishTest': '完成',
-    'detect_new_device': '检测到新设备，请使用！',
-    'camera_move_out': '摄像头被拔出，无法显示视频！',
-    'mic_move_out': '麦克风被拔出！',
-    'device_not_working': '设备未正常工作！',
-    'detect_new_device_in_room': '检测到新设备，请点击“设置”后，选择新设备。',
-    'teacher_device_may_not_work': '老师视频可能出现问题！',
+    'finishTest': '完成'
   },
   'biz-header': {
     'setting': '设置',
@@ -389,11 +380,5 @@ export const zh = {
     'content-a': `灵动课堂（“本产品”）是由上海兆言网络科技有限公司（“上海兆言”）提供的一款测试产品，上海兆言享有本产品的著作权和所有权。特此免费授予获得本产品和相关文档文件（以下简称“软件”）副本的任何人无限制地使用软件的权利，包括但不限于使用，复制，修改，合并，发布，分发，但本产品不得用于任何商业用途，不得再许可和/或出售该软件的副本。 `,
     'content-b': `本产品按“现状”提供，没有任何形式的明示担保，包括但不限于对适配性、特定目的的适用性和非侵权性的担保。无论是由于与本产品或本产品的使用或其他方式有关的任何合同、侵权或其他形式的行为，上海兆言均不对任何索赔、损害或其他责任负责。 `,
     'content-c': `您可以自由选择是否使用本产品提供的服务，如果您下载、安装、使用本产品中所提供的服务，即表明您信任该产品所有人，上海兆言对任何原因在使用本产品中提供的服务时可能对您自身或他人造成的任何形式的损失和伤害不承担任何责任。`,
-  },
-  'countdown': {
-    'appName': '倒计时',
-    'seconds': '秒',
-    'start': '开始',
-    'restart': '重新开始'
   }
 }

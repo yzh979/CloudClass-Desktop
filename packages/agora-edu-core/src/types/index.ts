@@ -1,12 +1,6 @@
 import { SceneDefinition } from "white-web-sdk"
 import { CourseWareItem, LanguageEnum } from "../api/declare"
 
-export enum DeviceStateEnum {
-  Frozen = 0,
-  Available = 1,
-  Disabled = 2,
-}
-
 export type StorageCourseWareItem = {
   size: string,
   updateTime: string,
@@ -114,7 +108,6 @@ export enum QuickTypeEnum {
 
 export enum AgoraMediaDeviceEnum {
   Default = "",
-  Disabled = "disabled",
   Unknown = "unknown"
 }
 

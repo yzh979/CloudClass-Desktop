@@ -1,27 +1,15 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, globalConfigs } from 'agora-edu-core';
+import { globalConfigs } from '@/ui-kit/utilities';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, MediaOption } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
-import { ReactElement, useState, ReactChild } from 'react';
-import { AgoraChatWidget } from 'agora-widget-gallery';
+import { ReactElement } from 'react';
+import { AgoraChatWidget, AgoraIFrameWidget } from 'agora-widget-gallery';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
-import { UIContext } from '@/infra/hooks'
-import { UIStore } from '@/infra/stores/app/ui'
-
-export const UIContextProvider = ({ children }: { children: ReactChild}) => {
-
-  const [store] = useState<UIStore>(() => new UIStore())
-
-  return (
-    <UIContext.Provider value={store}>
-      {children}
-    </UIContext.Provider>
-  )
-}
 
 export interface AliOSSBucket {
   key: string
@@ -83,6 +71,7 @@ const sdkConfig: SDKConfig = {
 export type LanguageEnum = "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
 
+
 /**
  * LaunchOption 接口
  */
@@ -106,7 +95,7 @@ export type LaunchOption = {
   extApps?: IAgoraExtApp[] // app插件
   region?: AgoraRegion
   widgets?: {[key: string]: IAgoraWidget}
-  userFlexProperties?: {[key: string]: any} //用户自订属性
+  mediaOptions?: MediaOption
 }
 
 export type ReplayOption = {
@@ -180,15 +169,7 @@ export class AgoraEduSDK {
       let json = JSON.parse(params)
       if(json["edu.apiUrl"]) {
         globalConfigs.setSDKDomain(json["edu.apiUrl"])
-      }
-      if(json["reportUrl"] && json["reportQos"]) {
-        globalConfigs.setReportConfig({
-          sdkDomain: json['reportUrl'],
-          qos: +(json['reportQos'])
-        })
-      }else{
-        globalConfigs.setReportConfig();
-      }
+      } 
       console.info(`setParameters ${params}`)
     }catch(e) {
       console.error(`parse private params failed ${params}`)
@@ -249,7 +230,6 @@ export class AgoraEduSDK {
           region: option.region,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
-          vid: data.vid,
           oss: {
             region: data.netless.oss.region,
             bucketName: data.netless.oss.bucket,
@@ -262,8 +242,8 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
-          userFlexProperties: option.userFlexProperties
+          widgets: {...{'chat':new AgoraIFrameWidget()}, ...option.widgets},
+          mediaOptions: option.mediaOptions
         },
         language: option.language,
         startTime: option.startTime,
@@ -283,9 +263,7 @@ export class AgoraEduSDK {
       }
       controller.appController.create(
         <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
-            <UIContextProvider>
-              <LiveRoom />
-            </UIContextProvider>
+            <LiveRoom />
         </CoreContextProvider>,
         dom,
         option.listener
