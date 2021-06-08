@@ -1682,7 +1682,6 @@ export class BoardStore extends ZoomController {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
-          this.room.moveCamera({centerX: 0, centerY: 0});
           this.moveCamera()
           this.room.refreshViewSize();
         }
