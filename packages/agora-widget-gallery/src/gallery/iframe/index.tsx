@@ -20,7 +20,7 @@ const App: React.FC<AppProps> = observer((props) => {
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-      <iframe style={{width:'100%',height:'100%'}} src={`http://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=https://img2.baidu.com/it/u=1593081528,1330377059&fm=26&fmt=auto&gp=0.jpg&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe>
+      <iframe style={{width:'100%',height:'100%'}} src={`https://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe>
     </div>
   )
 })
