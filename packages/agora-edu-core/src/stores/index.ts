@@ -12,10 +12,12 @@ import { MediaStore } from './media'
 import { PretestStore } from './pretest'
 import { RoomStore } from './room'
 import { SceneStore } from './scene'
-import { UIStore } from './ui'
+// import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
-import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
+import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
+import { reportServiceV2 } from '../services/report-v2'
+import { Subject } from 'rxjs'
 
 export class EduScenarioAppStore {
   // stores
@@ -23,7 +25,7 @@ export class EduScenarioAppStore {
    * appStore类
    * 包含uiStore
    */
-  uiStore!: UIStore;
+  // uiStore!: UIStore;
   boardStore!: BoardStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
@@ -36,6 +38,13 @@ export class EduScenarioAppStore {
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
   _uploadService?: UploadService;
+
+  toast$: Subject<any> = new Subject<any>()
+  dialog$: Subject<any> = new Subject<any>()
+  seq$: Subject<any> = new Subject<any>()
+  
+  @observable
+  speakers: Map<number, number> = new Map();
 
   get boardService() {
     return this._boardService as EduBoardService;
@@ -124,6 +133,22 @@ export class EduScenarioAppStore {
   @observable
   customScreenShareItems: any[] = []
 
+  @observable
+  allExtApps:IAgoraExtApp[]
+
+  @observable
+  activeExtAppIds:string[] = []
+
+  pretestNotice$: Subject<any> = new Subject<any>()
+
+  @computed
+  get activeExtApps():IAgoraExtApp[] {
+    return this.allExtApps.filter(app => this.activeExtAppIds.includes(app.appIdentifier))
+  }
+
+  @observable
+  language: string = 'zh'
+
   @action.bound
   resetStates() {
     this.mediaStore.resetRoomState()
@@ -167,6 +192,7 @@ export class EduScenarioAppStore {
 
     if (platform === 'electron') {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,
@@ -179,9 +205,11 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
+        scenarioType: roomInfoParams?.roomType
       })
     } else {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,
@@ -192,6 +220,7 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
+        scenarioType: roomInfoParams?.roomType
       })
     }
 
@@ -240,10 +269,10 @@ export class EduScenarioAppStore {
       EduManager.enableDebugLog(true);
     }
 
-    this.uiStore = new UIStore(this)
+    // this.uiStore = new UIStore(this)
 
     if (language) {
-      this.uiStore.setLanguage(language)
+      this.language = language
     }
 
     this.pretestStore = new PretestStore(this)
@@ -253,6 +282,7 @@ export class EduScenarioAppStore {
     this.mediaStore = new MediaStore(this)
     this.widgetStore = new WidgetStore()
     this.widgetStore.widgets = this.params.config.widgets || {}
+    this.allExtApps = this.params.config.extApps || []
 
     this._screenVideoRenderer = undefined
   }
@@ -403,10 +433,12 @@ export class EduScenarioAppStore {
     try {
       await this.roomStore.leave()
       reportService.stopHB()
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
       this.resetStates()
     } catch (err) {
       this.resetStates()
       const exception = GenericErrorWrapper(err)
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), err.code || err.message);
       throw exception
     }
   }
@@ -420,8 +452,32 @@ export class EduScenarioAppStore {
   async destroyRoom() {
     await this.appController.destroy()
   }
+  
+  @action.bound
+  fireToast(eventName: string, props?: any) {
+    this.toast$.next({
+      eventName,
+      props,
+    })
+  }
+
+  @action.bound
+  fireDialog(eventName: string, props?: any) {
+    console.log('fire dialog ', eventName, props)
+    this.dialog$.next({
+      eventName,
+      props
+    })
+  }
+
+  @action.bound
+  updateSeqId(props?: any) {
+    this.seq$.next({
+      props
+    })
+  }
 }
 export { BoardStore } from './board';
 export { PretestStore } from './pretest';
 export { RoomStore } from './room';
-export { UIStore } from './ui';
+// export { UIStore } from './ui';

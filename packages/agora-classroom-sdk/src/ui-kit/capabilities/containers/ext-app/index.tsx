@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
-import { IAgoraExtApp, useAppPluginContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext, useSmallClassVideoControlContext } from 'agora-edu-core'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
-import { Modal } from '@/ui-kit/components/modal'
+import { Modal, transI18n } from '~ui-kit'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
+// import { transI18n } from '~components/i18n';
 
-export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, properties: any}) => {
+export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
     const ref = useRef<HTMLDivElement | null>(null)
-    const {onShutdownAppPlugin, contextInfo} = useAppPluginContext()
+    const {contextInfo} = useAppPluginContext()
 
     const {userUuid, userName, userRole, roomName, roomUuid, roomType, language} = contextInfo
 
@@ -28,8 +30,8 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
               },
               language: language
             }, {
-              updateRoomProperty: async (properties: any, cause: {}) => {
-                return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, cause)
+              updateRoomProperty: async (properties: any, common: any, cause: {}) => {
+                return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)
               },
               deleteRoomProperties: async(properties: string[], cause: {}) => {
                 return await eduSDKApi.deleteExtAppProperties(roomUuid, app.appIdentifier, properties, cause)
@@ -39,10 +41,20 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
         return () => app.extAppWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, app])
+    const { studentStreams } = useSmallClassVideoControlContext()
     return (
-        <Draggable handle=".modal-title" defaultPosition={{x: 100, y: 100}}>
-            <Modal title={app.appName} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)}>
-                <div ref={ref} style={{width: '100%', height: app.height}}>
+        <Draggable 
+          handle=".modal-title" 
+          defaultPosition={{x: window.innerWidth / 2 - app.width / 2, y: window.innerHeight / 2 - app.height / 2 - 100}} 
+          bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
+          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? (studentStreams.length ? 40 + 170 : 40) : 0}}
+        >
+            <Modal 
+              title={transI18n(`${app.appName}.appName`)} 
+              width={app.width} onCancel={onCancel} 
+              closable={closable}
+            >
+                <div ref={ref} style={{width: '100%', height: app.height, overflow: 'hidden', transition: '.5s'}}>
                 </div>
             </Modal>
         </Draggable>
@@ -50,11 +62,29 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
 })
 
 export const AppPluginContainer = observer(() => {
-  const {activeAppPlugins, appPluginProperties} = useAppPluginContext()
+  const {activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo} = useAppPluginContext()
+  const {roomInfo} = useRoomContext()
+  const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
-        <AppPluginItem key={app.appIdentifier} app={app} properties={appPluginProperties(app)}></AppPluginItem>
+        <AppPluginItem 
+          key={app.appIdentifier} 
+          app={app} 
+          properties={appPluginProperties(app)} 
+          closable={closable}
+          onCancel={async () => {
+            await eduSDKApi.updateExtAppProperties(contextInfo.roomUuid, app.appIdentifier, {
+              state: '0',
+              startTime: '0',
+              pauseTime: '0',
+              duration: '0'
+            }, {
+              state: 0
+            }, {})
+            onShutdownAppPlugin(app.appIdentifier)
+          }}
+        ></AppPluginItem>
       )}
     </div>
   )

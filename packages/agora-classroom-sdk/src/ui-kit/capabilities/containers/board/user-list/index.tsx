@@ -1,51 +1,62 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
+import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import { StudentRoster } from '@/ui-kit/components';
+import { StudentRoster } from '~ui-kit/components';
 import { KickDialog } from '../../dialog';
+import { useUIStore } from '@/infra/hooks';
 
 export type UserListContainerProps = {
     onClose: () => void
 }
 
 export const UserListContainer: React.FC<UserListContainerProps> = observer((props) => {
-
     const {
         revokeBoardPermission,
         grantBoardPermission,
     } = useBoardContext()
 
     const {
-        streamList
+        streamList,
+        muteVideo,
+        muteAudio,
+        unmuteAudio,
+        unmuteVideo
     } = useStreamListContext()
 
     const {
         addDialog,
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
-        muteVideo,
-        muteAudio,
-        unmuteAudio,
-        unmuteVideo,
-        muteUserChat,
-        unmuteUserChat,
+        // muteVideo,
+        // muteAudio,
+        // unmuteAudio,
+        // unmuteVideo,
+        // muteUserChat,
+        // unmuteUserChat,
         roomInfo
     } = useRoomContext()
 
     const {
-        localUserUuid,
-        myRole,
-        teacherName,
-        rosterUserList,
-        revokeCoVideo,
-        teacherAcceptHandsUp,
+        muteUserChat,
+        unmuteUserChat
+    } = useChatContext()
+
+    const {
+        localUserInfo,
+        teacherInfo,
+        rosterUserList
     } = useUserListContext()
+
+    const {
+        teacherAcceptHandsUp,
+        teacherRevokeCoVideo
+    } = useHandsUpContext()
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = rosterUserList
@@ -58,7 +69,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             case 'podium': {
                 if (user.onPodium) {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await revokeCoVideo(user.uid)
+                        await teacherRevokeCoVideo(user.uid)
                     }
                 } else {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
@@ -137,9 +148,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     return (
         <Roster
             isDraggable={true}
-            localUserUuid={localUserUuid}
-            role={myRole as any}
-            teacherName={teacherName}
+            localUserUuid={localUserInfo.userUuid}
+            teacherName={teacherInfo?.userName || ''}
             dataSource={dataList}
             userType={userType}
             onClick={onClick}
@@ -158,26 +168,30 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     const {
         streamList,
         localStream,
+        muteVideo,
+        muteAudio,
+        unmuteAudio,
+        unmuteVideo
     } = useStreamListContext()
 
     const {
         addDialog,
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
-        muteVideo,
-        muteAudio,
-        unmuteAudio,
-        unmuteVideo,
-        roomInfo,
-        muteUserChat,
-        unmuteUserChat,
+        queryMicrophoneDeviceState,
+        queryCameraDeviceState,
+        roomInfo
     } = useRoomContext()
 
     const {
-        localUserUuid,
-        myRole,
-        teacherName,
+        muteUserChat,
+        unmuteUserChat
+    } = useChatContext()
+
+    const {
+        localUserInfo,
+        teacherInfo,
         userList,
         acceptedUserList
     } = useUserListContext()
@@ -196,56 +210,32 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         return true
       }
 
-    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean) {
+    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean, userList: EduUser[]) {
         return {
             name: user.userName,
             uid: user.userUuid,
             micEnabled: stream?.hasAudio ?? false,
             cameraEnabled: stream?.hasVideo ?? false,
             onPodium: onPodium,
+            micDevice: queryMicrophoneDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
+            cameraDevice: queryCameraDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
+            online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
+            hasStream: !!stream,
             chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
-            disabled: checkDisable(user, role)
+            disabled: checkDisable(user, role),
+            userType: ['assistant', 'teacher'].includes(role) ? 'teacher' : 'student'
         }
     }
 
     const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
 
-    // const localStudentInfo = useMemo(() => {
-
-    // }, [])
-
-    const lectureClassUserStreamList = useMemo(() => {
-        const remoteStudentList = userList
-            .filter((user: any) => ['audience'].includes(user.role))
-            .filter((user: any) => user.userUuid !== localUserUuid)
-            .reduce((acc: any[], user: any) => {
-                const stream = streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-                const userInfo = transformRosterUserInfo(user, roomInfo.userRole, stream, acceptedIds.includes(user.userUuid))
-                acc.push(userInfo)
-                return acc
-              }, [])
-
-        // is student
-        if (roomInfo.userRole === 2) {
-            const localUserInfo = transformRosterUserInfo(
-                {
-                    userUuid: roomInfo.userUuid,
-                    userName: roomInfo.userName,
-                },
-                roomInfo.userRole,
-                localStream,
-                acceptedIds.includes(roomInfo.userUuid)
-                )
-            return [localUserInfo].concat(remoteStudentList)
-        }              
-
-        return remoteStudentList
-    }, [localStream, roomInfo.userName, roomInfo.userUuid, roomInfo.userRole, userList, streamList, acceptedIds, localStream, acceptedUserList])
-
+    const {
+        rosterUserList,
+    } = useUserListContext()
 
     const dataList = useMemo(() => {
-        return lectureClassUserStreamList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-      }, [keyword, lectureClassUserStreamList])
+        return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+      }, [keyword, rosterUserList])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = dataList
@@ -309,9 +299,9 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     return (
         <StudentRoster
             isDraggable={true}
-            localUserUuid={localUserUuid}
-            role={myRole as any}
-            teacherName={teacherName}
+            localUserUuid={localUserInfo.userUuid}
+            // role={localUserInfo.role as any}
+            teacherName={teacherInfo?.userName || ''}
             dataSource={dataList}
             userType={userType}
             onClick={onClick}

@@ -1,1 +1,0 @@
-declare const REACT_APP_IM_APP_KEY: string;

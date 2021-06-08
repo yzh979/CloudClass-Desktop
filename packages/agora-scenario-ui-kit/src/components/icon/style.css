@@ -1,0 +1,161 @@
+.hover{
+  cursor: pointer;
+}
+
+.icon-box {
+  border-radius: 99px;
+  max-width: 29px;
+}
+
+.biz-header .icon-box-hover:hover::before {
+  height: 28px !important;
+  width: 28px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-box-hover:hover::before {
+  background-color: #f0f0f7;
+  border-radius: 50%;
+}
+
+.icon-hover:hover {
+  background-color: #f0f0f7;
+}
+
+.header-actions .icon-box-hover:hover,
+.zoom-controller .icon-box-hover:hover,
+.tool .icon-box-hover:hover {
+  color: #191919 !important;
+}
+
+.icon-hover{
+  border-radius: 9999px;
+  cursor: pointer;
+  text-align: center;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.use-svg {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.use-svg:before {
+  opacity: 0;
+}
+
+.agora-board-resources .icon-clicker {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-clicker {
+  width: 28px;
+  height: 28px;
+  background-image: url('./assets/svg/select-default.svg');
+}
+
+.active .icon-clicker {
+  background-image: url('./assets/svg/select-actived.svg');
+}
+
+.icon-assistant-authorized.assistant-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+}
+.icon-teacher-authorized.teacher-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+}
+.icon-teacher-whiteboard.teacher-whiteboard {
+  background-image: url('./assets/svg/teacher-granted-default.svg');
+}
+.icon-student-authorized.student-authorized {
+  background-image: url('./assets/svg/student-granted-active.svg'); 
+}
+.icon-student-whiteboard.student-whiteboard {
+  background-image: url('./assets/svg/student-granted-default.svg');
+}
+
+.icon-recording.recording {
+  background-image: url('./assets/svg/recording.svg'); 
+}
+.icon-share-screen.share-screen {
+  background-image: url('./assets/svg/share-screen.svg');
+}
+.icon-checked.checked {
+  background-image: url('./assets/svg/icon-accept.svg'); 
+}
+.icon-close.close{
+  background-image: url('./assets/svg/icon-refuse.svg');
+}
+.icon-countdown.countdown{
+  background-image: url('./assets/svg/icon-countdown.svg');
+}
+
+/* .can-hover .icon-microphone-on-outline,
+.can-hover .icon-camera,
+.can-hover .icon-microphone-off-outline,
+.can-hover .icon-camera-off
+{
+  cursor: pointer;
+}
+
+.disable-hover .icon-microphone-on-outline,
+.disable-hover .icon-camera,
+.disable-hover .icon-microphone-off-outline,
+.disable-hover .icon-camera-off {
+  cursor: none !important;
+} */
+
+.icon-microphone-on-outline.rtc-state-available,
+.icon-camera.rtc-state-available,
+.icon-microphone-on.rtc-state-available
+{
+  color: #357BF6 !important;
+}
+
+.icon-microphone-off-outline.rtc-state-available,
+.icon-camera-off.rtc-state-available,
+.icon-microphone-off.rtc-state-available
+{
+  color: #F04C36 !important;
+}
+
+.icon-microphone-on-outline.rtc-state-available,
+.icon-camera.rtc-state-available,
+.icon-microphone-off-outline.rtc-state-available,
+.icon-camera-off.rtc-state-available{
+  cursor: pointer !important;
+}
+
+.icon-microphone-on-outline.rtc-state-not-available,
+.icon-microphone-off-outline.rtc-state-not-available,
+.icon-camera.rtc-state-not-available,
+.icon-camera-off.rtc-state-not-available,
+.icon-microphone-on.rtc-state-not-available,
+.icon-microphone-off.rtc-state-not-available
+{
+  color: #BDBDCA !important;
+  user-select: none !important;
+}
+
+.icon-microphone-on-outline.rtc-state-not-permitted,
+.icon-microphone-off-outline.rtc-state-not-permitted,
+.icon-camera.rtc-state-not-permitted,
+.icon-camera-off.rtc-state-not-permitted,
+.icon-microphone-on.rtc-state-not-permitted,
+.icon-microphone-off.rtc-state-not-permitted
+{
+  color: #BDBDCA !important;
+  user-select: none !important;
+}
+
+.resource-type {
+  width: 24px;
+  height: 24px;
+}

@@ -8,15 +8,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer')
 const tailwindcss = require('tailwindcss')
 
-const {DefinePlugin} = webpack
-
 const path = require("path");
-
-const key = process.env.REACT_APP_IM_APP_KEY
 
 const env = process.env.NODE_ENV || 'production'
 
-console.log(`webpack.config.js loaded ${env} ${key}`)
+console.log(`webpack.config.js loaded ${env}`)
 
 module.exports = {
   entry: {
@@ -136,9 +132,6 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'index.html')
-    }),
-    new DefinePlugin({
-      REACT_APP_IM_APP_KEY: JSON.stringify(process.env.REACT_APP_IM_APP_KEY),
     })
   ],
 };

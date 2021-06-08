@@ -7,6 +7,7 @@ import { escapeExtAppIdentifier } from "../utilities/ext-app";
 type ConfigResult = {
   customerId: string,
   customerCertificate: string,
+  vid: number,
   netless: {
     appId: string
     token: string,
@@ -64,6 +65,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async reportMicState(payload: {roomUuid: string, userUuid: string, state: number}): Promise<any> {
+    const res = await this.fetch({
+      url: `/v2/rooms/${payload.roomUuid}/users/${payload.userUuid}/device`,
+      method: 'PUT',
+      data: {
+        mic: payload.state
+      }
+    })
+    return res.data
+  }
+
   async checkIn(params: {
     roomUuid: string,
     roomName: string,
@@ -73,7 +85,8 @@ export class EduSDKApi extends ApiBase {
     role: number,
     startTime?: number,
     duration?: number,
-    region?: string
+    region?: string,
+    userProperties?: Record<string, any>
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'http', 'preflight')
@@ -87,7 +100,8 @@ export class EduSDKApi extends ApiBase {
         startTime: params.startTime,
         userName: params.userName,
         duration: params.duration,
-        boardRegion: params.region
+        boardRegion: params.region,
+        userProperties: params.userProperties
       }
     })
     res.data.ts = res.ts
@@ -452,12 +466,13 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, cause: any) {
+  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, common: any, cause: any) {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'PUT',
       data: {
         properties,
+        common,
         cause
       }
     })

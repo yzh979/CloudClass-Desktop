@@ -1,5 +1,5 @@
 import { useHomeStore } from "@/infra/hooks"
-import { changeLanguage, Home } from "@/ui-kit"
+import { changeLanguage, Home } from "~ui-kit"
 import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
@@ -159,9 +159,10 @@ export const HomePage = observer(() => {
           roomName: `${roomName}`,
           userName: userName,
           roleType: role,
-          startTime: +startDate,
+          startTime: +(new Date()),
           region,
           duration: duration * 60,
+          userFlexProperties: {"avatar": "test"}
         })
         history.push('/launch')
       }}

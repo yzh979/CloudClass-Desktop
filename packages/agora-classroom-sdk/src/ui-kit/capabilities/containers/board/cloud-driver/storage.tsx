@@ -1,11 +1,11 @@
-import { useBoardContext } from 'agora-edu-core';
+import { useCloudDriveContext } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
 
 export const StorageContainer = observer(() => {
 
-  const {publicResources, openCloudResource} = useBoardContext()
+  const {publicResources, openCloudResource} = useCloudDriveContext()
 
   return (
     <Table>
@@ -27,7 +27,7 @@ export const StorageContainer = observer(() => {
             <Inline color="#586376">{size}</Inline>
           </Col>
           <Col>
-            <Inline color="#586376">{dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss")}</Inline>
+            <Inline color="#586376">{!!updateTime ? dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss") : '- -'}</Inline>
           </Col>
         </Row>
       ) : <Placeholder placeholderType="noFile"/>}

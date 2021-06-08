@@ -15,6 +15,7 @@ const {
   addDecoratorsLegacy,
   addBabelPresets,
   adjustStyleLoaders,
+  removeModuleScopePlugin,
   // addWebpackTarget,
 } = require('customize-cra')
 const autoprefixer = require('autoprefixer')
@@ -89,8 +90,14 @@ const isProd = process.env.ENV === 'production';
 const addStyleLoader = () => (config) => {
   config.module.rules.push({
     test: /\.css$/,
-    // exclude: /node_modules/,
-    include: path.resolve(__dirname, 'src'),
+    include: [
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, '../agora-rte-sdk/src'),
+      path.resolve(__dirname, '../agora-edu-core/src'),
+      path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+      path.resolve(__dirname, '../agora-plugin-gallery/src'),
+      path.resolve(__dirname, '../agora-widget-gallery/src'),
+    ],
     use: [
       // No need for "css-loader" nor "style-loader"
       // for CRA will later apply them anyways.
@@ -224,14 +231,17 @@ const removeEslint = () => config => {
 let version = packageInfo.version
 let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
 if(apaasBuildEnv) {
-  const date = dayjs().format('YYMMDD')
-  const translator = short()
-  const hash = translator.new()
-  if(apaasBuildEnv === 'test') {
-    version=`test-${packageInfo.version}-${date}${hash}`
-  } else if(apaasBuildEnv === 'preprod') {
-    version=`preprod-${packageInfo.version}-${date}${hash}`
-  }
+  // const date = dayjs().format('YYMMDD')
+  // const translator = short()
+  // const hash = translator.new()
+  version = `${packageInfo.version}`
+  // if(apaasBuildEnv === 'test') {
+  //   version=`test-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'preprod') {
+  //   version=`preprod-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'prod') {
+  //   version=`${packageInfo.version}`
+  // }
 }
 
 const webpackConfig = override(
@@ -249,7 +259,6 @@ const webpackConfig = override(
   addWebpackExternals(setElectronDeps),
   adjustStyleLoaders((loader) => {
     loader.exclude = [
-      // /node_modules/,
       path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
     ]
   }),
@@ -257,7 +266,6 @@ const webpackConfig = override(
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
-    REACT_APP_IM_APP_KEY: JSON.stringify(config.REACT_APP_IM_APP_KEY),
     REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
     REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
@@ -280,6 +288,8 @@ const webpackConfig = override(
     REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
     AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
+    REACT_APP_REPORT_URL: config.hasOwnProperty('REACT_APP_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_REPORT_URL}`) : JSON.stringify(""),
+    REACT_APP_REPORT_QOS: config.hasOwnProperty('REACT_APP_REPORT_QOS') ? JSON.stringify(`${config.REACT_APP_REPORT_QOS}`) : JSON.stringify(""),
   })),
   // addWebpackPlugin(
   //   new SimpleProgressWebpackPlugin()
@@ -297,7 +307,12 @@ const webpackConfig = override(
   //   })
   // ),
   babelInclude([
-    path.resolve("src")
+    path.resolve("src"),
+    path.resolve(__dirname, '../agora-rte-sdk/src'),
+    path.resolve(__dirname, '../agora-edu-core/src'),
+    path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+    path.resolve(__dirname, '../agora-plugin-gallery/src'),
+    path.resolve(__dirname, '../agora-widget-gallery/src'),
   ]),
   babelExclude([
     path.resolve("node_modules"),
@@ -331,14 +346,19 @@ const webpackConfig = override(
   addWebpackAlias({
     ['@']: path.resolve(__dirname, 'src'),
     '~core': path.resolve(__dirname, 'src/core'),
-    '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
-    '~components': path.resolve(__dirname, 'src/ui-kit/components'),
-    '~styles': path.resolve(__dirname, 'src/ui-kit/styles'),
-    '~utilities': path.resolve(__dirname, 'src/ui-kit/utilities'),
+    '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+    '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
+    '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
+    '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
     '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
     '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
     '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
+    'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
+    'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
+    'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
+    'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
   }),
+  removeModuleScopePlugin()
   // addBabelPresets(
   //   [
   //     "@babel/env",

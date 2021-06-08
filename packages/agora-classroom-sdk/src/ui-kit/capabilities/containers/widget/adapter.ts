@@ -1,3 +1,4 @@
+import { useUIStore } from "@/infra/hooks"
 import { useChatContext, useGlobalContext, useRoomContext } from "agora-edu-core"
 import { useEffect, useState } from "react"
 import { BehaviorSubject } from "rxjs"
@@ -8,14 +9,12 @@ export const Adapter = () => {
     const [globalEvents] = useState(() => new BehaviorSubject({}))
 
     const {
-        chatCollapse,
         canChatting,
         isHost,
         getHistoryChatMessage,
         unreadMessageCount,
         muteChat,
         unmuteChat,
-        toggleChatMinimize,
         messageList,
         sendMessage,
         addChatMessage,
@@ -25,22 +24,35 @@ export const Adapter = () => {
         getConversationList,
         getConversationHistoryChatMessage
     } = useChatContext()
+
+    const {
+        chatCollapse,
+        toggleChatMinimize
+    } = useUIStore()
+
     const {
         roomInfo
     } = useRoomContext()
 
+
+    
     const {
         isFullScreen,
-        joined
+        isJoined
     } = useGlobalContext()
 
     useEffect(() => {
         chatEvents.next({unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList})
     }, [unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList, chatEvents])
+    useEffect(() => {
+        return () => {
+            chatEvents.complete()
+        }
+    }, [])
 
     useEffect(() => {
-        globalEvents.next({isFullScreen, joined})
-    }, [isFullScreen, globalEvents, joined])
+        globalEvents.next({isFullScreen, isJoined})
+    }, [isFullScreen, globalEvents, isJoined])
 
     useEffect(() => {
         roomEvents.next({roomInfo})

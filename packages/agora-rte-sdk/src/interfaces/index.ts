@@ -112,7 +112,8 @@ export enum EduRoleType {
   audience = 'audience',
   student = 'broadcaster',
   invisible = 'invisible',
-  assistant = 'assistant'
+  assistant = 'assistant',
+  none = 'none'
 }
 
 /**
@@ -166,6 +167,7 @@ export enum LogLevel {
 }
 
 export interface EduConfiguration {
+  vid?: number,
   appId: string;
   cefClient?: any;
   // region: AREA_CODE;
@@ -181,7 +183,8 @@ export interface EduConfiguration {
   codec?: string
   sdkDomain?: string
   rtmUid: string
-  rtmToken: string
+  rtmToken: string,
+  scenarioType?: number
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
@@ -539,6 +542,10 @@ export class EduUserData {
 
   updateUserChatMute(v: boolean) {
     setWith(this._user!, 'userProperties.mute.muteChat', !!v)
+  }
+
+  updateUserDevice(path: 'device.camera' | 'device.mic', v: number) {
+    setWith(this._user!, `userProperties.${path}`, v)
   }
 
   get rtcToken(): string {

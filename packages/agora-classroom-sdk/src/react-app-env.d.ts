@@ -19,7 +19,6 @@ declare const REACT_APP_BUILD_VERSION: string;
 declare const REACT_APP_PUBLISH_DATE: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;
-declare const REACT_APP_IM_APP_KEY: string;
 declare const REACT_APP_AGORA_APP_CERTIFICATE: string;
 declare const REACT_APP_NETLESS_APP_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_ID: string;
@@ -31,6 +30,8 @@ declare const REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: string;
 declare const REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: string;
 declare const REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: string;
 declare const REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: string;
+declare const REACT_APP_REPORT_URL: string;
+declare const REACT_APP_REPORT_QOS: number;
 interface CustomGlobalUtils {
   platform: string
   isElectron: boolean

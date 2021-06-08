@@ -4,6 +4,7 @@ import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
+import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
@@ -25,6 +26,8 @@ import { ZoomController } from './zoom';
 import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { Resource } from '../context/type';
+import { reportServiceV2 } from '../services/report-v2';
+import MD5 from 'js-md5';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -237,15 +240,7 @@ export class BoardStore extends ZoomController {
 
   @observable
   downloading: boolean = false
-
-  @action.bound
-  changeScenePath(path: string) {
-    this.activeScenePath = path
-    if (this.online && this.room && this.boardRoomIsAvailable) {
-      this.room.setScenePath(this.activeScenePath)
-    }
-  }
-
+  
   appStore!: EduScenarioAppStore
 
   @observable
@@ -434,6 +429,29 @@ export class BoardStore extends ZoomController {
       else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
+          if (targetResource.ext === 'h5') {
+            this.insertH5(targetResource.url, targetResource.id)
+            if (targetPath === 'screenShare') {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 1})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            } else {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 0})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            }
+            return
+          }
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
@@ -621,16 +639,11 @@ export class BoardStore extends ZoomController {
     if (resourceUuid.match(/screenShare/i)) {
       try {
         await this.appStore.sceneStore.stopRTCSharing()
-      } catch (err) {
-        this.appStore.uiStore.fireToast('toast.stop_screen_share_failed')
-        throw err
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), 0)
+      } catch (error) {
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message)
       }
-      try {
-        this.removeScreenShareScene()
-      } catch (err) {
-        this.appStore.uiStore.fireToast('toast.stop_screen_share_failed')
-        throw err
-      }
+      this.removeScreenShareScene()
     } else {
       this.room.setGlobalState({
         roomScenes: {
@@ -937,7 +950,7 @@ export class BoardStore extends ZoomController {
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
-          this.room.scalePptToFit()
+          this.scaleToFit()
         }
       }
       if (state.memberState) {
@@ -995,6 +1008,8 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
+      wrappedComponents: [IframeWrapper],
+      invisiblePlugins: [IframeBridge]
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -1003,10 +1018,10 @@ export class BoardStore extends ZoomController {
       b: 63
     }
     this.room.setMemberState({
-      currentApplianceName: ApplianceNames.selector,
+      currentApplianceName: ApplianceNames.clicker,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
-    this.selector = 'selection'
+    this.selector = 'clicker'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -1129,7 +1144,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   setLaserPoint() {
-    if (!this.boardRoomIsAvailable) {
+    if (this.boardRoomIsAvailable) {
       this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
@@ -1164,6 +1179,8 @@ export class BoardStore extends ZoomController {
       case 'hand':
       case 'eraser':
       case 'color':
+      case 'clicker':
+      case ApplianceNames.clicker:
       case ApplianceNames.pencil:
       case ApplianceNames.rectangle:
       case ApplianceNames.ellipse:
@@ -1189,7 +1206,8 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.ellipse]: 'circle',
             [ApplianceNames.straight]: 'line',
             [ApplianceNames.arrow]: 'arrow',
-            [ApplianceNames.selector]: 'selection'
+            [ApplianceNames.selector]: 'selection',
+            [ApplianceNames.clicker]: 'clicker',
           }
 
           if (selector[tool]) {
@@ -1389,9 +1407,9 @@ export class BoardStore extends ZoomController {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_lock'))
+    //       this.appStore.fireToast('toast.whiteboard_lock'))
     //     } else {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_unlock'))
+    //       this.appStore.fireToast('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1402,7 +1420,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.uiStore.fireToast(notice)
+        this.appStore.fireToast(notice)
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1483,7 +1501,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return oneToOneTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return []
         }
@@ -1500,7 +1518,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return bigClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return bigClassTools.filter((item: ToolItem) => item.value === 'student_list')
         }
@@ -1528,7 +1546,7 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get tools() {
+  get tools(): any[] {
     if (this._tools) {
       const isMenuItem = (value: string) => !['cloud', 'tools', 'register', 'student_list'].includes(value)
       return this._tools.map((item: ToolItem) => ({...item, hover: isMenuItem(item.value) ? this.ready : true}))
@@ -1603,9 +1621,9 @@ export class BoardStore extends ZoomController {
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
           this.room.setMemberState({
-            currentApplianceName: ApplianceNames.selector
+            currentApplianceName: ApplianceNames.clicker
           })
-          this.selector = 'selection'
+          this.selector = 'clicker'
         }
       }
       this.room.disableDeviceInputs = !v
@@ -1656,9 +1674,9 @@ export class BoardStore extends ZoomController {
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.granted_board_success`)
+      this.appStore.fireToast(`toast.granted_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1666,9 +1684,9 @@ export class BoardStore extends ZoomController {
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.revoke_board_success`)
+      this.appStore.fireToast(`toast.revoke_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1682,6 +1700,7 @@ export class BoardStore extends ZoomController {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
+          this.room.moveCamera({centerX: 0, centerY: 0});
           this.moveCamera()
           this.room.refreshViewSize();
         }
@@ -1837,8 +1856,13 @@ export class BoardStore extends ZoomController {
           }
         }
       })
-      this.room.putScenes(`/${resource.id}`, resource.scenes)
-      this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`]
+      if (sceneExists) {
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      } else {
+        this.room.putScenes(`/${resource.id}`, resource.scenes)
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      }
     }
   }
 
@@ -1878,6 +1902,70 @@ export class BoardStore extends ZoomController {
     })
     room.putScenes(sharePath, [{name: "0"}])
     room.setScenePath(sharePath)
+  }
+
+  iframe: IframeBridge = null as any;
+
+  @action.bound
+  async insertH5(url: string, resourceUuid: string) {
+    const bridge = this.boardClient.bridge;
+    const scenePath = `/${resourceUuid}`
+    const room = this.room
+    // const iframe = this.iframeList.get(scenePath)
+    const iframe = this.iframe
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
+      // TODO: workaround.
+      // Cause probably is readonly state, so the IframeBridge cannot operate.
+      await this.room.setWritable(true)
+    }
+    if (!iframe) {
+      const oldIframe = this.room.getInvisiblePlugin('IframeBridge')
+      if (oldIframe) {
+        //@ts-ignore
+        oldIframe?.setAttributes({
+          //@ts-ignore
+          url: url,
+          width: 1280,
+          height: 720,
+          displaySceneDir: `${scenePath}`,
+          useClicker: true
+        })
+        //@ts-ignore
+        this.iframe = oldIframe
+        this.putCourseResource(resourceUuid)
+        return
+      }
+      const iframe = await IframeBridge.insert({
+        room,
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: true
+      })
+      this.iframe = iframe
+      this.putCourseResource(resourceUuid)
+    } else {
+      iframe?.setAttributes({
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: true
+      })
+      this.putCourseResource(resourceUuid)
+      // room.setScenePath(scenePath)
+    }
+    // if (bridge) {
+      
+      // const scenes = room.entireScenes();
+      // if (!scenes[scenePath]) {
+      //     room.putScenes(scenePath, genH5Scenes(totalPage));
+      // }
+      // if (room.state.sceneState.contextPath !== scenePath) {
+      //     room.setScenePath(scenePath);
+      // }
+    // }
   }
 
   @action.bound
@@ -1936,6 +2024,9 @@ export class BoardStore extends ZoomController {
       if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)
       }
+      if (["h5"].includes(resource.type)) {
+        await this.insertH5(resource.url, uuid)
+      }
     } catch (err) {
       throw err
     }
@@ -1989,19 +2080,39 @@ export class BoardStore extends ZoomController {
     this.room.cleanCurrentScene()
   }
 
+  @computed
+  get isH5IFrame() {
+    const id = this.room.state.sceneState.contextPath.split('/')[1]
+    const resource = this.allResources.find((it: any) => it.id === id)
+    const ext = resource?.ext ?? 'unknown'
+    return ext === 'h5'
+  }
+
+
   @action.bound
-  moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[this.room.state.sceneState.index].ppt) {
-      this.room.scalePptToFit()
-    } else {
-      if(this.room.state.broadcastState.mode === ViewMode.Freedom) {
-        this.room.moveCamera({
-          centerX: 0,
-          centerY: 0,
-          scale: 1,
-        })
+  scaleToFit() {
+    if (this.isH5IFrame) {
+      if(this.iframe){
+        this.iframe.scaleIframeToFit()
+      } else {
+          //@ts-ignore
+          this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
       }
     }
+    this.room.scalePptToFit()
+  } 
+
+  @action.bound
+  moveCamera() {
+    if (!isEmpty(this.room.state.sceneState.scenes) 
+    && !this.room.state.sceneState.scenes[0].ppt) {
+      this.room.moveCamera({
+        centerX: 0,
+        centerY: 0,
+        scale: 1,
+      })
+    }
+    this.scaleToFit()
   }
 
   @computed

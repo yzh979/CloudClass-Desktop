@@ -1,26 +1,42 @@
-import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
+import { useUIStore } from "@/infra/hooks"
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
-    teacherStream: userStream,
+    // teacherStream: userStream,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
     onOffAllPodiumClick,
-    sceneVideoConfig,
+    // sceneVideoConfig,
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
+  const {
+    teacherStream: userStream
+  } = useStreamListContext()
+  const {
+    controlTools,
+    isHost
+  } = useUserListContext()
+
+  const {
+    roomInfo
+  } = useRoomContext()
+
+  const {
+    eduRole2UIRole
+  } = useUIStore()
 
   return (
     <VideoPlayer
-      isHost={sceneVideoConfig.isHost}
+      isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
       stars={userStream.stars}
@@ -28,11 +44,17 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
       hideControl={userStream.hideControl}
+      micDevice={userStream.micDevice}
+      cameraDevice={userStream.cameraDevice}
+      isLocal={userStream.isLocal}
+      online={userStream.online}
+      isOnPodium={userStream.onPodium}
+      hasStream={userStream.hasStream}
       whiteboardGranted={userStream.whiteboardGranted}
       hideBoardGranted={true}
       hideStars={true}
       micVolume={userStream.micVolume}
-      hideOffAllPodium={sceneVideoConfig.hideOffAllPodium}
+      hideOffAllPodium={!controlTools.includes(ControlTool.offPodiumAll)}
       canHoverHideOffAllPodium={canHoverHideOffAllPodium}
       onOffAllPodiumClick={onOffAllPodiumClick!}
       onCameraClick={onCameraClick}
@@ -42,7 +64,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       controlPlacement={'left'}
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
-      userType={'teacher'}
+      userType={eduRole2UIRole(roomInfo.userRole)}
       className={className}
       style={style}
     >
@@ -71,22 +93,46 @@ export type VideoProps = {
 export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement, style, className}) => {
 
   const {
-    firstStudent: userStream,
+    // firstStudent: userStream,
     onCameraClick, onMicClick,
     onSendStar, onWhiteboardClick,
-    sceneVideoConfig,
+    // sceneVideoConfig,
     onOffPodiumClick,
   } = useVideoControlContext()
+
+  const {
+    roomInfo
+  } = useRoomContext()
+
+  const {
+    eduRole2UIRole
+  } = useUIStore()
+
+  const {
+    studentStreams
+  } = useStreamListContext()
+
+  const userStream = studentStreams[0]
+
+  const {
+    isHost
+  } = useUserListContext()
   
   return (
     <VideoPlayer
-      isHost={sceneVideoConfig.isHost}
+      isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
+      micDevice={userStream.micDevice}
+      cameraDevice={userStream.cameraDevice}
+      isLocal={userStream.isLocal}
+      online={userStream.online}
+      isOnPodium={userStream.onPodium}
+      hasStream={userStream.hasStream}
       whiteboardGranted={userStream.whiteboardGranted}
       hideStars={true}
       micVolume={userStream.micVolume}
@@ -100,6 +146,8 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       placement={controlPlacement}
       style={style}
       className={className}
+      showGranted={true}
+      userType={eduRole2UIRole(roomInfo.userRole)}
     >
       {
         <>
@@ -126,15 +174,20 @@ export const VideoMarqueeStudentContainer = observer(() => {
     onWhiteboardClick,
     onOffPodiumClick,
     studentStreams,
-    sceneVideoConfig,
-    firstStudent
+    // sceneVideoConfig,
+    // firstStudent
   } = useSmallClassVideoControlContext()
 
-    const videoStreamList = useMemo(() => {
+  const {
+    isHost,
+    controlTools
+  } = useUserListContext()
 
+  const firstStudentStream = studentStreams[0]
+
+  const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
-      isHost: sceneVideoConfig.isHost,
-      hideOffPodium: sceneVideoConfig.hideOffPodium,
+      isHost: isHost,
       username: stream.account,
       stars: stream.stars,
       uid: stream.userUuid,
@@ -146,7 +199,13 @@ export const VideoMarqueeStudentContainer = observer(() => {
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
       canHoverHideOffAllPodium: true,
-      hideBoardGranted: sceneVideoConfig.hideBoardGranted,
+      hasStream: stream.hasStream,
+      online: stream.online,
+      isLocal: stream.isLocal,
+      isOnPodium: stream.onPodium,
+      micDevice: stream.micDevice,
+      cameraDevice: stream.cameraDevice,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
         {
@@ -161,10 +220,10 @@ export const VideoMarqueeStudentContainer = observer(() => {
       )
       }))
   }, [
-    firstStudent,
+    firstStudentStream,
     studentStreams,
-    sceneVideoConfig.hideOffPodium,
-    sceneVideoConfig.isHost
+    isHost,
+    controlTools.includes(ControlTool.offPodium)
   ])
 
   const {
@@ -185,12 +244,21 @@ export const VideoMarqueeStudentContainer = observer(() => {
     sceneType
   } = useRoomContext()
 
+  const {
+    roomInfo
+  } = useRoomContext()
+
+  const {
+    eduRole2UIRole
+  } = useUIStore()
+
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
           hideStars={sceneType === 2}
           videoStreamList={videoStreamList}
+          userType={eduRole2UIRole(roomInfo.userRole)}
           onCameraClick={onCameraClick}
           onMicClick={onMicClick}
           onSendStar={onSendStar}

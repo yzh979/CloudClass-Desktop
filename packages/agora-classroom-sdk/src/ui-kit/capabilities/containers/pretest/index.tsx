@@ -1,24 +1,42 @@
-import { useGlobalContext, usePretestContext } from 'agora-edu-core'
+import { useGlobalContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Modal, Pretest, t } from '~ui-kit'
+import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
+import { Volume } from '~components/volume'
+import {v4 as uuidv4} from 'uuid'
+
+
+const VolumeIndicationView = observer(() => {
+    const {
+        microphoneLevel
+    } = useVolumeContext()
+    // const {
+        // microphoneLevel
+    // } = usePretestContext()
+
+    return (
+        <Volume
+            currentVolume={microphoneLevel}
+            maxLength={48}
+            style={{marginLeft: 6}}
+        />
+    )
+})
 
 
 export const PretestContainer = observer(() => {
     const {
+        cameraError,
+        microphoneError,
         cameraList,
         microphoneList,
         speakerList,
-        cameraError,
-        microphoneError,
         cameraId,
         microphoneId,
-        pretestCameraRenderer,
         isMirror,
         setMirror,
-        microphoneLevel,
         changeTestSpeakerVolume,
         changeTestMicrophoneVolume,
         installPretest,
@@ -26,11 +44,11 @@ export const PretestContainer = observer(() => {
         changeTestMicrophone,
         stopPretestCamera,
         stopPretestMicrophone,
+        pretestNoticeChannel,
+        pretestCameraRenderer,
     } = usePretestContext()
 
-    useEffect(() => installPretest(), [])
-
-    const VideoPreviewPlayer = useCallback(() => {
+    const VideoPreviewPlayer = useCallback(() => {    
         return (
             <RendererPlayer
                 className="camera-placeholder camera-muted-placeholder"
@@ -43,6 +61,12 @@ export const PretestContainer = observer(() => {
             />
         )
     }, [pretestCameraRenderer, cameraId, isMirror])
+
+    const handleError = (evt: any) => {
+        pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
+    }
+
+    useEffect(() => installPretest(handleError), [])
 
     const onChangeDevice = async (type: string, value: any) => {
         switch (type) {
@@ -89,10 +113,12 @@ export const PretestContainer = observer(() => {
                 footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
                 onOk={handleOk}
                 onCancel={() => {}}
+                btnId="device_assert"
             >
                 <Pretest
+                    //@ts-ignore
+                    pretestChannel={pretestNoticeChannel}
                     speakerTestUrl={"https://webdemo.agora.io/pretest_audio.mp3"}
-                    microphoneLevel={microphoneLevel}
                     isMirror={isMirror}
                     onChangeDevice={onChangeDevice}
                     onChangeAudioVolume={onChangeAudioVolume}
@@ -106,9 +132,8 @@ export const PretestContainer = observer(() => {
                     speakerList={speakerList}
                     speakerId={speakerList[0].deviceId}
                     isNative={false}
-                    cameraError={!!cameraError}
-                    microphoneError={!!microphoneError}
                     videoComponent={<VideoPreviewPlayer />}
+                    volumeComponent={<VolumeIndicationView />}
                 />
             </Modal>
         </div>

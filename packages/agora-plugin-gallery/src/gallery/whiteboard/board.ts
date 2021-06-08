@@ -101,7 +101,7 @@ export class BoardClient extends EventEmitter {
     })
     this.room.setMemberState({
       strokeColor: [252, 58, 63],
-      currentApplianceName: ApplianceNames.selector,
+      currentApplianceName: ApplianceNames.clicker,
       textSize: 24,
     })
 
@@ -183,6 +183,8 @@ export class BoardClient extends EventEmitter {
   }
 
   async destroy() {
+    //@ts-ignore
+    this.room && this.room.dispose()
     if (this.room && !this.disconnected) {
       await this.room.disconnect()
       this.disconnected = true
