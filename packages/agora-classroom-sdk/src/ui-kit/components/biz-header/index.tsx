@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Button, Inline, Tooltip } from '~components';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';
@@ -11,19 +11,8 @@ import IconStop from './assets/stop.png'
 import IconExit from './assets/exit.png'
 import IconFullscreen from './assets/fullscreen.png'
 import { useMemo } from 'react';
-
-const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
-  excellent: 'good-signal',
-  good: 'normal-signal',
-  bad: 'bad-signal',
-  unknown: 'unknown-signal',
-};
-const CLASS_STATUS_TEXT_COLOR : { [key: string]: string } = {
-  'pre-class': '#677386',
-  'in-class': '#677386',
-  'end-class': '#F04C36',
-}
-
+import { useGlobalContext, useUserListContext, useBoardContext } from 'agora-edu-core'
+import { StudentUserListDialog } from '~capabilities/containers/dialog'
 const SIGNAL_QUALITY_TEXT: {[key:string]:string} = {
   excellent: '优',
   good: '良',
@@ -103,6 +92,30 @@ export const BizHeader: FC<BizHeaderProps> = ({
   onClick
 }) => {
 
+  const {
+    addDialog,
+    isFullScreen
+  } = useGlobalContext()
+
+  const {
+    rosterUserList
+  } = useUserListContext()
+
+  const {
+    zoomBoard
+  } = useBoardContext()
+
+  const handleRosterClick = () => {
+    addDialog(StudentUserListDialog)
+  }
+
+  const handleSwitchFullscreen = () => {
+    if(isFullScreen){
+      zoomBoard('fullscreenExit')
+    }else{
+      zoomBoard('fullscreen')
+    }
+  }
 
   return (
     <>
@@ -153,15 +166,15 @@ export const BizHeader: FC<BizHeaderProps> = ({
           }
         </div>
         <div className="biz-header_rh">
-          <Button className="biz-header_rh-roster">
-            <span>花名册 6/6</span>
+          <Button className="biz-header_rh-roster" onClick={handleRosterClick}>
+            <span>花名册 {rosterUserList.length}/6</span>
           </Button>
           <div className="biz-header_rh-item signal">
             <img  src={IconFullscreen}/>
             <span>{monitor.networkLatency}ms</span>
             <span>{SIGNAL_QUALITY_TEXT[monitor.networkQuality]}</span>
           </div>
-          <div className="biz-header_rh-item fullscreen">
+          <div className="biz-header_rh-item fullscreen" onClick={handleSwitchFullscreen}>
             <img src={IconFullscreen}/>
             <span>全屏学习</span>
           </div>
