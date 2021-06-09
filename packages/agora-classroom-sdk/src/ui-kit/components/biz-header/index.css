@@ -4,6 +4,7 @@
   height: 80px;
   padding: 0 30px;
   background: #131313;
+  position: relative;
 }
 .biz-header_lf {
   font-size: 20px;
@@ -14,6 +15,9 @@
   font-size: 17px;
   font-weight: 400;
   color: #FFFFFF;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .biz-header_md > .biz-header_md-join, .biz-header_md-stop{
   width: 128px !important;
