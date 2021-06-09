@@ -34,7 +34,9 @@ const meta: Meta = {
     title: '一对一课堂',
     monitor,
     devices,
-    formatTime: dayjs(+Date.now()).format("mm:ss")
+    formatTime: dayjs(+Date.now()).format("mm:ss"),
+    studentInRoomCnt: 3,
+    studentInClassCnt: 6
   },
 };
 

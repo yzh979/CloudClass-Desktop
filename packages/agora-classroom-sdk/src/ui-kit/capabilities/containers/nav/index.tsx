@@ -1,5 +1,5 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext, useBoardContext, useUserListContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
 import { SettingContainer } from '../setting'
+import { StudentUserListDialog } from '~capabilities/containers/dialog'
 
 export const NavigationBar = observer(() => {
   const {
@@ -28,9 +29,16 @@ export const NavigationBar = observer(() => {
   } = useMediaContext()
 
   const {
-    addDialog
+    addDialog,
+    isFullScreen
   } = useGlobalContext()
 
+  const {
+    zoomBoard
+  } = useBoardContext()
+  const {
+    rosterUserList
+  } = useUserListContext()
   const addRecordDialog = useCallback(() => {
     return addDialog(Record, {starting: isRecording})
   }, [addDialog, Record, isRecording])
@@ -39,11 +47,20 @@ export const NavigationBar = observer(() => {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
     'record': () => addRecordDialog(),
+    'roster': () => addDialog(StudentUserListDialog),
   }
 
   function handleClick (type: string) {
-    const showDialog = bizHeaderDialogs[type]
-    showDialog && showDialog(type)
+    if(type == 'fullscreen'){
+      if(isFullScreen){
+        zoomBoard('fullscreenExit')
+      }else{
+        zoomBoard('fullscreen')
+      }
+    }else{
+      const showDialog = bizHeaderDialogs[type]
+      showDialog && showDialog(type)
+    }
   }
 
   const formatTime = useMemo(() => {
@@ -74,6 +91,8 @@ export const NavigationBar = observer(() => {
         packetLostRate: packetLostRate,
       }}
       onClick={handleClick}
+      studentInClassCnt={6}
+      studentInRoomCnt={rosterUserList.length}
     />
   )
 })
