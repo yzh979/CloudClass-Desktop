@@ -31,16 +31,15 @@ const meta: Meta = {
   args: {
     signalQuality: 'excellent',
     isStarted: false,
-    classStatusText: 'pre-class 22:11',
     title: '一对一课堂',
     monitor,
     devices,
-    // formatTime: dayjs(+Date.now()).format("mm:ss")
+    formatTime: dayjs(+Date.now()).format("mm:ss")
   },
 };
 
 export const Docs: FC<BizHeaderProps> = (props) => (
-  <div className="bg-black h-40 p-5">
+  <div className="h-40 p-5">
     <BizHeader {...props} />
   </div>
 );

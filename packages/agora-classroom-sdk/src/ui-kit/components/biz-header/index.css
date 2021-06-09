@@ -1,10 +1,46 @@
 /* FIXME: etxtract colors to tailwind config */
 
 .biz-header {
-  @apply bg-white;
-  /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
-  padding: 0 15px 0 8px;
+  height: 80px;
+  padding: 0 30px;
+  background: #131313;
 }
+.biz-header_lf {
+  font-size: 20px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+.biz-header_md {
+  font-size: 17px;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.biz-header_md > .biz-header_md-join, .biz-header_md-stop{
+  width: 128px !important;
+  height: 40px !important;
+  background: #38AE48 !important;
+  border-radius: 20px !important;
+  @apply flex items-center justify-center;
+}
+.biz-header_md > .biz-header_md-done {
+  width: 128px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  background: rgba(139, 139, 139, 0.5);
+  border-radius: 7px;
+}
+.biz-header_md-join > img {
+  width: 12px;
+  height: 15px;
+  margin-right: 10px;
+}
+.biz-header_md-stop > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+}
+
 
 .biz-header-title-wrap {
   @apply flex items-center divide-x;

@@ -46,21 +46,9 @@ export const NavigationBar = observer(() => {
     showDialog && showDialog(type)
   }
 
-  const classStatusText = useMemo(() => {
-    const {classState, duration} = liveClassStatus
-
-    const stateMap = {
-      'default': () => `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`,
-      'pre-class': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
-      'in-class': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
-      'end-class': ()=> `${transI18n('nav.ended_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`
-    }
-
-    if (stateMap[classState]) {
-      return stateMap[classState]()
-    }
-
-    return stateMap['default']()
+  const formatTime = useMemo(() => {
+    const {duration} = liveClassStatus
+    return formatCountDown(duration, TimeFormatType.Timeboard)
   }, [JSON.stringify(liveClassStatus), formatCountDown])
 
   const userType = useMemo(() => {
@@ -74,7 +62,7 @@ export const NavigationBar = observer(() => {
     <BizHeader
       userType={userType}
       isNative={isNative}
-      classStatusText={classStatusText}
+      formatTime={formatTime}
       classState={liveClassStatus.classState as BizClassStatus}
       isRecording={isRecording}
       title={roomInfo.roomName}
