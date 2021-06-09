@@ -12,21 +12,12 @@ import recordingSvg from './assets/svg/recording.svg'
 import shareScreenSvg from './assets/svg/share-screen.svg'
 import checkedSvg from './assets/svg/icon-accept.svg'
 import closeSvg from './assets/svg/icon-refuse.svg'
-// import authorizedSvg from './assets/svg/shouquan-actived1.svg'
-import authorizedOperateSvg from './assets/svg/authorized-operate.svg'
-import authorizedUnOperateSvg from './assets/svg/authorized-un-operate.svg'
-import unAuthorizedOperateSvg from './assets/svg/un-authorized-operate.svg'
-import unAuthorizedUnOperateSvg from './assets/svg/un-authorized-un-operate.svg'
 
 const svgDict: Record<string, any> = {
   'recording': recordingSvg,
   'share-screen': shareScreenSvg,
   'checked': checkedSvg,
-  'close': closeSvg,
-  'authorized-operate': authorizedOperateSvg,
-  'authorized-un-operate': authorizedUnOperateSvg,
-  'un-authorized-operate': unAuthorizedOperateSvg,
-  'un-authorized-un-operate': unAuthorizedUnOperateSvg
+  'close': closeSvg
 }
 export interface IconProps extends BaseProps {
   type: IconTypes;
@@ -55,7 +46,7 @@ export const Icon: FC<IconProps> = ({
     ['hover']: !!hover
   });
   const iconAssets = Object.keys(svgDict).includes(type) ? (
-    <img style={{"margin": "5px auto"}} className={cls} src={svgDict[type]} {...restProps}/>
+    <img className={cls} src={svgDict[type]} {...restProps}/>
   ) : (
     <i  
       className={cls}

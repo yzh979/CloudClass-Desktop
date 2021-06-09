@@ -63,8 +63,4 @@ export type IconTypes =
   | 'kick-out'
   | 'red-caution'
   | 'laser-pointer'
-  | 'recording'
-  | 'authorized-operate'
-  | 'authorized-un-operate'
-  | 'un-authorized-operate'
-  | 'un-authorized-un-operate';
+  | 'recording';

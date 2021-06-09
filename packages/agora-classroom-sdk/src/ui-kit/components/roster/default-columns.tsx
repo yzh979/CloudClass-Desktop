@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { Icon, IconProps } from '~components/icon';
+import { Icon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
 import {getCameraState, getMicrophoneState} from './base';
 
@@ -30,27 +30,15 @@ export const defaultColumns: Column[] = [
     name: 'roster.granted',
     action: 'whiteboard',
     render: (_, profile, canOperate) => {
+      const type =  !!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard';
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
-      let type = 'authorized-operate';
-      if(!!profile.whiteboardGranted === true){
-        if(!!canOperate === true){
-          type = 'authorized-operate'
-        }else{
-          type = 'authorized-un-operate'
-        }
-      }else{
-        if(!!canOperate === true){
-          type = 'un-authorized-operate'
-        }else{
-          type = 'un-authorized-un-operate'
-        }
-      }
       const cls = classnames({
         [`${operateStatus}`]: 1,
+        [`${whiteboardStatus}`]: 1,
       })
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate}/>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },

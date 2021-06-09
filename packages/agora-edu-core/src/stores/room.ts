@@ -689,7 +689,7 @@ export class RoomStore extends SimpleInterval {
           break;
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间
-          let durationToClose = Number(this.classroomSchedule.closeDelay*1000 || 0) - this.classTimeDuration;
+          let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration;
           let dDurationToClose = dayjs.duration(durationToClose)
           if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.uiStore.fireToast(
@@ -842,7 +842,7 @@ export class RoomStore extends SimpleInterval {
       this.classroomSchedule = {
         startTime: checkInResult.startTime,
         duration: checkInResult.duration,
-        closeDelay: checkInResult.closeDelay || 0
+        closeDelay: checkInResult.closeDelay
       }
       this.tickClassroom()
 
@@ -1385,7 +1385,7 @@ export class RoomStore extends SimpleInterval {
     } else if (state === EduClassroomStateEnum.end) {
       if(this.classroomSchedule) {
         // classroomSchedule must already exists
-        let durationToClose = Number(this.classroomSchedule.closeDelay*1000 || 0) - this.classTimeDuration
+        let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration
         if(durationToClose > 0) {
           // durationToClose > 0 means not yet closed
           this.appStore.uiStore.fireToast('toast.class_is_end',{
