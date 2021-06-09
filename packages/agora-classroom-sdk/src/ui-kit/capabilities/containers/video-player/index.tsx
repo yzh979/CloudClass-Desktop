@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 
-export const VideoPlayerTeacher = observer(({style}: any) => {
+export const VideoPlayerTeacher = observer(({ style }: any) => {
   const {
     teacherStream: userStream,
     onCameraClick,
@@ -50,10 +50,10 @@ export const VideoPlayerTeacher = observer(({style}: any) => {
         <>
           {
             userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+              />
+              : null
           }
           <CameraPlaceHolder state={userStream.holderState} />
         </>
@@ -66,7 +66,7 @@ export type VideoProps = {
   style?: any
 }
 
-export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement, style}) => {
+export const VideoPlayerStudent: React.FC<VideoProps> = observer(({ controlPlacement, style }) => {
 
   const {
     firstStudent: userStream,
@@ -75,7 +75,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
     sceneVideoConfig,
     onOffPodiumClick,
   } = useVideoControlContext()
-  
+
   return (
     <VideoPlayer
       isHost={sceneVideoConfig.isHost}
@@ -102,10 +102,10 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
         <>
           {
             userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+              />
+              : null
           }
           <CameraPlaceHolder state={userStream.holderState} />
         </>
@@ -127,8 +127,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
     firstStudent
   } = useSmallClassVideoControlContext()
 
-    const videoStreamList = useMemo(() => {
-
+  const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
       isHost: sceneVideoConfig.isHost,
       hideOffPodium: sceneVideoConfig.hideOffPodium,
@@ -141,37 +140,37 @@ export const VideoMarqueeStudentContainer = observer(() => {
       micVolume: stream.micVolume,
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,
-      hideControl: stream.hideControl,
+      // hideControl: stream.hideControl,
+      hideControl: true,// 只能通过花名册操作
       canHoverHideOffAllPodium: true,
       hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (
         <>
-        {
-          stream.renderer && stream.video ?
-          <RendererPlayer
-            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
-          />
-          : null
-        }
-        <CameraPlaceHolder state={stream.holderState} />
+          {
+            stream.renderer && stream.video ?
+              <RendererPlayer
+                key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
+              />
+              : null
+          }
+          <CameraPlaceHolder state={stream.holderState} />
         </>
       )
-      }))
+    }))
   }, [
     firstStudent,
     studentStreams,
     sceneVideoConfig.hideOffPodium,
     sceneVideoConfig.isHost
   ])
-
   const {
     onStartPrivateChat,
     onStopPrivateChat,
     inPrivateConversation
   } = usePrivateChatContext()
 
-  const onPrivateChat = async (toUuid:string | number) => {
-    if(inPrivateConversation) {
+  const onPrivateChat = async (toUuid: string | number) => {
+    if (inPrivateConversation) {
       await onStopPrivateChat(`${toUuid}`)
     } else {
       await onStartPrivateChat(`${toUuid}`)
@@ -183,7 +182,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
   } = useRoomContext()
 
   return (
-    videoStreamList.length ? 
+    videoStreamList.length ?
       <div className="video-marquee-pin">
         <VideoMarqueeList
           hideStars={sceneType === 2}
@@ -196,7 +195,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
           onPrivateChat={onPrivateChat}
         />
       </div>
-    : null
+      : null
   )
 })
 
@@ -208,8 +207,8 @@ export const VideoList = observer(() => {
 
   return (
     <>
-      <VideoPlayerTeacher style={{opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}/>
-      <VideoPlayerStudent controlPlacement="left" style={{opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}/>
+      <VideoPlayerTeacher style={{ opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }} />
+      <VideoPlayerStudent controlPlacement="left" style={{ opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }} />
     </>
   )
 })

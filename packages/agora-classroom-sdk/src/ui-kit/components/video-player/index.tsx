@@ -8,7 +8,7 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 
 export interface BaseVideoPlayerProps {
@@ -120,7 +120,7 @@ export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 私密语音聊天
    */
-  onPrivateChat?: (uid:string | number) => Promise<any>;
+  onPrivateChat?: (uid: string | number) => Promise<any>;
 }
 
 interface AnimSvga {
@@ -161,7 +161,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
+  const previousState = usePrevious<{ stars: number, uid: string | number }>({ stars: stars, uid: `${uid}` })
   const animListCb = useCallback(() => {
     setAnimList([
       ...animList,
@@ -229,17 +229,17 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
-            <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
-          </Tooltip>
+            <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
+              <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
+            </Tooltip>
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon 
-                type="star-outline" 
+              <Icon
+                type="star-outline"
                 onClick={() => {
                   onSendStar(uid)
-                }} 
+                }}
               />
             </Tooltip>
           )}
@@ -248,7 +248,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
               }}></div>
-          </Tooltip>
+            </Tooltip>
           )}
         </>
       ) : null}
@@ -267,10 +267,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         {placeholder ? <>{placeholder}</> : null}
         {animList.length ? (
           animList.map((item) => (
-            <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
-              <SvgaPlayer 
-                type="reward" 
-                width={200} 
+            <div key={item.id} className="center-reward" style={{ width: 200, height: 200 }}>
+              <SvgaPlayer
+                type="reward"
+                width={200}
                 height={200}
                 audio="reward"
                 duration={2000}
@@ -311,12 +311,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 export const VideoPlaceHolder = () => {
   return (
     <div className="placeholder-video">
-      <img src="" alt=""/>
+      <img src="" alt="" />
     </div>
   )
 }
 
-export type VideoItemProps = Omit<VideoPlayerProps, 
+export type VideoItemProps = Omit<VideoPlayerProps,
   | 'onCameraClick'
   | 'onMicClick'
   | 'onOffPodiumClick'
@@ -373,20 +373,6 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null)
 
-  const scroll = useCallback((direction: 'left' | 'right') => {
-    const videoContainer = videoContainerRef.current
-    if (!videoContainer) return
-    const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement
-    if (!videoDOM) return
-    const offsetWidth = videoDOM.offsetWidth
-    if(direction === 'left') {
-      videoContainer.scrollLeft -= offsetWidth
-    }
-    if(direction === 'right') {
-      videoContainer.scrollLeft += offsetWidth
-    }
-  }, [videoContainerRef.current])
-
   const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
     const targetOffsetWidth = target.offsetWidth
     const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item')
@@ -438,13 +424,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   return (
     <div className="video-container" ref={mountDOM}>
-      <div className="left-container scroll-btn" onClick={() => {scroll('left')}}>
-      <span className="offset">
-        <Icon type="backward"></Icon>
-      </span> 
-      </div>
       {
-        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => 
+        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
@@ -459,15 +440,10 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onPrivateChat={async () => {
                 await onPrivateChat(videoStream.uid)
               }}
-              ></VideoPlayer>
+            ></VideoPlayer>
           </div>
         )
       }
-      <div className="right-container scroll-btn" onClick={() => {scroll('right')}}>
-        <span className="offset">
-          <Icon type="forward"></Icon>
-        </span> 
-      </div>
     </div>
   )
 }

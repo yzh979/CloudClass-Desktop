@@ -29,7 +29,6 @@ export const MidClassScenario = observer(() => {
     'edu-room': 1,
     'fullscreen': !!isFullScreen
   })
-
   return (
     <Layout
       className={cls}
@@ -40,8 +39,14 @@ export const MidClassScenario = observer(() => {
     >
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
-        <Content className="column">
+        <Aside>
+          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
+            <VideoPlayerTeacher />
+          </div>
           <VideoMarqueeStudentContainer />
+          {/* <RoomChat /> */}
+        </Aside>
+        <Content className="column">
           <div className="board-box">
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
@@ -50,12 +55,7 @@ export const MidClassScenario = observer(() => {
             <HandsUpContainer/>
           </div>
         </Content>
-        <Aside>
-          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
-            <VideoPlayerTeacher />
-          </div>
-          <RoomChat />
-        </Aside>
+        
       </Layout>
       <DialogContainer />
       <LoadingContainer />

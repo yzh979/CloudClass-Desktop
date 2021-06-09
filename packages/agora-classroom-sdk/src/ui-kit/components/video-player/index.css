@@ -167,7 +167,8 @@
 
 .video-container {
   display: flex;
-  flex-direction: row;
+  position: relative;
+  flex-direction: column;
   overflow-x: scroll;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
@@ -184,6 +185,19 @@
   margin-right: 5px;
 }
 
+.top-container {
+  color: #FFFFFF;
+  height: 30px;
+  width: 300px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index: 999;
+  cursor: pointer;
+}
 .left-container {
   color: #FFFFFF;
   width: 30px;
@@ -191,11 +205,24 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   position: absolute;
+  left:0;
   z-index: 999;
   cursor: pointer;
 }
 
-
+.bottom-container {
+  color: #FFFFFF;
+  height: 30px;
+  width: 300px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  position: absolute;
+  right: 0;
+  left:0;
+  bottom: 0;
+  z-index: 999;
+  cursor: pointer;
+}
 .right-container {
   color: #FFFFFF;
   width: 30px;

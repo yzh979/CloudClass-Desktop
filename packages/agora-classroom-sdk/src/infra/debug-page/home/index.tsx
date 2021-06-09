@@ -19,7 +19,7 @@ export const HomePage = observer(() => {
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
-  const [duration, setDuration] = useState<number>(30)
+  const [duration, setDuration] = useState<number>(60)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
   const [region, setRegion] = useState<AgoraRegion>('CN')
