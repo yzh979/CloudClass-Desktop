@@ -1,10 +1,9 @@
-import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext, usePretestContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
-import { usePretestContext } from '../../../../../../agora-edu-core/lib';
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
