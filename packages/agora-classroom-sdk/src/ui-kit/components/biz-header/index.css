@@ -40,86 +40,62 @@
   height: 20px;
   margin-right: 16px;
 }
-
-
-.biz-header-title-wrap {
-  @apply flex items-center divide-x;
+.biz-header_rh {
+  @apply flex items-center;
 }
 
-.biz-subtitle .line:first-child{
-  padding-right: 8px;
+.biz-header_rh-roster {
+  width: 107px !important;
+  height: 31px !important;
+  border-radius: 19px !important;
+  border: 1px solid #38AE48 !important;
+  background: transparent !important;
+
+}
+.biz-header_rh-roster > span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #38AE48;
 }
 
-.biz-header-title-wrap > div {
-  padding: 0 19px;
-  border-color: #d2d2e2;
+.biz-header_rh-item {
+  margin-left: 60px;
+  @apply flex items-center;
 }
-
-.biz-header-title {
-  color: #191919;
-  font-size: 13px;
+.signal > img {
+  width: 17px;
+  height: 17px;
 }
-
-.header-actions {
-  @apply flex;
+.signal > span:first-of-type{
+  font-size: 15px;
+  font-weight: 600;
+  color: #38AE48;
+  margin-left: 6px;
 }
-
-.header-actions > .iconfont {
-  margin-left: 27px;
-  font-size: 29px;
-  color: #3f5c8f;
-  cursor: pointer;
-  width: 29px;
-  height: 29px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @apply cursor-pointer;
-}
-
-/* 因为 iconfont icon设计不合规无法对齐 特此 hack */
-.biz-signal-quality {
-  @apply text-center;
-  width: 40px;
-}
-.biz-signal-quality.popover-open {
-}
-.biz-signal-quality.excellent {
-  color: #0bad69;
-}
-
-.biz-signal-quality.good {
-  color: #f5b723;
-}
-
-.biz-signal-quality.bad {
-  color: #f04c36;
-}
-
-.biz-signal-quality.unknown {
-  color: #666;
-}
-
-.biz-signal-content-row {
-  @apply flex justify-between;
-}
-.biz-signal-content-row.margin-top-9 {
-  margin-top: 9px;
-}
-
-.biz-signal-content-row > .padding-right-27 {
-  padding-right: 27px;
-}
-
-.biz-col {
-  font-size: 13px;
+.signal > span:last-of-type{
+  font-size: 15px;
   font-weight: 400;
+  color: #FFFFFF;
+  margin-left: 5px;
 }
 
-.biz-col > label {
-  color: #586376;
+.fullscreen > img {
+  width: 17px;
+  height: 17px;
 }
-
-.biz-col > span {
-  color: #191919;
+.fullscreen > span {
+  font-size: 15px;
+  font-weight: 400;
+  color: #FFFFFF;
+  margin-left: 10px;
+}
+.exit > img {
+  width: 19px;
+  height: 20px;
+}
+.exit > span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #888888;
+  margin-left: 10px;
 }

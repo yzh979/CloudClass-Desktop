@@ -8,6 +8,8 @@ import './index.css';
 import { SignalContent } from './signal-content';
 import IconJoin from './assets/join.png'
 import IconStop from './assets/stop.png'
+import IconExit from './assets/exit.png'
+import IconFullscreen from './assets/fullscreen.png'
 import { useMemo } from 'react';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
@@ -144,7 +146,22 @@ export const BizHeader: FC<BizHeaderProps> = ({
           }
         </div>
         <div className="biz-header_rh">
-        第1节 奥数的秘密
+          <Button className="biz-header_rh-roster">
+            <span>花名册 6/6</span>
+          </Button>
+          <div className="biz-header_rh-item signal">
+            <img  src={IconFullscreen}/>
+            <span>{monitor.networkLatency}ms</span>
+            <span>{monitor.networkQuality}</span>
+          </div>
+          <div className="biz-header_rh-item fullscreen">
+            <img src={IconFullscreen}/>
+            <span>全屏学习</span>
+          </div>
+          <div className="biz-header_rh-item exit" onClick={() => onClick('exit')}>
+            <img src={IconExit}/>
+            <span>退出</span>
+          </div>
         </div>
       </Header>
     </>
