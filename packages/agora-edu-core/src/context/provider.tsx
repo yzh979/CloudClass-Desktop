@@ -84,7 +84,6 @@ export const useStreamListContext = (): StreamListContext => {
 
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
-  const [isMirror, setMirror] = useState<boolean>(false)
 
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
@@ -118,8 +117,8 @@ export const usePretestContext = (): PretestContext => {
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
     microphoneLevel: pretestStore.microphoneLevel,
-    isMirror: isMirror,
-    setMirror,
+    isMirror: pretestStore.isMirror,
+    setMirror: pretestStore.setMirror,
     installPretest,
     startPretestCamera: pretestStore.openTestCamera,
     stopPretestCamera: pretestStore.closeTestCamera,

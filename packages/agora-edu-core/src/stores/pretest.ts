@@ -24,6 +24,14 @@ export class PretestStore {
   ]
 
   @observable
+  isMirror: boolean = false
+
+  @action.bound
+  setMirror (isMirror: boolean) {
+    this.isMirror = isMirror
+  }
+
+  @observable
   settingVisible: boolean = false
 
   @action.bound 
