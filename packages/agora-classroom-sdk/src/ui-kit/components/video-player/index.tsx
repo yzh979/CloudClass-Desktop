@@ -12,6 +12,7 @@ import {v4 as uuidv4} from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 
 export interface BaseVideoPlayerProps {
+  isMirror?: boolean;
   isHost?: boolean;
   /**
    * 用户的唯一标识
@@ -139,6 +140,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   micVolume,
   cameraEnabled,
   whiteboardGranted,
+  isMirror = false,
   isHost = false,
   hideControl = false,
   hideOffAllPodium = true,
@@ -185,6 +187,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
+    [`isMirror`]: !!isMirror,
     [`${className}`]: !!className,
   });
   const micStateCls = classnames({

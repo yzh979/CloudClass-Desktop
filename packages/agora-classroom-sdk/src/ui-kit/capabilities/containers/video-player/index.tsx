@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
+import { usePretestContext } from '../../../../../../agora-edu-core/lib';
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
@@ -18,8 +19,11 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
 
+  const {isMirror} = usePretestContext()
+
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={sceneVideoConfig.isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -77,9 +81,12 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
     sceneVideoConfig,
     onOffPodiumClick,
   } = useVideoControlContext()
+
+  const {isMirror} = usePretestContext()
   
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={sceneVideoConfig.isHost}
       hideOffPodium={true}
       username={userStream.account}
