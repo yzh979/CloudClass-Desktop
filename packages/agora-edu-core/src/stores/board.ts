@@ -4,7 +4,8 @@ import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
-import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
@@ -22,6 +23,11 @@ import { BizLogger,
   transToolBar
 } from '../utilities/kit';
 import { ZoomController } from './zoom';
+import { screenSharePath } from '../constants';
+import { eduSDKApi } from '../services/edu-sdk-api';
+import { Resource } from '../context/type';
+import { reportServiceV2 } from '../services/report-v2';
+import MD5 from 'js-md5';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -55,19 +61,7 @@ export type GlobalRoomScene = {
   }
 }
 
-export type Resource = {
-  file: {
-    name: string,
-    type: string,
-  },
-  resourceName: string,
-  resourceUuid: string,
-  taskUuid: string,
-  currentPage: number,
-  totalPage: number,
-  scenePath: string,
-  show: boolean,
-}
+export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -246,15 +240,7 @@ export class BoardStore extends ZoomController {
 
   @observable
   downloading: boolean = false
-
-  @action.bound
-  changeScenePath(path: string) {
-    this.activeScenePath = path
-    if (this.online && this.room) {
-      this.room.setScenePath(this.activeScenePath)
-    }
-  }
-
+  
   appStore!: EduScenarioAppStore
 
   @observable
@@ -421,6 +407,8 @@ export class BoardStore extends ZoomController {
     let targetPath = resourceUuid
     if (resourceUuid === "/init" || resourceUuid === "/" || resourceUuid === "init") {
       targetPath = "init"
+    } else if (resourceUuid === "/screenShare" || resourceUuid === "screenShare") {
+      targetPath = "screenShare"
     } else {
       targetPath = `/${resourceUuid}`
     }
@@ -434,13 +422,60 @@ export class BoardStore extends ZoomController {
         } else {
           this.room.setScenePath(`/${currentPage}`)
         }
-      } else {
+      }
+      else if (targetPath === "screenShare") {
+        this.room.setScenePath(`/${targetPath}`)
+      }
+      else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
+          if (targetResource.ext === 'h5') {
+            this.insertH5(targetResource.url, targetResource.id)
+            if (targetPath === 'screenShare') {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 1})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            } else {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 0})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            }
+            return
+          }
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
       }
+    }
+
+    if (targetPath === 'screenShare') {
+      eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 1})
+      .then(() => {
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+      })
+      .catch((err) => {
+        const error = GenericErrorWrapper(err)
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+      })
+    } else {
+      eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 0})
+      .then(() => {
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+      })
+      .catch((err) => {
+        const error = GenericErrorWrapper(err)
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+      })
     }
 
     this.moveCamera()
@@ -510,28 +545,123 @@ export class BoardStore extends ZoomController {
     return 0
   }
 
+  @observable
+  currentPath: string = ''
+
+  @computed
+  get bizScreenShare() {
+    const selectedShare = this.appStore.roomStore?.roomProperties?.screen?.selected ?? false
+    return !!selectedShare;
+  }
+
+  @computed
+  get isBoardScreenShare() {
+    const matchedShareScreen = this.currentPath.match(/screenShare/i)
+    return !!matchedShareScreen
+  }
+
+  @computed
+  get showBoardTool(): [boolean, boolean] {
+    const roomInfo = this.appStore.roomInfo
+    let showZoomControl = false
+    if (this.isBoardScreenShare) {
+      showZoomControl = false
+    } else {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+        showZoomControl = true
+      } else {
+        showZoomControl = this.hasPermission
+      }
+    }
+    // TODO: need refactor
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+      return [true, showZoomControl]
+    }
+    else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [this.hasPermission, showZoomControl]
+    }
+    else if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, showZoomControl]
+    }
+    else {
+      return [false, false]
+    }
+  }
+
+  @computed
+  get canSharingScreen() {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
+      if (this.appStore.sceneStore.customScreenSharePickerVisible) {
+        return false
+      }
+      if (!this.appStore.sceneStore.screenShareStream || this.appStore.sceneStore.screenShareStream && !this.appStore.sceneStore.screenShareStream.renderer) {
+        return true
+      }
+      return false
+    }
+    return false
+  }
+
+  @computed
+  get isShareScreen() {
+    if (!this.isBoardScreenShare) {
+      return !!this.bizScreenShare
+    }
+    return !!this.isBoardScreenShare
+  }
+
+  removeScreenShareScene() {
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    const restRoomScenes = {...roomScenes, [`${screenSharePath}`]: undefined}
+    const room = this.room
+    room.setGlobalState({
+      roomScenes: {
+        ...restRoomScenes,
+      }
+    })
+
+    const sharePath = `/${screenSharePath}`
+    const hasScreenShare = room.entireScenes()[sharePath]
+    if (hasScreenShare) {
+      room.removeScenes(sharePath)
+    }
+
+    room.setScenePath('')
+  }
+
   @action.bound
-  closeMaterial(resourceUuid: string) {
+  async closeMaterial(resourceUuid: string) {
     const currentSceneState = this.room.state.sceneState
     const roomScenes = (this.room.state.globalState as any).roomScenes
     const resourceName = roomScenes[resourceUuid]?.resourceName
-    this.room.setGlobalState({
-      roomScenes: {
-        ...roomScenes,
-        [`${resourceUuid}`]: {
-          contextPath: currentSceneState.contextPath,
-          index: currentSceneState.index,
-          sceneName: currentSceneState.sceneName,
-          scenePath: currentSceneState.scenePath,
-          totalPage: currentSceneState.scenes.length,
-          resourceName: resourceName,
-          resourceUuid: resourceUuid,
-          show: false,
-        }
+    const currentContextPath = currentSceneState.contextPath
+
+    if (resourceUuid.match(/screenShare/i)) {
+      try {
+        await this.appStore.sceneStore.stopRTCSharing()
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), 0)
+      } catch (error) {
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message)
       }
-    })
-    // const resourceName = this.resourcesList.find((it: any) => it.resou)
-    this.room.setScenePath('')
+      this.removeScreenShareScene()
+    } else {
+      this.room.setGlobalState({
+        roomScenes: {
+          ...roomScenes,
+          [`${resourceUuid}`]: {
+            contextPath: currentSceneState.contextPath,
+            index: currentSceneState.index,
+            sceneName: currentSceneState.sceneName,
+            scenePath: currentSceneState.scenePath,
+            totalPage: currentSceneState.scenes.length,
+            resourceName: resourceName,
+            resourceUuid: resourceUuid,
+            show: false,
+          }
+        }
+      })
+      this.room.setScenePath('')
+    }
   }
 
   async autoFetchDynamicTask() {
@@ -555,30 +685,33 @@ export class BoardStore extends ZoomController {
 
     const resourceName = roomScenes[resourceUuid]?.resourceName ?? 'init'
 
-    this.room.setGlobalState({
-      currentSceneInfo: {
-        contextPath: currentSceneState.contextPath,
-        index: currentSceneState.index,
-        sceneName: currentSceneState.sceneName,
-        scenePath: currentSceneState.scenePath,
-        totalPage: currentSceneState.scenes.length,
-        resourceUuid: resourceUuid,
-        resourceName: resourceName
-      },
-      roomScenes: {
-        ...roomScenes,
-        [`${resourceUuid}`]: {
+    if (this.room.isWritable) {
+      this.room.setGlobalState({
+        currentSceneInfo: {
           contextPath: currentSceneState.contextPath,
           index: currentSceneState.index,
           sceneName: currentSceneState.sceneName,
           scenePath: currentSceneState.scenePath,
           totalPage: currentSceneState.scenes.length,
           resourceUuid: resourceUuid,
-          resourceName: resourceName,
-          show: true,
+          resourceName: resourceName
+        },
+        roomScenes: {
+          ...roomScenes,
+          [`${resourceUuid}`]: {
+            contextPath: currentSceneState.contextPath,
+            index: currentSceneState.index,
+            sceneName: currentSceneState.sceneName,
+            scenePath: currentSceneState.scenePath,
+            totalPage: currentSceneState.scenes.length,
+            resourceUuid: resourceUuid,
+            resourceName: resourceName,
+            show: true,
+          }
         }
-      }
-    })
+      })
+    }
+
     const sceneState = this.room.state.sceneState
     const name = this.getResourcePath(sceneState.contextPath)
     
@@ -593,6 +726,7 @@ export class BoardStore extends ZoomController {
       }, false)
     }
     this.updatePagination()
+    this.currentPath = this.room.state.sceneState.contextPath
   }
 
   @observable
@@ -621,6 +755,23 @@ export class BoardStore extends ZoomController {
           taskUuid: '',
           show: true,
           resourceName: 'init',
+        }
+      } 
+      else if (resourceUuid === "screenShare" || resourceUuid === "/screenShare") {
+        if (resource) {
+          newList.push({
+            file: {
+              name: resourceUuid,
+              type: 'screen_share',
+            },
+            resourceUuid: resourceUuid,
+            resourceName: resourceUuid,
+            taskUuid: '',
+            currentPage: resource.index,
+            totalPage: resource.totalPage,
+            scenePath: resource?.scenePath,
+            show: resource.show,
+          })
         }
       } else {
         const rawResource = this.allResources.find((it) => it.id === resourceUuid)
@@ -732,6 +883,11 @@ export class BoardStore extends ZoomController {
 
     this.ready = true
 
+
+    if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      this.resetBoardPath()
+    }
+
     this.updateBoardState(this.room.state.globalState as CustomizeGlobalState)
     this.updateCourseWareList()
 
@@ -761,38 +917,7 @@ export class BoardStore extends ZoomController {
       this.scale = this.room.state.zoomScale
     }
   }
-
-  // @action.bound
-  // setFollow(v: boolean) {
-  //   this.follow = v
-
-  //   const isTeacher = this.userRole === EduRoleTypeEnum.teacher
-
-  //   if (isTeacher) {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.appStore.uiStore.fireToast('toast.open_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Broadcaster)
-  //       } else {
-  //         this.appStore.uiStore.fireToast('toast.close_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //       }
-  //     }
-  //   } else {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.room.disableCameraTransform = true
-  //         this.room.setViewMode(ViewMode.Follower)
-  //         this.room.disableDeviceInputs = true
-  //       } else {
-  //         this.room.disableCameraTransform = false
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //         this.room.disableDeviceInputs = false
-  //       }
-  //     }
-  //   }
-  // }
-
+  
   @action.bound
   setGrantPermission(v: boolean) {
     this._grantPermission = v
@@ -825,7 +950,7 @@ export class BoardStore extends ZoomController {
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
-          this.room.scalePptToFit()
+          this.scaleToFit()
         }
       }
       if (state.memberState) {
@@ -883,6 +1008,8 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
+      wrappedComponents: [IframeWrapper],
+      invisiblePlugins: [IframeBridge]
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -891,10 +1018,10 @@ export class BoardStore extends ZoomController {
       b: 63
     }
     this.room.setMemberState({
-      currentApplianceName: ApplianceNames.selector,
+      currentApplianceName: ApplianceNames.clicker,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
-    this.selector = 'selection'
+    this.selector = 'clicker'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -931,6 +1058,10 @@ export class BoardStore extends ZoomController {
     this.room.setGlobalState({
       materialList: this.internalResources.map(transformMaterialList)
     })
+  }
+
+  resetBoardPath() {
+    this.removeScreenShareScene()
   }
 
   // reset board scenes
@@ -1003,9 +1134,17 @@ export class BoardStore extends ZoomController {
   @observable
   laserPoint: boolean = false
 
+  @computed
+  get boardRoomIsAvailable() {
+    if (!this.room || this.room && this.room.phase !== RoomPhase.Connected) {
+      return false
+    }
+    return true
+  }
+
   @action.bound
   setLaserPoint() {
-    if (this.room) {
+    if (this.boardRoomIsAvailable) {
       this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
@@ -1018,7 +1157,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   setTool(tool: string) {
-    if (!this.room) return
+    if (!this.boardRoomIsAvailable) return
 
     switch(tool) {
       case 'blank-page': {
@@ -1040,6 +1179,8 @@ export class BoardStore extends ZoomController {
       case 'hand':
       case 'eraser':
       case 'color':
+      case 'clicker':
+      case ApplianceNames.clicker:
       case ApplianceNames.pencil:
       case ApplianceNames.rectangle:
       case ApplianceNames.ellipse:
@@ -1065,7 +1206,8 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.ellipse]: 'circle',
             [ApplianceNames.straight]: 'line',
             [ApplianceNames.arrow]: 'arrow',
-            [ApplianceNames.selector]: 'selection'
+            [ApplianceNames.selector]: 'selection',
+            [ApplianceNames.clicker]: 'clicker',
           }
 
           if (selector[tool]) {
@@ -1265,9 +1407,9 @@ export class BoardStore extends ZoomController {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_lock'))
+    //       this.appStore.fireToast('toast.whiteboard_lock'))
     //     } else {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_unlock'))
+    //       this.appStore.fireToast('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1278,7 +1420,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.uiStore.fireToast(notice)
+        this.appStore.fireToast(notice)
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1359,7 +1501,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return oneToOneTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return []
         }
@@ -1376,7 +1518,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return bigClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return bigClassTools.filter((item: ToolItem) => item.value === 'student_list')
         }
@@ -1404,7 +1546,7 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get tools() {
+  get tools(): any[] {
     if (this._tools) {
       const isMenuItem = (value: string) => !['cloud', 'tools', 'register', 'student_list'].includes(value)
       return this._tools.map((item: ToolItem) => ({...item, hover: isMenuItem(item.value) ? this.ready : true}))
@@ -1479,9 +1621,9 @@ export class BoardStore extends ZoomController {
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
           this.room.setMemberState({
-            currentApplianceName: ApplianceNames.selector
+            currentApplianceName: ApplianceNames.clicker
           })
-          this.selector = 'selection'
+          this.selector = 'clicker'
         }
       }
       this.room.disableDeviceInputs = !v
@@ -1532,9 +1674,9 @@ export class BoardStore extends ZoomController {
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.granted_board_success`)
+      this.appStore.fireToast(`toast.granted_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1542,9 +1684,9 @@ export class BoardStore extends ZoomController {
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.revoke_board_success`)
+      this.appStore.fireToast(`toast.revoke_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1714,9 +1856,116 @@ export class BoardStore extends ZoomController {
           }
         }
       })
-      this.room.putScenes(`/${resource.id}`, resource.scenes)
-      this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`]
+      if (sceneExists) {
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      } else {
+        this.room.putScenes(`/${resource.id}`, resource.scenes)
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      }
     }
+  }
+
+  @action.bound
+  setScreenShareScenePath () {
+    const room = this.appStore.boardStore.room
+    const sharePath = `/${screenSharePath}`
+    const hasScreenShare = room.entireScenes()[sharePath]
+    if (hasScreenShare) {
+      room.removeScenes(sharePath)
+    }
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    const currentSceneState = this.room.state.sceneState
+    room.setGlobalState({
+      currentSceneInfo: {
+        contextPath: currentSceneState.contextPath,
+        index: currentSceneState.index,
+        sceneName: currentSceneState.sceneName,
+        scenePath: currentSceneState.scenePath,
+        totalPage: currentSceneState.scenes.length,
+        resourceUuid: `${screenSharePath}`,
+        resourceName: `${screenSharePath}`
+      },
+      roomScenes: {
+        ...roomScenes,
+        [`${screenSharePath}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceUuid: `${screenSharePath}`,
+          resourceName: `${screenSharePath}`,
+          show: true,
+        }
+      }
+    })
+    room.putScenes(sharePath, [{name: "0"}])
+    room.setScenePath(sharePath)
+  }
+
+  iframe: IframeBridge = null as any;
+
+  @action.bound
+  async insertH5(url: string, resourceUuid: string) {
+    const bridge = this.boardClient.bridge;
+    const scenePath = `/${resourceUuid}`
+    const room = this.room
+    // const iframe = this.iframeList.get(scenePath)
+    const iframe = this.iframe
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
+      // TODO: workaround.
+      // Cause probably is readonly state, so the IframeBridge cannot operate.
+      await this.room.setWritable(true)
+    }
+    if (!iframe) {
+      const oldIframe = this.room.getInvisiblePlugin('IframeBridge')
+      if (oldIframe) {
+        //@ts-ignore
+        oldIframe?.setAttributes({
+          //@ts-ignore
+          url: url,
+          width: 1280,
+          height: 720,
+          displaySceneDir: `${scenePath}`,
+          useClicker: true
+        })
+        //@ts-ignore
+        this.iframe = oldIframe
+        this.putCourseResource(resourceUuid)
+        return
+      }
+      const iframe = await IframeBridge.insert({
+        room,
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: true
+      })
+      this.iframe = iframe
+      this.putCourseResource(resourceUuid)
+    } else {
+      iframe?.setAttributes({
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: true
+      })
+      this.putCourseResource(resourceUuid)
+      // room.setScenePath(scenePath)
+    }
+    // if (bridge) {
+      
+      // const scenes = room.entireScenes();
+      // if (!scenes[scenePath]) {
+      //     room.putScenes(scenePath, genH5Scenes(totalPage));
+      // }
+      // if (room.state.sceneState.contextPath !== scenePath) {
+      //     room.setScenePath(scenePath);
+      // }
+    // }
   }
 
   @action.bound
@@ -1775,6 +2024,9 @@ export class BoardStore extends ZoomController {
       if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)
       }
+      if (["h5"].includes(resource.type)) {
+        await this.insertH5(resource.url, uuid)
+      }
     } catch (err) {
       throw err
     }
@@ -1828,17 +2080,39 @@ export class BoardStore extends ZoomController {
     this.room.cleanCurrentScene()
   }
 
+  @computed
+  get isH5IFrame() {
+    const id = this.room.state.sceneState.contextPath.split('/')[1]
+    const resource = this.allResources.find((it: any) => it.id === id)
+    const ext = resource?.ext ?? 'unknown'
+    return ext === 'h5'
+  }
+
+
+  @action.bound
+  scaleToFit() {
+    if (this.isH5IFrame) {
+      if(this.iframe){
+        this.iframe.scaleIframeToFit()
+      } else {
+          //@ts-ignore
+          this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+      }
+    }
+    this.room.scalePptToFit()
+  } 
+
   @action.bound
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
-      this.room.scalePptToFit()
-    } else {
+    if (!isEmpty(this.room.state.sceneState.scenes) 
+    && !this.room.state.sceneState.scenes[0].ppt) {
       this.room.moveCamera({
         centerX: 0,
         centerY: 0,
         scale: 1,
       })
     }
+    this.scaleToFit()
   }
 
   @computed
