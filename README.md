@@ -6,7 +6,7 @@
 
 
 - NodeJS 12+
-- Chrome Browser
+- Chrome Browse
 
 ## Install  
 ```bash
