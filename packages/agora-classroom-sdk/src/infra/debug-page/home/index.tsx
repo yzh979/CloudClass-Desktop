@@ -21,7 +21,7 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(60)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
+  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'zh')
   const [region, setRegion] = useState<AgoraRegion>('CN')
   const [debug, setDebug] = useState<boolean>(false)
 

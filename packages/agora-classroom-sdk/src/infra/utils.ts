@@ -12,7 +12,7 @@ import { transI18n } from '@/ui-kit/components/i18n';
 
 export enum TimeFormatType {
   Timeboard,
-  Message
+  Message,
 }
 
 export const formatCountDown = (time: number, mode: TimeFormatType): string => {
@@ -25,7 +25,7 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
   let seconds_text = duration.seconds() === 0 ? '' : `s [${transI18n('nav.seconds')}]`;
   let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
   let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
-  let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
+  let short_seconds_text = `ss`;
   if(mode === TimeFormatType.Timeboard) {
     // always display all time segment
     if(seconds < 60 * 60) {
@@ -34,7 +34,7 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
     } else {
       formatItems = [short_hours_text, short_mins_text, short_seconds_text]
     }
-  } else {
+  } else if(mode == TimeFormatType.Message){
     // do not display time segment if it's 0
     if(seconds < 60) {
       // less than a min
@@ -45,6 +45,7 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
       [hours_text, mins_text, seconds_text].forEach(item => item && formatItems.push(item))
     }
   }
+  console.log(formatItems.join(' '))
   return duration.format(formatItems.join(' '))
 }
 

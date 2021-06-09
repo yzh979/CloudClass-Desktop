@@ -23,6 +23,13 @@ const CLASS_STATUS_TEXT_COLOR : { [key: string]: string } = {
   'in-class': '#677386',
   'end-class': '#F04C36',
 }
+
+const SIGNAL_QUALITY_TEXT: {[key:string]:string} = {
+  excellent: '优',
+  good: '良',
+  bad: '差',
+  unknown: '未知', 
+}
 export interface MonitorInfo {
   /**
    * CPU 使用率, 单位: %
@@ -152,7 +159,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
           <div className="biz-header_rh-item signal">
             <img  src={IconFullscreen}/>
             <span>{monitor.networkLatency}ms</span>
-            <span>{monitor.networkQuality}</span>
+            <span>{SIGNAL_QUALITY_TEXT[monitor.networkQuality]}</span>
           </div>
           <div className="biz-header_rh-item fullscreen">
             <img src={IconFullscreen}/>

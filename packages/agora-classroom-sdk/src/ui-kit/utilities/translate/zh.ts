@@ -290,9 +290,9 @@ export const zh = {
     'minutes': '分钟',
     'seconds': '秒',
     'short': {
-      'hours': '小时',
-      'minutes': '分钟',
-      'seconds': '秒',
+      'hours': ':',
+      'minutes': ':',
+      'seconds': '',
     },
     'signal_good': '优',
     'signal_weak': '良',
