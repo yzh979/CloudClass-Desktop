@@ -23,7 +23,7 @@ export const PensContainer = observer((props: PensContainerProps) => {
   return (
     <Pens
       value='pen'
-      label={t('scaffold.pencil')}
+      label={transI18n('scaffold.pencil')}
       icon='pen'
       activePen={lineSelector}
       onClick={onClick}

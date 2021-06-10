@@ -15,7 +15,7 @@ export const ColorsContainer = observer(() => {
   return (
     <Colors
       value='color'
-      label={t('scaffold.color')}
+      label={transI18n('scaffold.color')}
       icon='color'
       colorSliderMin={1}
       colorSliderMax={31}

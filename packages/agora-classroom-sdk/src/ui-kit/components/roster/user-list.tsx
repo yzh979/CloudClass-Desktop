@@ -153,7 +153,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
         <div className="roster-container">
           <div className="search-header roster-header">
             <div className="search-teacher-name">
-              <label>{t('roster.teacher_name')}</label>
+              <label>{transI18n('roster.teacher_name')}</label>
               <span title={teacherName} className="roster-username">{teacherName}</span>
             </div>
             {

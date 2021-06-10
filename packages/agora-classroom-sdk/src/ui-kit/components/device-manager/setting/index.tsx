@@ -53,7 +53,7 @@ export const Setting: FC<SettingProps> = ({
     return (
         <div className={cls} {...restProps} style={{width: 318}}>
             <div className="device-choose">
-                <div className="device-title">{t('device.camera')}</div>
+                <div className="device-title">{transI18n('device.camera')}</div>
                 <Select 
                     value={cameraId}
                     onChange={async value => {
@@ -64,7 +64,7 @@ export const Setting: FC<SettingProps> = ({
                 </Select>
             </div>
             <div className="device-choose">
-                <div className="device-title">{t('device.microphone')}</div>
+                <div className="device-title">{transI18n('device.microphone')}</div>
                 <Select 
                     value={microphoneId}
                     onChange={async value => {
@@ -78,7 +78,7 @@ export const Setting: FC<SettingProps> = ({
                 hasMicrophoneVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">{t('device.microphone_volume')}</span>
+                            <span className="device-text">{transI18n('device.microphone_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -95,7 +95,7 @@ export const Setting: FC<SettingProps> = ({
 
             </div>
             <div className="device-choose">
-                <div className="device-title">{t('device.speaker')}</div>
+                <div className="device-title">{transI18n('device.speaker')}</div>
                 <Select
                     value={speakerId}
                     onChange={async value => {
@@ -108,7 +108,7 @@ export const Setting: FC<SettingProps> = ({
                     hasSpeakerVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">{t('device.speaker_volume')}</span>
+                            <span className="device-text">{transI18n('device.speaker_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}

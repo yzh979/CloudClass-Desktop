@@ -211,7 +211,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       {isHost ? (
         <>
           {hideOffAllPodium ? null : (
-            <Tooltip title={t('Clear Podiums')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podiums')} placement={placement}>
               <Icon
                 hover={canHoverHideOffAllPodium}
                 type="invite-to-podium"
@@ -220,7 +220,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideOffPodium ? null : (
-            <Tooltip title={t('Clear Podium')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podium')} placement={placement}>
               <Icon
                 type="invite-to-podium"
                 className={isOnPodium ? 'no_podium' : 'podium'}
@@ -234,7 +234,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           </Tooltip>
           }
           {hideStars ? null : (
-            <Tooltip title={t('Star')} placement={placement}>
+            <Tooltip title={transI18n('Star')} placement={placement}>
               <Icon 
                 type="star-outline" 
                 onClick={() => {

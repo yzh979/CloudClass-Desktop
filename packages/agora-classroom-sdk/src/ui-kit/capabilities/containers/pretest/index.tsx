@@ -84,9 +84,9 @@ export const PretestContainer = observer(() => {
     return (
         <div className="fixed-container">
             <Modal
-                title={t('pretest.settingTitle')}
+                title={transI18n('pretest.settingTitle')}
                 width={720}
-                footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
+                footer={[<Button action="ok">{transI18n('pretest.finishTest')}</Button>]}
                 onOk={handleOk}
                 onCancel={() => {}}
             >

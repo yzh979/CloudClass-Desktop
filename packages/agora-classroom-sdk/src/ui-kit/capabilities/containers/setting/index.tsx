@@ -18,9 +18,9 @@ export const SettingContainer = observer(({id}: any) => {
 
     return (
         <Modal
-            title={t('pretest.settingTitle')}
+            title={transI18n('pretest.settingTitle')}
             width={360}
-            footer={[<Button action="ok">{t('toast.confirm')}</Button>]}
+            footer={[<Button action="ok">{transI18n('toast.confirm')}</Button>]}
             onCancel={() => {
                 // uiStore.removeDialog(id)
                 removeDialog(id)

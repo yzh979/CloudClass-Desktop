@@ -145,7 +145,7 @@ export const Chat: FC<ChatProps> = ({
       />}>
       <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : ''].join(' ')}>
         <div className="chat-header">
-          <span className="chat-header-title">{t('message')}</span>
+          <span className="chat-header-title">{transI18n('message')}</span>
           <span style={{
             display: 'flex',
             justifyContent: 'center',
@@ -169,13 +169,13 @@ export const Chat: FC<ChatProps> = ({
           <div className="chat-notice">
             <span>
               <Icon type="red-caution" />
-              <span>{t('placeholder.enable_chat_muted')}</span>
+              <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
           </div>
         ) : null}
         <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
           {!messages || messages.length === 0 ? (
-            <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
+            <Placeholder placeholderDesc={transI18n('placeholder.empty_chat')} />
           ) : (
             messages.map((message) => (
               <ChatMessage
@@ -190,7 +190,7 @@ export const Chat: FC<ChatProps> = ({
           <textarea
             value={chatText}
             className="chat-texting-message"
-            placeholder={t('placeholder.input_message')}
+            placeholder={transI18n('placeholder.input_message')}
             disabled={!isHost && !canChatting}
             onChange={(e) => onText(e.currentTarget.value)}
             onFocus={handleFocus}
@@ -202,7 +202,7 @@ export const Chat: FC<ChatProps> = ({
             bottom: 10,
             right: 10
           }}>
-            {t('send')}
+            {transI18n('send')}
           </Button>
         </div>
       </div>

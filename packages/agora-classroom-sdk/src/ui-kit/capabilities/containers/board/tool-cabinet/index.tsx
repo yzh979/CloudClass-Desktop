@@ -29,7 +29,7 @@ export const ToolCabinetContainer = () => {
     return (
         <ToolCabinet
             value='tools'
-            label={t('scaffold.tools')}
+            label={transI18n('scaffold.tools')}
             icon='tools'
             cabinetList={[
                 {

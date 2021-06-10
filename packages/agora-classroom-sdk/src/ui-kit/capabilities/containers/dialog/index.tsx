@@ -43,8 +43,8 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
       }}
       footer={
         [
-          <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
-          <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+          <Button type={'secondary'} action="cancel">{transI18n('toast.cancel')}</Button>,
+          <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
         ]
       }
     >
@@ -189,10 +189,10 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'secondary'} action="cancel">{transI18n('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.screen_share')}
+      title={transI18n('toast.screen_share')}
     >
       <ScreenShareContainer
         windowId={windowId}
@@ -222,12 +222,12 @@ export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> 
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'secondary'} action="cancel">{transI18n('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.close_ppt')}
+      title={transI18n('toast.close_ppt')}
     >
-      <p>{t('toast.sure_close_ppt')}</p>
+      <p>{transI18n('toast.sure_close_ppt')}</p>
     </Modal>
   )
 })
@@ -257,10 +257,10 @@ export const KickEnd: React.FC<BaseDialogProps> = observer(({id}) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.kick_by_other_side')}>
-      <p>{t('toast.quit_from_room')}</p>
+      title={transI18n('toast.kick_by_other_side')}>
+      <p>{transI18n('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -290,10 +290,10 @@ export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.kick_by_teacher')}>
-      <p>{t('toast.quit_from_room')}</p>
+      title={transI18n('toast.kick_by_teacher')}>
+      <p>{transI18n('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -314,10 +314,10 @@ export const RoomEndNotice: React.FC<BaseDialogProps> = observer(({id}) => {
         removeDialog(id)
       }}
       footer={[
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>
       ]}
-      title={t('toast.end_class')}>
-      <p>{t('toast.quit_from_room')}</p>
+      title={transI18n('toast.end_class')}>
+      <p>{transI18n('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -346,11 +346,11 @@ export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">{transI18n('toast.cancel')}</Button>,
+        <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.end_class')}>
-      <p>{t('toast.quit_from_room')}</p>
+      title={transI18n('toast.end_class')}>
+      <p>{transI18n('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -375,11 +375,11 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'ghost'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'ghost'} action="cancel">{transI18n('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
       ]}
-      title={t('toast.leave_room')}>
-      <p>{t('toast.quit_room')}</p>
+      title={transI18n('toast.leave_room')}>
+      <p>{transI18n('toast.quit_room')}</p>
     </Modal>
   )
 })
@@ -419,8 +419,8 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         removeDialog(id)
       }}
       footer={[
-        <Button type={'ghost'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
+        <Button type={'ghost'} action="cancel">{transI18n('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>
       ]}
       title={transI18n(recordingTitle)}
     >

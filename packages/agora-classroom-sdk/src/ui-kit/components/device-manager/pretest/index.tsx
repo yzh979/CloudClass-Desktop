@@ -122,7 +122,7 @@ export const Pretest: React.FC<PretestProps> = ({
             <div className="pretest-left" style={{width: 318}}>
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.camera')}</span>
+                        <span className="device-title-text">{transI18n('media.camera')}</span>
                         <span className="device-mirror-box">
                             <CheckBox 
                                 style={{width: 12, height: 12}} 
@@ -131,7 +131,7 @@ export const Pretest: React.FC<PretestProps> = ({
                                     onSelectMirror(e.target.checked)
                                 }}
                             /> 
-                            <span className="camera-mode" style={{marginLeft: 5}}>{t('media.mirror')}</span>
+                            <span className="camera-mode" style={{marginLeft: 5}}>{transI18n('media.mirror')}</span>
                         </span>
                     </div>
                     <Select 
@@ -148,7 +148,7 @@ export const Pretest: React.FC<PretestProps> = ({
             <div className="pretest-right">
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.microphone')}</span>
+                        <span className="device-title-text">{transI18n('media.microphone')}</span>
                     </div>
                     <Select 
                         value={microphoneId}
@@ -184,7 +184,7 @@ export const Pretest: React.FC<PretestProps> = ({
                 </div>
                 <div className="device-choose">
                     <div className="device-title">
-                        <span className="device-title-text">{t('media.speaker')}</span>
+                        <span className="device-title-text">{transI18n('media.speaker')}</span>
                     </div>
                     {isNative ? (
                         <>
@@ -197,7 +197,7 @@ export const Pretest: React.FC<PretestProps> = ({
                             >
                             </Select>
                             <div className="device-volume">
-                                <span className="device-text">{t('media.volume')}</span>
+                                <span className="device-text">{transI18n('media.volume')}</span>
                                 <Slider
                                     min={0}
                                     max={100}
@@ -218,7 +218,7 @@ export const Pretest: React.FC<PretestProps> = ({
                             maxLength={33}
                             style={{marginLeft: 6}}
                         />
-                        <Button disabled={disable} type="secondary" style={{marginLeft: 10}} onClick={handleTestSpeakerClick}>{t('media.test_speaker')}</Button>
+                        <Button disabled={disable} type="secondary" style={{marginLeft: 10}} onClick={handleTestSpeakerClick}>{transI18n('media.test_speaker')}</Button>
                     </div>
                 </div>
                 <div className="pretest-error-info">

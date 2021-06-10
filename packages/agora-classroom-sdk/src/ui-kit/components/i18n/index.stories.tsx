@@ -17,11 +17,11 @@ const Text = ({text}: any) => {
   
   return (
     <div className="flex flex-1 items-center gap-10">
-      <div className="w-20">{t(text)}</div>
+      <div className="w-20">{transI18n(text)}</div>
       <Button onClick={() => {
         setLanguage(lang === 'zh' ? 'en' : 'zh')
         changeLanguage(lang === 'zh' ? 'en' : 'zh')
-      }}>{t('zh')}</Button>
+      }}>{transI18n('zh')}</Button>
       <div>{transI18n('error.unknown', {errCode: '123', message: 'test'})}</div>
     </div>
   )

@@ -40,29 +40,29 @@ export const ZoomController: FC<ZoomControllerProps> = ({
     return (
         <div className={cls} {...restProps}>
             { maximum ?
-                <Tooltip title={t('tool.fullScreen')} placement="top">
+                <Tooltip title={transI18n('tool.fullScreen')} placement="top">
                     <Icon type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
                 </Tooltip>
                 :
-                <Tooltip title={t('tool.reduction')} placement="top">
+                <Tooltip title={transI18n('tool.reduction')} placement="top">
                     <Icon type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
                 </Tooltip>
             }
-            <Tooltip title={t('tool.zoomOut')} placement="top">
+            <Tooltip title={transI18n('tool.zoomOut')} placement="top">
                 <Icon type="zoom-out" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-out')} />
             </Tooltip>
             <span className="zoom-value">{zoomValue}%</span>
-            <Tooltip title={t('tool.zoomIn')} placement="top">
+            <Tooltip title={transI18n('tool.zoomIn')} placement="top">
                 <Icon type="zoom-in" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-in')} />   
             </Tooltip>
             <span className="line"></span>
-            <Tooltip title={t('tool.prev')} placement="top">
+            <Tooltip title={transI18n('tool.prev')} placement="top">
                 <Icon type="backward" size={fontSize} color={fontColor} onClick={() => clickHandler('backward')} />
             </Tooltip>
             <span className="page-info">
                 {currentPage}/{totalPage}
             </span>
-            <Tooltip title={t('tool.next')} placement="top">
+            <Tooltip title={transI18n('tool.next')} placement="top">
                 <Icon type="forward" size={fontSize} color={fontColor} onClick={() => clickHandler('forward')} />   
             </Tooltip>
         </div>
