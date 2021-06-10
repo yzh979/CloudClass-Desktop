@@ -8,6 +8,16 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  background: #2E2E2E;
+}
+
+.whiteboard > #netless {
+  position: absolute;
+  left: 40px;
+  top: 84px;
+  right: 40px;
+  bottom: 83px;
+  background: white;
 }
 
 .card-loading-position {
@@ -17,6 +27,7 @@
   bottom: 0;
   right: 0;
   margin: auto;
+  border-radius: 5px;
 }
 
 .pin-right {
