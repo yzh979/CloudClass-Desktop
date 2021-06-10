@@ -1,5 +1,5 @@
 import React, { FC, ReactEventHandler } from 'react';
-import { t } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 

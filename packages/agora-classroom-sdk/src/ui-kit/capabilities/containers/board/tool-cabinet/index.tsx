@@ -1,5 +1,5 @@
 import { useBoardContext, useAppPluginContext, IAgoraExtApp } from 'agora-edu-core'
-import { Icon, t, ToolCabinet } from '~ui-kit'
+import { Icon, transI18n, ToolCabinet } from '~ui-kit'
 
 export const ToolCabinetContainer = () => {
 
@@ -35,12 +35,12 @@ export const ToolCabinetContainer = () => {
                 {
                     id: 'screenShare',
                     icon: <Icon type="share-screen" />,
-                    name: t('scaffold.screen_share')
+                    name: transI18n('scaffold.screen_share')
                 },
                 {
                     id: 'laser',
                     icon: <Icon type="laser-pointer" />,
-                    name: t('scaffold.laser_pointer')
+                    name: transI18n('scaffold.laser_pointer')
                 },
                 ...appPlugins.map((p:IAgoraExtApp) => {
                     return {

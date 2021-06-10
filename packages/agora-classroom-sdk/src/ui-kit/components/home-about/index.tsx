@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import './index.css';
-import { t } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 
 export interface HomeAboutProps extends BaseProps {
     version?: string;

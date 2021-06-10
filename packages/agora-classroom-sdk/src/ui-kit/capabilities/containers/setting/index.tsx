@@ -1,4 +1,4 @@
-import { Button, Modal, Setting, t } from '~ui-kit'
+import { Button, Modal, Setting, transI18n } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useMediaContext } from 'agora-edu-core'
 

@@ -1,6 +1,6 @@
 import { useBoardContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { Pens, t } from '~components';
+import { Pens, transI18n } from '~components';
 
 export type PensContainerProps = {
   onClick: (pen: string) => void

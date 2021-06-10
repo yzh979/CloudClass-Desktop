@@ -1,4 +1,4 @@
-import { Colors, t } from '~ui-kit'
+import { Colors, transI18n } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useBoardContext } from 'agora-edu-core'
 

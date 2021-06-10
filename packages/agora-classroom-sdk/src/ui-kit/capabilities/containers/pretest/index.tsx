@@ -2,7 +2,7 @@ import { useGlobalContext, usePretestContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Modal, Pretest, t } from '~ui-kit'
+import { Button, Modal, Pretest, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 
 

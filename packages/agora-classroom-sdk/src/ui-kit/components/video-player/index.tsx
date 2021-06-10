@@ -3,7 +3,8 @@ import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon, SvgGrantBoardIcon } from '~components/icon';
 import { Popover } from '~components/popover';
-import { Tooltip } from '~components/tooltip'
+import { Tooltip } from '~components/tooltip';
+import {transI18n} from '~components/i18n';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
@@ -182,7 +183,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       animListCb()
     }
   }, [stars, previousState.uid, previousState.stars, animListCb])
-  const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
     [`${className}`]: !!className,
@@ -194,14 +194,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
+      <Tooltip title={micEnabled ? transI18n('Close Microphone') : transI18n('Open Microphone')} placement={placement}>
         <Icon
           className={micEnabled ? '' : 'red'}
           type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
           onClick={() => onMicClick(uid)}
         />
       </Tooltip>
-      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
+      <Tooltip title={cameraEnabled ? transI18n('Close Camera') : transI18n('Open Camera')} placement={placement}>
         <Icon
           className={cameraEnabled ? '' : 'red'}
           type={cameraEnabled ? 'camera' : 'camera-off'}
@@ -229,7 +229,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
+          <Tooltip title={whiteboardGranted ? transI18n('Close Whiteboard'): transI18n('Open Whiteboard')} placement={placement}>
             <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
           </Tooltip>
           }
@@ -244,7 +244,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
-            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
+            <Tooltip title={privateCallEnabled ? transI18n('Close Private Call') : transI18n('Open Private Call')} placement={placement}>
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
               }}></div>

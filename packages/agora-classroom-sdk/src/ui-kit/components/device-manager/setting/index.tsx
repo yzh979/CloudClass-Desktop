@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select'
 import { Slider } from '~components/slider'
 import './index.css';
-import { t } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 interface DeviceProps {
     deviceId: string;
     label: string;

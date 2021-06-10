@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
-import { t } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 
 export type ZoomItemType =
     | 'max'

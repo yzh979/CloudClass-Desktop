@@ -8,6 +8,7 @@ import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
 import './index.css';
 import { Message } from './interface';
+import {transI18n} from '~components/i18n';
 
 import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
 
@@ -75,8 +76,6 @@ export const Chat: FC<ChatProps> = ({
   onPullFresh,
   ...resetProps
 }) => {
-
-  const { t } = useTranslation()
 
   const [focused, setFocused] = useState<boolean>(false);
 
