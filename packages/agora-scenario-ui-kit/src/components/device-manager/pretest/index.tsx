@@ -142,8 +142,13 @@ const PretestComponent: React.FC<PretestProps> = ({
     useEffect(() => {
         pretestChannel && pretestChannel.subscribe({
             next: (evt: any) => {
+                console.log('subscribe:next', evt)
                 if (evt.kind === 'toast') {
-                    setToastQueue(oldArray => oldArray.concat(evt))
+                    setToastQueue(oldArray => {
+                        const state = [...oldArray.concat(evt)]
+                        console.log('subscribe set state ', state)
+                        return state
+                    })
                 } else {
                     setMessage((oldArray: any[]) => oldArray.concat(evt))
                 }

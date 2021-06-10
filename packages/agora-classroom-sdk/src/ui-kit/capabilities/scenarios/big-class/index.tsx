@@ -10,8 +10,6 @@ import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '~capabilities/containers/room-chat'
-import './style.css'
-import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React, { useLayoutEffect, useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
@@ -97,8 +95,9 @@ export const BigClassScenario = observer(() => {
           ) : null}
           <VideoMarqueeStudentContainer />
           <div className="board-box">
-            <ScreenSharePlayerContainer />
-            <WhiteboardContainer />
+            <WhiteboardContainer>
+              <ScreenSharePlayerContainer />
+            </WhiteboardContainer>
           </div>
           <div
             className={classnames({

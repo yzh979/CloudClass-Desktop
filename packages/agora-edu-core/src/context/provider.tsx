@@ -132,7 +132,7 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: pretestStore.microphoneLevel,
+    microphoneLevel: 0,
     isMirror: pretestStore.isMirror,
     setMirror: pretestStore.setMirror,
     installPretest,
@@ -426,7 +426,6 @@ export const useBoardContext = (): BoardContext => {
 
 export const useCloudDriveContext = (): CloudDriveContext => {
   const {
-    courseWareList,
     downloadList,
     putSceneByResourceUuid,
     startDownload,
@@ -443,7 +442,6 @@ export const useCloudDriveContext = (): CloudDriveContext => {
 
 
   return {
-    courseWareList,
     downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
     openCloudResource: putSceneByResourceUuid,
     startDownload,
@@ -491,7 +489,7 @@ export const useUserListContext = (): UserListContext => {
     controlTools
   } = useSceneStore()
   // const localUserUuid = appStore.roomInfo.userUuid
-  let localUserInfo:EduUser = {
+  let localUserInfo:any = {
     userUuid: roomInfo.userUuid,
     userName: roomInfo.userName,
     role: EduUserRoleEnum2EduUserRole(roomInfo.userRole, sceneType),

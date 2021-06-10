@@ -93,7 +93,7 @@ export interface BaseVideoPlayerProps {
   */
   online?: boolean;
   hasStream?: boolean;
-  userType?: 'student' | 'teacher';
+  userType?: 'student' | 'teacher' | 'assistant';
   isLocal?: boolean;
   cameraDevice?: number;
   micDevice?: number;
@@ -439,7 +439,7 @@ export interface VideoMarqueeListProps {
   /**
    * 用户类型
    */
-  userType: 'teacher' | 'student';
+  userType: 'teacher' | 'student' | 'assistant';
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
