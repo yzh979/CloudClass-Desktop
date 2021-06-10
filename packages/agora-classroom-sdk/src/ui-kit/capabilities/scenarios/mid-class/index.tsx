@@ -40,10 +40,8 @@ export const MidClassScenario = observer(() => {
     >
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
-        <Aside>
-          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
-            <VideoPlayerTeacher />
-          </div>
+        <Aside  style={{opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
+          <VideoPlayerTeacher />
           <VideoMarqueeStudentContainer />
           {/* <RoomChat /> */}
         </Aside>

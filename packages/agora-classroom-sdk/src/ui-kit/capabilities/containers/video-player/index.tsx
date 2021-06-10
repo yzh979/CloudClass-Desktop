@@ -6,6 +6,8 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Tabs, TabPane } from '~components/tabs';
 import { Button} from '~ui-kit'
+
+import EmptyImage from './assets/empty_seat.png'
 export const VideoPlayerTeacher = observer(({ style }: any) => {
   const {
     teacherStream: userStream,
@@ -195,9 +197,9 @@ export const VideoMarqueeStudentContainer = observer(() => {
             <Button className="video-marquee-tab-btn">上台学员</Button>
           </>
         } key="0">
+          <div className="video-marquee-pin">
           {
             videoStreamList.length ?
-            <div className="video-marquee-pin">
               <VideoMarqueeList
                 hideStars={sceneType === 2}
                 videoStreamList={videoStreamList}
@@ -208,9 +210,13 @@ export const VideoMarqueeStudentContainer = observer(() => {
                 onOffPodiumClick={onOffPodiumClick}
                 onPrivateChat={onPrivateChat}
               />
-            </div>
-            : null
+            : 
+              <div className="video-marquee-pin-empty">
+                <img src={EmptyImage}/>
+                <span>还未有学员上台</span>
+              </div>
           }
+          </div>
         </TabPane>
         <TabPane tab={
           <>
