@@ -48,7 +48,7 @@
   @apply flex items-center;
 }
 
-.biz-header_rh-roster {
+.biz-header_rh-roster-teacher {
   width: 107px !important;
   height: 31px !important;
   border-radius: 19px !important;
@@ -56,10 +56,15 @@
   background: transparent !important;
 
 }
-.biz-header_rh-roster > span {
+.biz-header_rh-roster-teacher > span {
   font-size: 15px;
   font-weight: 600;
   color: #38AE48;
+}
+.biz-header_rh-roster-student {
+  font-size: 15px;
+  font-weight: 400;
+  color: #FFFFFF;
 }
 
 .biz-header_rh-item {

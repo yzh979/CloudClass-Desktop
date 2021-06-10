@@ -6,7 +6,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Tabs, TabPane } from '~components/tabs';
 import { Button} from '~ui-kit'
-
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import EmptyImage from './assets/empty_seat.png'
 export const VideoPlayerTeacher = observer(({ style }: any) => {
   const {
@@ -181,56 +181,76 @@ export const VideoMarqueeStudentContainer = observer(() => {
   }
 
   const {
-    sceneType
+    sceneType,
+    roomInfo
   } = useRoomContext()
 
-  // const {
-  //   tabIndex,
-  //   setTabIndex
-  // } = React.useState<number>(0)
-
-  return (
-    <>
-       <Tabs className="video-marquee-tab">
-        <TabPane className="video-marquee-tab-item" tab={
-          <>
-            <Button className="video-marquee-tab-btn">上台学员</Button>
-          </>
-        } key="0">
-          <div className="video-marquee-pin">
-          {
-            videoStreamList.length ?
-              <VideoMarqueeList
-                hideStars={sceneType === 2}
-                videoStreamList={videoStreamList}
-                onCameraClick={onCameraClick}
-                onMicClick={onMicClick}
-                onSendStar={onSendStar}
-                onWhiteboardClick={onWhiteboardClick}
-                onOffPodiumClick={onOffPodiumClick}
-                onPrivateChat={onPrivateChat}
-              />
-            : 
-              <div className="video-marquee-pin-empty">
-                <img src={EmptyImage}/>
-                <span>还未有学员上台</span>
+  if(roomInfo.userRole === EduRoleTypeEnum.teacher){
+      return (
+        <>
+          <Tabs className="video-marquee-tab">
+            <TabPane className="video-marquee-tab-item" tab={
+              <>
+                <Button className="video-marquee-tab-btn">上台学员</Button>
+              </>
+            } key="0">
+              <div className="video-marquee-pin">
+              {
+                videoStreamList.length ?
+                  <VideoMarqueeList
+                    hideStars={sceneType === 2}
+                    videoStreamList={videoStreamList}
+                    onCameraClick={onCameraClick}
+                    onMicClick={onMicClick}
+                    onSendStar={onSendStar}
+                    onWhiteboardClick={onWhiteboardClick}
+                    onOffPodiumClick={onOffPodiumClick}
+                    onPrivateChat={onPrivateChat}
+                  />
+                : 
+                  <div className="video-marquee-pin-empty">
+                    <img src={EmptyImage}/>
+                    <span>还未有学员上台</span>
+                  </div>
+              }
               </div>
-          }
+            </TabPane>
+            <TabPane tab={
+              <>
+                <Button className="video-marquee-tab-btn">全部学员</Button>
+              </> 
+            } key="1">
+              <div>我的云盘</div>
+              <div>我的云盘</div>
+              <div>我的云盘</div>
+            </TabPane>
+          </Tabs>
+        </>
+      )
+  }else{
+    return (
+      <div className="video-marquee-pin">
+      {
+        videoStreamList.length ?
+          <VideoMarqueeList
+            hideStars={sceneType === 2}
+            videoStreamList={videoStreamList}
+            onCameraClick={onCameraClick}
+            onMicClick={onMicClick}
+            onSendStar={onSendStar}
+            onWhiteboardClick={onWhiteboardClick}
+            onOffPodiumClick={onOffPodiumClick}
+            onPrivateChat={onPrivateChat}
+          />
+        : 
+          <div className="video-marquee-pin-empty">
+            <img src={EmptyImage}/>
+            <span>还未有学员上台</span>
           </div>
-        </TabPane>
-        <TabPane tab={
-          <>
-            <Button className="video-marquee-tab-btn">全部学员</Button>
-          </> 
-        } key="1">
-          <div>我的云盘</div>
-          <div>我的云盘</div>
-          <div>我的云盘</div>
-        </TabPane>
-      </Tabs>
-    </>
-    
-  )
+      }
+      </div>
+    )
+  }
 })
 
 export const VideoList = observer(() => {

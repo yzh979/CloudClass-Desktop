@@ -152,9 +152,18 @@ export const BizHeader: FC<BizHeaderProps> = ({
           }
         </div>
         <div className="biz-header_rh">
-          <Button className="biz-header_rh-roster" onClick={() => onClick('roster')}>
-            <span>花名册 {studentInRoomCnt}/{studentInClassCnt}</span>
-          </Button>
+          { userType == 'teacher' &&
+            <Button className="biz-header_rh-roster-teacher" onClick={() => onClick('roster')}>
+              <span>花名册 {studentInRoomCnt}/{studentInClassCnt}</span>
+            </Button>
+          }
+
+          { userType == 'student' &&
+            <div className="biz-header_rh-roster-student">
+              <span>花名册 {studentInRoomCnt}/{studentInClassCnt}</span>
+            </div>
+          }
+          
           <div className="biz-header_rh-item signal">
             <img src={IconWifi}/>
             <span>{monitor.networkLatency}ms</span>
