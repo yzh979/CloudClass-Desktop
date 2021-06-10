@@ -4,7 +4,8 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
-
+import { Tabs, TabPane } from '~components/tabs';
+import { Button} from '~ui-kit'
 export const VideoPlayerTeacher = observer(({ style }: any) => {
   const {
     teacherStream: userStream,
@@ -181,21 +182,48 @@ export const VideoMarqueeStudentContainer = observer(() => {
     sceneType
   } = useRoomContext()
 
+  // const {
+  //   tabIndex,
+  //   setTabIndex
+  // } = React.useState<number>(0)
+
   return (
-    videoStreamList.length ?
-      <div className="video-marquee-pin">
-        <VideoMarqueeList
-          hideStars={sceneType === 2}
-          videoStreamList={videoStreamList}
-          onCameraClick={onCameraClick}
-          onMicClick={onMicClick}
-          onSendStar={onSendStar}
-          onWhiteboardClick={onWhiteboardClick}
-          onOffPodiumClick={onOffPodiumClick}
-          onPrivateChat={onPrivateChat}
-        />
-      </div>
-      : null
+    <>
+       <Tabs className="video-marquee-tab">
+        <TabPane className="video-marquee-tab-item" tab={
+          <>
+            <Button className="video-marquee-tab-btn">上台学员</Button>
+          </>
+        } key="0">
+          {
+            videoStreamList.length ?
+            <div className="video-marquee-pin">
+              <VideoMarqueeList
+                hideStars={sceneType === 2}
+                videoStreamList={videoStreamList}
+                onCameraClick={onCameraClick}
+                onMicClick={onMicClick}
+                onSendStar={onSendStar}
+                onWhiteboardClick={onWhiteboardClick}
+                onOffPodiumClick={onOffPodiumClick}
+                onPrivateChat={onPrivateChat}
+              />
+            </div>
+            : null
+          }
+        </TabPane>
+        <TabPane tab={
+          <>
+            <Button className="video-marquee-tab-btn">全部学员</Button>
+          </> 
+        } key="1">
+          <div>我的云盘</div>
+          <div>我的云盘</div>
+          <div>我的云盘</div>
+        </TabPane>
+      </Tabs>
+    </>
+    
   )
 })
 

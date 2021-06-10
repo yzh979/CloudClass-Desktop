@@ -23,7 +23,7 @@
 .layout-aside {
   @apply flex flex-col border-l border-gray-100 h-full;
   /* width: 19rem; */
-  min-width: 18rem;
+  min-width: 360px;
   border-left: none;
   @apply overflow-hidden;
 }

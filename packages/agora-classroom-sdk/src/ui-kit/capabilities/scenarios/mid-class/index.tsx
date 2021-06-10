@@ -12,6 +12,7 @@ import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
+import { Tabs, TabPane } from '~components/tabs';
 
 export const MidClassScenario = observer(() => {
 

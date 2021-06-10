@@ -34,12 +34,6 @@ html, body, #root {
   position: relative;
 }
 
-.edu-room .tabs {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-}
-
 .layout-aside-normal {
   max-width: 300px;
   min-width: 300px;
@@ -109,6 +103,46 @@ html, body, #root {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 71px;
+}
+.video-marquee-tab  .tabs-nav-list{
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.video-marquee-tab .tabs-ink-bar{
+  display: none;
+}
+
+.video-marquee-tab .tabs-nav-operations {
+  display: none;
+}
+
+.video-marquee-tab .tabs-tab + .tabs-tab {
+  margin: 0;
+}
+
+.video-marquee-tab > .tabs-nav::before,
+.video-marquee-tab > div > .tabs-nav::before{
+  border: none;
+}
+.tabs-tab .video-marquee-tab-btn {
+  width: 165px !important;
+  height: 44px  !important;
+  border-radius: 5px  !important;
+  background: #D8D8D8  !important;
+  font-size: 17px;
+  font-weight: 400;
+  color: #2D353A;
+}
+
+.tabs-tab-active .video-marquee-tab-btn {
+  background: #38AE48  !important;
+  color: #FFFFFF;
+}
+
+.video-marquee-tab > .tabs-nav-wrap {
+  width: 100% !important;
 }
 
 .video-marquee-pin {
