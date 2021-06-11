@@ -124,7 +124,7 @@ export const regionMap = {
   'AP': 'sg',
   'CN': 'cn-hz',
   'EU': 'gb-lon',
-  'NS': 'us-sv',
+  'NA': 'us-sv',
 } as const
 
 export type AgoraRegionString = 
