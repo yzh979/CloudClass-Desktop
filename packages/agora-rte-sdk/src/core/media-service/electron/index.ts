@@ -110,7 +110,7 @@ export class CEFVideoEncoderConfiguration {
 
   constructor(
     dimensions: CEFVideoDimensions = new CEFVideoDimensions(),
-    frameRate: any = 15,
+    frameRate: any = 30,
     minFrameRate: number = -1,
     bitrate: number = 0,
     minBitrate: number = -1,
@@ -253,6 +253,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   _remoteVideoStats: Record<number, any>;
   _remoteAudioStats: Record<number, any>;
   _cefClient: any;
+  videoEncoderWidth: number = 1280;
+  videoEncoderHeight: number = 720;
+  videoEncoderFrameRate: number = 30;
 
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)
@@ -321,15 +324,18 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     const resolutionConfig = options.resolution
     const config: any = {
       bitrate: 0,
-      frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
-      width: resolutionConfig ? resolutionConfig?.width : 320,
-      height: resolutionConfig ? resolutionConfig?.height : 240,
+      frameRate: resolutionConfig?.frameRate,
+      width: resolutionConfig?.width,
+      height: resolutionConfig?.height,
     }
 
     const videoEncoderConfiguration = Object.assign({
-      width: config.width,
-      height: config.height,
-      frameRate: config.frameRate,
+      // width: config.width,
+      // height: config.height,
+      // frameRate: config.frameRate,
+      width: this.videoEncoderWidth,
+      height: this.videoEncoderHeight,
+      frameRate: this.videoEncoderFrameRate,
       minFrameRate: -1,
       minBitrate: config.bitrate,
     })
@@ -1418,5 +1424,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       throw 'setBeautyEffectOptions failure'
     }
     return ret
+  }
+
+  setVideoEncoderConfiguration ({width, height, frameRate}: {width: number, height: number, frameRate: number}) {
+    this.videoEncoderWidth = width
+    this.videoEncoderHeight = height
+    this.videoEncoderFrameRate = frameRate
   }
 }

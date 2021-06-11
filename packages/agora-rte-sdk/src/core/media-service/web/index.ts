@@ -25,9 +25,9 @@ type AgoraWebSDK = IAgoraRTC & {
 
 function getEncoderConfig(option?: CameraOption) {
   return {
-    frameRate: option?.encoderConfig?.frameRate ?? 15,
-    width: option?.encoderConfig?.width ?? 320,
-    height: option?.encoderConfig?.height ?? 240,
+    frameRate: option?.encoderConfig?.frameRate,
+    width: option?.encoderConfig?.width,
+    height: option?.encoderConfig?.height,
   }
 }
 
@@ -88,6 +88,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   audioDeviceConfig: Map<'microphoneTestTrack' | 'microphoneTrack', any> = new Map()
   audioTrackPublished: Map<string, boolean> = new Map()
   videoTrackPublished: Map<string, boolean> = new Map()
+  videoEncoderWidth: number = 1280;
+  videoEncoderHeight: number = 720;
+  videoEncoderFrameRate: number = 30;
 
   get microphoneTrack(): IMicrophoneAudioTrack {
     return this.audioTrackMap.get('microphoneTrack')!
@@ -958,7 +961,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     if (!track) {
       const videoTrack = await this.agoraWebSdk.createCameraVideoTrack({
         cameraId: this.videoDeviceConfig.get(type),
-        encoderConfig: getEncoderConfig(),
+        encoderConfig: {
+          width: this.videoEncoderWidth,
+          height: this.videoEncoderHeight,
+          frameRate: this.videoEncoderFrameRate
+        },
       })
       const trackId = videoTrack.getTrackId()
       this.videoTrackMap.set(type, videoTrack)
@@ -1190,5 +1197,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     await track.setDevice(deviceId)
     // await this.agoraWebSdk.checkAudioTrackIsActive(track)
     this.audioDeviceConfig.set('microphoneTrack', deviceId)
+  }
+
+  setVideoEncoderConfiguration ({width, height, frameRate}: {width: number, height: number, frameRate: number}) {
+    this.videoEncoderWidth = width
+    this.videoEncoderHeight = height
+    this.videoEncoderFrameRate = frameRate
   }
 }

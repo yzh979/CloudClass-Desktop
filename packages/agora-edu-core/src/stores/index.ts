@@ -18,6 +18,7 @@ import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo 
 import { WidgetStore } from './widget'
 import { reportServiceV2 } from '../services/report-v2'
 import { Subject } from 'rxjs'
+import { globalConfigs } from '../utilities/config'
 
 export class EduScenarioAppStore {
   // stores
@@ -225,6 +226,12 @@ export class EduScenarioAppStore {
         userRole: roomInfoParams?.userRole
       })
     }
+
+    this.mediaService.setVideoEncoderConfiguration({
+      width: globalConfigs.videoEncoderWidth,
+      height: globalConfigs.videoEncoderHeight,
+      frameRate: globalConfigs.videoEncoderFrameRate
+    })
 
     if (isEmpty(roomInfoParams)) {
       this.load()
