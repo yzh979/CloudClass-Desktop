@@ -55,7 +55,7 @@ export const Icon: FC<IconProps> = ({
     ['hover']: !!hover
   });
   const iconAssets = Object.keys(svgDict).includes(type) ? (
-    <img style={{"margin": "5px auto"}} className={cls} src={svgDict[type]} {...restProps}/>
+    <img style={{"display": "inline-block"}} className={cls} src={svgDict[type]} {...restProps}/>
   ) : (
     <i  
       className={cls}
