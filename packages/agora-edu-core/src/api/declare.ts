@@ -95,7 +95,7 @@ export const regionMap = {
 export type AgoraRegionString = 
   | 'cn'
   | 'ap'
-  | 'ns'
+  | 'na'
 
 export type AppStoreConfigParams = {
   agoraAppId: string,

@@ -12,7 +12,7 @@ export const regionMap = {
 export type AgoraRegionString = 
   | 'cn'
   | 'ap'
-  | 'ns'
+  | 'na'
 
 export type RoomConfigProps<T> = {
   store: T
