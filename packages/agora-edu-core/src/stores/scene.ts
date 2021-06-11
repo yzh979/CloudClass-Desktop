@@ -15,6 +15,7 @@ import { screenSharePath } from '../constants';
 import { ControlTool, EduMediaStream } from "../context/type"
 import { reportServiceV2 } from '../services/report-v2';
 import { AgoraMediaDeviceEnum, DeviceStateEnum } from '../types';
+import { globalConfigs } from '../utilities/config';
 
 const delay = 2000
 
@@ -103,9 +104,9 @@ export class SceneStore extends SimpleInterval {
   @computed
   get videoEncoderConfiguration(): SceneVideoConfiguration {
     return {
-      width: 320,
-      height: 240,
-      frameRate: 15
+      width: globalConfigs.videoEncoderWidth,
+      height: globalConfigs.videoEncoderHeight,
+      frameRate: globalConfigs.videoEncoderFrameRate
     }
   }
 

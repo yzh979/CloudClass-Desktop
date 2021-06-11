@@ -147,6 +147,8 @@ export declare interface MicrophoneOption {
  */
 export declare interface IAgoraRTCModule {
 
+  setVideoEncoderConfiguration: ({width, height, frameRate}: {width: number, height: number, frameRate: number}) => void
+
   init(): void
   release(): void
 
