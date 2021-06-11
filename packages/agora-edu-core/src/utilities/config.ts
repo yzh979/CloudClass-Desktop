@@ -36,14 +36,14 @@ export const getRegion = (region: string) => {
     "CN": "GLOBAL",
     "AP": "ASIA",
     "EU": "EUROPE",
-    "NS": "NORTH_AMERICA",
+    "NA": "NORTH_AMERICA",
   }
 
   const rtmRegions: Record<string, string> = {
     "CN": "GLOB",
     "AP": "AS",
     "EU": "EU",
-    "NS": "NA",
+    "NA": "NA",
   }
 
   return {
@@ -57,7 +57,7 @@ export const getRegionDomainCode = (region: string) => {
     "CN": "cn",
     "AP": "ap",
     "EU": "eu",
-    "NS": "na"
+    "NA": "na"
   }
 
   return regionDomain[region] ?? regionDomain["CN"]
