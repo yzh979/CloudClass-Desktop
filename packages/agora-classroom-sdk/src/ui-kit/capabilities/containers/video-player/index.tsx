@@ -57,7 +57,7 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
       hideBoardGranted={true}
       hideStars={true}
       micVolume={userStream.micVolume}
-      hideOffAllPodium={!controlTools.includes(ControlTool.offPodiumAll)}
+      hideOffAllPodium={true}
       canHoverHideOffAllPodium={canHoverHideOffAllPodium}
       onOffAllPodiumClick={onOffAllPodiumClick!}
       onCameraClick={onCameraClick}

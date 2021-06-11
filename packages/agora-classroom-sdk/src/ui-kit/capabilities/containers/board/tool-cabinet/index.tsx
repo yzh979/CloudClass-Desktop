@@ -25,12 +25,12 @@ export const ToolCabinetContainer = observer(() => {
 
     const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {
-            case 'screenShare': {
-                if (canSharingScreen) {
-                    await startOrStopSharing()
-                }
-                break;
-            }
+            // case 'screenShare': {
+            //     if (canSharingScreen) {
+            //         await startOrStopSharing()
+            //     }
+            //     break;
+            // }
             case 'laser': {
                 setLaserPoint()
                 break;
@@ -71,11 +71,7 @@ export const ToolCabinetContainer = observer(() => {
             })
         ]
 
-        if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
-            return screenShareTool.concat(...restTools)
-        } else {
-            return restTools
-        }
+        return restTools
     }, [roomInfo.userRole])
 
     return (

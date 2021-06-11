@@ -99,13 +99,13 @@ export const BigClassScenario = observer(() => {
               <ScreenSharePlayerContainer />
             </WhiteboardContainer>
           </div>
-          <div
+          {/* <div
             className={classnames({
               'pin-right': 1
             })}
           >
             <HandsUpContainer />
-          </div>
+          </div> */}
         </Content>
         <Aside className={classnames({
           "big-class-aside": 1,

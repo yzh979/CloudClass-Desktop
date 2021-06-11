@@ -76,14 +76,14 @@ export const MidClassScenario = observer(() => {
               <ScreenSharePlayerContainer />
             </WhiteboardContainer>
           </div>
-          <div
+          {/* <div
             className={classnames({
               'pin-right': 1
             })}
             style={{display:'flex'}}
           >
             <HandsUpContainer />
-          </div>
+          </div> */}
         </Content>
         <Aside className={classnames({
           "mid-class-aside": 1,
