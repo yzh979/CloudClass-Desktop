@@ -60,7 +60,8 @@ export const LaunchPage = observer(() => {
         ...launchOption,
         // TODO:  这里需要传递开发者自己发布的录制页面地址
         // recordUrl: 'https://webdemo.agora.io/flexible-classroom/record_page',
-        recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
+        recordUrl: AGORA_APAAS_BRANCH_PATH ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page` : `https://webdemo.agora.io/flexible-classroom/record_page`,
+        // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)
           if (evt === AgoraEduEvent.destroyed) {
