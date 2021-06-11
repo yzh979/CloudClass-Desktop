@@ -13,6 +13,7 @@ import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../interfaces'
 // import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
+  
   sdkWrapper!: RTCWrapperProvider;
 
   cameraTestRenderer?: LocalUserRenderer;
@@ -784,5 +785,13 @@ export class MediaService extends EventEmitter implements IMediaService {
         smoothnessLevel
       })
     }
+  }
+
+  setVideoEncoderConfiguration ({width, height, frameRate}: {width: number, height: number, frameRate: number}) {
+    this.sdkWrapper.setVideoEncoderConfiguration({
+      width,
+      height,
+      frameRate
+    })
   }
 }

@@ -19,6 +19,7 @@ import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
+import { globalConfigs } from "../utilities/config"
 // import packageJson from "../../package.json"
 const packageJson = require('../../package.json')
 
