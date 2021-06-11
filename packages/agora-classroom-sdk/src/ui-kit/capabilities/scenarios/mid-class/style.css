@@ -1,7 +1,7 @@
-.zoom-position {
+.zoom-position-mid {
   position: absolute;
-  left: 15px;
-  bottom: 8px;
+  right: 68px;
+  bottom: 104px;
 }
 
 .whiteboard {

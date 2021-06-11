@@ -1,0 +1,49 @@
+.whiteboard-tab {
+	position: absolute;
+	top: 17px;
+	left: 40px;
+	right: 40px;
+	overflow-x: scroll;
+}
+
+.whiteboard-tab .tabs-tab {
+	width: 234px !important;
+	height: 50px !important;
+	padding: 0 !important;
+	background: #E4E4E4 !important;
+	border-radius: 5px;
+
+}
+.whiteboard-tab .tabs-tab-active {
+	background: white !important;
+	border: none !important;
+}
+.whiteboard-tab .tabs-tab .tabs-tab-btn {
+	text-align: center;
+	width: 100% !important;
+	display: block !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+	margin: 0 30px;
+	font-size: 16px  !important;
+	font-weight: 600  !important;
+	color: #B3B3B3  !important;
+}
+.whiteboard-tab .tabs-tab-active .tabs-tab-btn {
+	color: #38AE48  !important;
+}
+.whiteboard-tab .tabs-tab-remove {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+.whiteboard-tab  .tabs-nav-list {
+	border: none !important;
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+.whiteboard-tab .tabs-nav-operations {
+	display: none !important;
+}

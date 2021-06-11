@@ -11,6 +11,8 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 
+import './index.css'
+
 export const allTools: ToolItem[] = [
   {
     value: 'selection',
@@ -105,19 +107,18 @@ const TabsContainer = observer(() => {
   } = useGlobalContext()
 
   return (
-    <Tabs activeKey={activeSceneName} type="editable-card"
+    <Tabs className="whiteboard-tab" activeKey={activeSceneName} type="editable-card"
       onChange={changeSceneItem}>
       {resourcesList.map((item: Resource, key: number) => (
         <TabPane
           key={item.resourceUuid}
           tab={
             <>
-              {key === 0 && <Icon type="whiteboard" />}
               {key === 0 ? transI18n("tool.board_name") : item.file.name}
             </>
           }
           closeIcon={
-            <Icon type="close"
+            <Icon className="whiteboard-tab-item-close" type="close"
               onClick={() => {
                 addDialog(CloseConfirm, {
                   resourceUuid: item.resourceUuid,
@@ -240,7 +241,7 @@ export const WhiteboardContainer = observer(() => {
         <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolClick} className="toolbar-biz" />
       : null}
       {showZoomControl ? <ZoomController
-        className='zoom-position'
+        className='zoom-position-mid'
         zoomValue={zoomValue}
         currentPage={currentPage}
         totalPage={totalPage}
