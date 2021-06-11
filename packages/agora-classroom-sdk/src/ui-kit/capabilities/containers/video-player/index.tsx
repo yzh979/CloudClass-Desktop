@@ -1,4 +1,4 @@
-import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { EduMediaStream, useGlobalContext, useRoomContext, useUserListContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -130,6 +130,11 @@ export const VideoMarqueeStudentContainer = observer(() => {
     firstStudent
   } = useSmallClassVideoControlContext()
 
+  const {
+    myRole,
+} = useUserListContext()
+
+
   const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
       isHost: sceneVideoConfig.isHost,
@@ -143,8 +148,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
       micVolume: stream.micVolume,
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,
-      // hideControl: stream.hideControl,
-      hideControl: true,// 只能通过花名册操作
+      hideControl: myRole == 'student',// 学生不能控制席位
       canHoverHideOffAllPodium: true,
       hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (

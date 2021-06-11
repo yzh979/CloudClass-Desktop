@@ -22,7 +22,6 @@ const meta: Meta = {
         alt="placeholder"
         style={{
           display: 'inline-block',
-          maxHeight: '100%',
           maxWidth: '100%',
           borderRadius: 4,
         }}

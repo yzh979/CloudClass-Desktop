@@ -11,6 +11,12 @@ import { SvgaPlayer } from '~components/svga-player'
 import { v4 as uuidv4 } from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 
+import CoVideo from './assets/covideo.png'
+import CameraOn from './assets/camera_on.png'
+import CameraOff from './assets/camera_off.png'
+import MicrophoneOff from './assets/microphone_off.png'
+import MicrophoneOn from './assets/microphone_on.png'
+
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
   /**
@@ -182,85 +188,98 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       animListCb()
     }
   }, [stars, previousState.uid, previousState.stars, animListCb])
-  const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
     [`${className}`]: !!className,
   });
-  const micStateCls = classnames({
-    [`mic-state`]: 1,
-    [`disabled`]: !micEnabled,
-  });
 
-  const tools = (
-    <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
-        <Icon
-          className={micEnabled ? '' : 'red'}
-          type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
-          onClick={() => onMicClick(uid)}
-        />
-      </Tooltip>
-      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
-        <Icon
-          className={cameraEnabled ? '' : 'red'}
-          type={cameraEnabled ? 'camera' : 'camera-off'}
-          onClick={() => onCameraClick(uid)}
-        />
-      </Tooltip>
-      {isHost ? (
-        <>
-          {hideOffAllPodium ? null : (
-            <Tooltip title={t('Clear Podiums')} placement={placement}>
-              <Icon
-                hover={canHoverHideOffAllPodium}
-                type="invite-to-podium"
-                onClick={() => onOffAllPodiumClick()}
-              />
-            </Tooltip>
-          )}
-          {hideOffPodium ? null : (
-            <Tooltip title={t('Clear Podium')} placement={placement}>
-              <Icon
-                type="invite-to-podium"
-                className={isOnPodium ? 'no_podium' : 'podium'}
-                onClick={() => onOffPodiumClick(uid)}
-              />
-            </Tooltip>
-          )}
-          {hideBoardGranted ? null :
-            <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
-              <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
-            </Tooltip>
-          }
-          {hideStars ? null : (
-            <Tooltip title={t('Star')} placement={placement}>
-              <Icon
-                type="star-outline"
-                onClick={() => {
-                  onSendStar(uid)
-                }}
-              />
-            </Tooltip>
-          )}
-          {hidePrivateChat ? null : (
-            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
-              <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
-                onPrivateChat(uid)
-              }}></div>
-            </Tooltip>
-          )}
-        </>
-      ) : null}
-    </div>
-  );
+
+  // const tools = (
+  //   <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
+  //     <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
+  //       <Icon
+  //         className={micEnabled ? '' : 'red'}
+  //         type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
+  //         onClick={() => onMicClick(uid)}
+  //       />
+  //     </Tooltip>
+  //     <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
+  //       <Icon
+  //         className={cameraEnabled ? '' : 'red'}
+  //         type={cameraEnabled ? 'camera' : 'camera-off'}
+  //         onClick={() => onCameraClick(uid)}
+  //       />
+  //     </Tooltip>
+  //     {isHost ? (
+  //       <>
+  //         {hideOffAllPodium ? null : (
+  //           <Tooltip title={t('Clear Podiums')} placement={placement}>
+  //             <Icon
+  //               hover={canHoverHideOffAllPodium}
+  //               type="invite-to-podium"
+  //               onClick={() => onOffAllPodiumClick()}
+  //             />
+  //           </Tooltip>
+  //         )}
+  //         {hideOffPodium ? null : (
+  //           <Tooltip title={t('Clear Podium')} placement={placement}>
+  //             <Icon
+  //               type="invite-to-podium"
+  //               className={isOnPodium ? 'no_podium' : 'podium'}
+  //               onClick={() => onOffPodiumClick(uid)}
+  //             />
+  //           </Tooltip>
+  //         )}
+  //         {hideBoardGranted ? null :
+  //           <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
+  //             <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
+  //           </Tooltip>
+  //         }
+  //         {hideStars ? null : (
+  //           <Tooltip title={t('Star')} placement={placement}>
+  //             <Icon
+  //               type="star-outline"
+  //               onClick={() => {
+  //                 onSendStar(uid)
+  //               }}
+  //             />
+  //           </Tooltip>
+  //         )}
+  //         {hidePrivateChat ? null : (
+  //           <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
+  //             <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
+  //               onPrivateChat(uid)
+  //             }}></div>
+  //           </Tooltip>
+  //         )}
+  //       </>
+  //     ) : null}
+  //   </div>
+  // );
+
+  const handleMicClick = useCallback(() => {
+    if(!hideControl){
+      onMicClick(uid)
+    }
+  }, [hideControl, onMicClick])
+
+  const handleCamClick = useCallback(() => {
+    if(!hideControl){
+      onCameraClick(uid)
+    }
+  }, [hideControl, onCameraClick])
+
+  const handleCovClick = useCallback(() => {
+    if(!hideControl){
+      onOffPodiumClick(uid)
+    }
+  }, [hideControl, onOffPodiumClick])
   return (
     <Popover
       align={{
         offset: [-8, 0],
       }}
       overlayClassName="video-player-tools-popover"
-      content={hideControl ? null : tools}
       placement={controlPlacement}>
       <div className={cls} {...restProps}>
         {children ? children : null}
@@ -287,7 +306,22 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </>
           ) : null}
         </div>
-        <div className="bottom-left-info">
+        <div className="bottom-info">
+            <div className="bottom-info_lf">
+              <Tooltip title="下台" placement={placement}>
+                <img className={`close-video ${hideControl ? '':'show-control'}`} onClick={handleCovClick} src={CoVideo}/>
+              </Tooltip>
+              <Tooltip title={cameraEnabled ? '禁用视频':'启用视频'} placement={placement}>
+                <img className={`camera ${hideControl ? '':'show-control'}`} onClick={handleCamClick} src={cameraEnabled ? CameraOn:CameraOff}/>
+              </Tooltip>
+              <Tooltip title={micEnabled ? '禁用音频':'启用音频'} placement={placement}>
+                <img className={`microphone ${hideControl ? '':'show-control'}`} onClick={handleMicClick} src={micEnabled ? MicrophoneOn: MicrophoneOff}/>
+              </Tooltip>
+              <VolumeIndicator volume={micVolume} />
+            </div>
+            <span className="username">{username}</span>
+        </div>
+        {/* <div className="bottom-left-info">
           <div>
             {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
             <Icon
@@ -296,12 +330,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             />
           </div>
           <span title={username} className="username">{username}</span>
-        </div>
-        <div className="bottom-right-info">
+        </div> */}
+        {/* <div className="bottom-right-info">
           {(whiteboardGranted && userType === 'student') ? (
             <div className="bottom-right-granted"></div>
           ) : null}
-        </div>
+        </div> */}
       </div>
     </Popover>
   );

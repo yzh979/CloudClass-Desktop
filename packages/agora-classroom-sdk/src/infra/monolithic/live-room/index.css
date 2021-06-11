@@ -25,10 +25,6 @@ html, body, #root {
   object-fit: contain !important;
 }
 
-.edu-room .video-player {
-  border: 2px solid white;
-  margin-top: -2px;
-}
 
 .edu-room .layout {
   position: relative;
@@ -146,6 +142,7 @@ html, body, #root {
 }
 
 .video-marquee-pin {
+  margin-top: 15px;
   width: 360px;
   height: 100%;
 }

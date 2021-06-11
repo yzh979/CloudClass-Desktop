@@ -1,7 +1,7 @@
 .video-player {
   @apply relative flex items-center justify-center;
-  height: 168px;
-  width: 300px;
+  width: 360px;
+  height: 203px;
   background: transparent;
   border-radius: 4px;
   color: #fff;
@@ -22,7 +22,15 @@
   @apply absolute bottom-0 right-0;
   padding: 0 8px;
 }
-
+.bottom-info {
+  height: 53px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0 15px;
+  @apply absolute bottom-0 left-0 right-0 flex items-center justify-between;
+}
+.bottom-info .show-control {
+  cursor: pointer;
+}
 .stars {
   font-size: 18px;
   color: #f58723;
@@ -43,17 +51,32 @@
 .mic-state.disabled {
   color: #ff0000;
 }
+.bottom-info_lf {
+  @apply flex flex-row items-center;
+}
 
+.bottom-info  .close-video {
+  width: 25px;
+  height: 25px;
+  margin-right: 23px;
+}
+.bottom-info  .camera {
+  width: 25px;
+  height: 25px;
+  margin-right: 25px;
+  object-fit: contain;
+  
+} 
+.bottom-info  .microphone {
+  width: 19px;
+  height: 26px;
+  margin-right: 25px;
+} 
 .username {
-  @apply text-white font-medium;
-  font-size: 12px;
-  margin-bottom: 5px;
-  /* letter-spacing: -0.41px; */
-  text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 71px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 24px;
 }
 
 .whiteboard-state {
@@ -143,16 +166,16 @@
 }
 
 .volume-indicators {
-  @apply flex flex-col;
-  margin-left: 6px;
+  @apply flex flex-row items-end;
 }
 
 .v-indicator {
-  @apply rounded;
-  height: 1px;
-  width: 6px;
-  background-color: #357bf6;
-  margin-bottom: 4px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  width: 4px;
+  height: 24px;
+  margin-right: 3px;
+  background-color: white;
 }
 
 .show-scroll .scroll-btn {
@@ -179,11 +202,7 @@
   width: 0;
 }
 
-.video-item {
-  width: 300px;
-  height: 168px;
-  margin-right: 5px;
-}
+
 
 .top-container {
   color: #FFFFFF;
