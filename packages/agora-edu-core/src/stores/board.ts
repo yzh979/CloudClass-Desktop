@@ -5,6 +5,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+//@ts-ignore
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';

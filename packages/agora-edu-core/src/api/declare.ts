@@ -36,6 +36,7 @@ export interface IAgoraExtApp {
   extAppWillUnload():void
 }
 
+//@ts-ignore
 export type ConvertedFile = {
   width: number,
   height: number,
