@@ -65,6 +65,7 @@ export const LaunchPage = observer(() => {
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)
           if (evt === AgoraEduEvent.destroyed) {
+            homeStore.clear()
             history.push('/')
           }
         }

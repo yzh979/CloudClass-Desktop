@@ -1,6 +1,6 @@
 import { reportServiceV2 } from "../services/report-v2"
 class GlobalConfigs {
-  sdkDomain: string = 'https://api.agora.io/%region%'
+  _sdkDomain: string = 'https://api.agora.io/%region%'
   reportDomain: string = 'https://api.agora.io'
   logDomain: string = 'https://api-solutions.agoralab.co'
   appId: string = '';
@@ -8,14 +8,18 @@ class GlobalConfigs {
   _region: string = '';
 
   public setRegion(region: string): void {
-    const regionDomain = getSDKDomain(this.sdkDomain, region)
     this._region = region
-    this.setSDKDomain(regionDomain)
   }
 
   public setSDKDomain(domain: string): void {
-    this.sdkDomain = domain
+    this._sdkDomain = domain
   }
+
+  get sdkDomain() {
+    const regionDomain = getSDKDomain(this._sdkDomain, this._region)
+    return regionDomain
+  }
+
 
   public setReportConfig(config= {
     sdkDomain: 'https://test-rest-argus.bj2.agoralab.co',

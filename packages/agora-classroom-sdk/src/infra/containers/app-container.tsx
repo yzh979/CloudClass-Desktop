@@ -8,6 +8,7 @@ import {I18nProvider} from '~ui-kit'
 import { RoomParameters } from '../api/declare'
 import { Provider } from "mobx-react"
 import { HashRouter, MemoryRouter, Redirect, Route, Switch } from "react-router-dom"
+import { useEffect } from "react"
 
 export interface RouteContainerProps {
   routes: BizPageRouter[];
