@@ -54,7 +54,7 @@ export class HomeApi extends ApiBase {
   setRegion(region: string) {
     this.region = region
     const prefixRegion = getHomeApiRegion(this.region)
-    const sdkDomain = `http://api-solutions.%region%.agoralab.co/edu`.replace('%region%', prefixRegion)
+    const sdkDomain = `https://api-solutions.%region%.agoralab.co/edu`.replace('%region%', prefixRegion)
     this.sdkDomain = sdkDomain
     this.prefix = this.sdkDomain
     // this.region = region
