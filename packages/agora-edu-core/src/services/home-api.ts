@@ -8,7 +8,8 @@ type LoginParams = {
 
 type LoginResult = Promise<{
   rtmToken: string,
-  userUuid: string
+  userUuid: string,
+  appId: string
 }>
 
 type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>
@@ -21,7 +22,8 @@ export class HomeApi extends ApiBase {
 
   async login(userUuid: string): Promise<{
     rtmToken: string,
-    userUuid: string
+    userUuid: string,
+    appId: string
   }> {
     const res = await this.fetch({
       url: `/v2/users/${userUuid}/token`,

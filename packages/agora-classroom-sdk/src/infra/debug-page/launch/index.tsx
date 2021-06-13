@@ -36,7 +36,7 @@ export const LaunchPage = observer(() => {
       //   'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       // }))
       AgoraEduSDK.config({
-        appId: `${REACT_APP_AGORA_APP_ID}`,
+        appId: launchOption.appId,
         region: launchOption.region ?? "CN",
       })
       // homeApi.updateConfig({

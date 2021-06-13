@@ -1,9 +1,11 @@
 import { GlobalStorage } from '../../utils';
 import { LaunchOption } from "@/infra/api";
 
+type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {appId: string}
+
 export class HomeStore {
 
-  launchOption!: Omit<LaunchOption, 'listener'>
+  launchOption!: HomeLaunchOption
 
   launchKey: string
 
@@ -12,7 +14,7 @@ export class HomeStore {
     this.launchOption = GlobalStorage.read(this.launchKey) || {}
   }
 
-  setLaunchConfig(payload: Omit<LaunchOption, 'listener'>) {
+  setLaunchConfig(payload: HomeLaunchOption) {
     this.launchOption = payload
     GlobalStorage.save(this.launchKey, this.launchOption)
   }

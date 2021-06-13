@@ -144,10 +144,11 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        let {rtmToken} = await homeApi.login(userUuid)
+        let {rtmToken, appId} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
           // rtmUid: userUuid,
+          appId: appId,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),

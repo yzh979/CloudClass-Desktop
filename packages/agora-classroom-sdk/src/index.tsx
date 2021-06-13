@@ -31,7 +31,8 @@ eduSDKApi.updateConfig({
 })
 
 homeApi.updateConfig({
-  sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+  sdkDomain: 'https://api-solutions.fr3sbm.agoralab.co',
+  // sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
   appId: `${REACT_APP_AGORA_APP_ID}`,
 })
 
