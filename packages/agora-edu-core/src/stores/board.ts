@@ -6,7 +6,7 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 //@ts-ignore
-import { ConvertedFile, CourseWareItem } from '../api/declare';
+import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -72,7 +72,7 @@ export type Resource = {
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index+1}`,
       componentCount: 1,
       ppt: {
@@ -193,6 +193,8 @@ export class BoardStore extends ZoomController {
   @observable
   showFolder: boolean = false;
   boardRegion: string = '';
+
+  whiteboardContainer?: HTMLDivElement;
 
   @action.bound
   closeFolder() {
@@ -377,7 +379,7 @@ export class BoardStore extends ZoomController {
   }
 
   loadScene(data: any[]): SceneDefinition[] {
-    return data.map((item: ConvertedFile, index: number) => ({
+    return data.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index + 1}`,
       componentCount: 1,
       ppt: {
@@ -1557,6 +1559,7 @@ export class BoardStore extends ZoomController {
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
+      this.whiteboardContainer = dom
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
           this.room.moveCamera({centerX: 0, centerY: 0});
@@ -1730,9 +1733,9 @@ export class BoardStore extends ZoomController {
       width: imageInfo.width,
       height: imageInfo.height,
       //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
+      coordinateX: this.whiteboardContainer ? this.whiteboardContainer.clientHeight / 2 : 0,
       //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateY: this.whiteboardContainer ? this.whiteboardContainer.clientWidth / 2 : 0,
     })
   }
 
