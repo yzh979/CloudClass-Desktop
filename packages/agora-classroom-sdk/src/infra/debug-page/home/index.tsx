@@ -144,6 +144,7 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
+        homeApi.setRegion(region)
         let {rtmToken, appId} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
