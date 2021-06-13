@@ -182,8 +182,8 @@ export class LogUpload {
         securityToken,
       }
       const ossClient = new OSS({
-        accessKeyId: ossParams.accessKeyId,
-        accessKeySecret: ossParams.accessKeySecret,
+        accessKeyId: `ossParams.accessKeyId`,
+        accessKeySecret: `ossParams.accessKeySecret`,
         stsToken: ossParams.securityToken,
         bucket: ossParams.bucketName,
         secure: true,
@@ -226,8 +226,8 @@ export class LogUpload {
         securityToken,
       }
       const ossClient = new OSS({
-        accessKeyId: ossParams.accessKeyId,
-        accessKeySecret: ossParams.accessKeySecret,
+        accessKeyId: `ossParams.accessKeyId`,
+        accessKeySecret: `ossParams.accessKeySecret`,
         stsToken: ossParams.securityToken,
         bucket: ossParams.bucketName,
         secure: true,

@@ -47,7 +47,7 @@ export class EduSDKApi extends ApiBase {
 
   async getConfig(): Promise<ConfigResult> {
     const res = await this.fetch({
-      url: `/v2/configs`,
+      url: `/v2/client/configs`,
       method: 'GET',
     })
     return res.data

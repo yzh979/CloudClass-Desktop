@@ -280,8 +280,8 @@ export class BoardStore extends ZoomController {
     const ossConfig = this.appStore?.params?.config?.oss
     if (ossConfig) {
       this.ossClient = new OSS({
-        "accessKeyId": `${ossConfig.accessKey}`,
-        "accessKeySecret": `${ossConfig.secretKey}`,
+        "accessKeyId": `ossConfig.accessKey`,
+        "accessKeySecret": `ossConfig.secretKey`,
         "bucket": `${ossConfig.bucketName}`,
         "endpoint": `${ossConfig.endpoint}`,
         "folder": `${ossConfig.folder}`,
