@@ -331,8 +331,8 @@ export class UploadService extends ApiBase {
   async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
     const key = ossConfig.ossKey
     this.ossClient = new OSS({
-      accessKeyId: `ossConfig.accessKeyId`,
-      accessKeySecret: `ossConfig.accessKeySecret`,
+      accessKeyId: `${ossConfig.accessKeyId}`,
+      accessKeySecret: `${ossConfig.accessKeySecret}`,
       bucket: `${ossConfig.bucketName}`,
       endpoint: `${ossConfig.ossEndpoint}`,
       secure: true,
