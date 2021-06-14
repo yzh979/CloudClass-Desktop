@@ -22,7 +22,7 @@ const svgDict: Record<string, any> = {
   'recording': recordingSvg,
   'share-screen': shareScreenSvg,
   'checked': checkedSvg,
-  'close': closeSvg,
+  // 'close': closeSvg,
   'authorized-operate': authorizedOperateSvg,
   'authorized-un-operate': authorizedUnOperateSvg,
   'un-authorized-operate': unAuthorizedOperateSvg,

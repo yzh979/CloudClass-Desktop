@@ -946,7 +946,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   async join(option: any): Promise<any> {
     try {
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
-      EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
+      EduLogger.info("[GA-Electron] client.joinChannel ", ret, ` params: `, JSON.stringify(option))
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `joinSubChannel failure`,
@@ -954,7 +954,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = true;
-      this.client.setClientRole(1)
+      ret = this.client.setClientRole(1)
+      EduLogger.info("[GA-Electron] client.setClientRole ", ret)
       return
     } catch(err) {
       throw GenericErrorWrapper(err)
@@ -962,12 +963,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   }
 
   async leaveSubChannel(channelName: string): Promise<any> {
-    EduLogger.info(`[ELECTRON] call leaveSubChannel: ${channelName}`)
+    EduLogger.info(`[GA-Electron] call leaveSubChannel: ${channelName}`)
     try {
       const subChannel = this._subClient[channelName]
       if (subChannel) {
         let ret = subChannel.client.leaveChannel()
-        EduLogger.info("ELECTRON leaveSubChannel ", ret, " channelName ", channelName)
+        EduLogger.info("[GA-Electron] leaveSubChannel ", ret, " channelName ", channelName)
         subChannel.client.off('userJoined', subChannel.handleUserOnline)
         subChannel.client.off('userOffline', subChannel.handleUserOffline)
         delete this._subClient[channelName]

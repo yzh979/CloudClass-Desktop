@@ -61,7 +61,7 @@ export const convertNativeAreaCode = (codeName: string) => {
 
   const areaCode = areaTable[codeName] ?? areaTable["GLOBAL"]
 
-  console.log("use native area code: ", areaCode)
+  console.log("[GA-Electron] use native area code: ", areaCode, "codeName ", codeName)
   return areaCode;
 }
 
