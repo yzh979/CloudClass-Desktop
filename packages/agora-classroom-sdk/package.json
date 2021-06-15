@@ -275,6 +275,7 @@
     "webpack-cli": "4.3.1",
     "workbox-webpack-plugin": "6.1.1",
     "worker-loader": "2.0.0",
+    "agora-electron-sdk": "3.4.2-rc.1-build.615",
     "zlib": "1.0.5"
   },
   "dependencies": {
@@ -286,7 +287,6 @@
     "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.1.0-ga",
-    "agora-electron-sdk": "3.4.2-rc.1-build.615",
     "agora-rte-sdk": "1.1.0-ga",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
