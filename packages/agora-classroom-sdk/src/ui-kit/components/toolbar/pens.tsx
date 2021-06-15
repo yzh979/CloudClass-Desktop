@@ -5,6 +5,8 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 
+import IconPen from './assets/icon-pen.png'
+import IconPenActive from './assets/icon-pen-active.png'
 const defaultPens = [
     'pen',
     'square',
@@ -55,7 +57,7 @@ export const Pens: FC<PensProps> = ({
         }
     }, [handleClick, isActive])
     return (
-        <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+        <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
             <div className="tool" onClick={() => {
                 handleClickTool(activePen)
             }}>
@@ -67,8 +69,9 @@ export const Pens: FC<PensProps> = ({
                 overlayClassName="expand-tools-popover"
                 trigger="hover"
                 content={content}
-                placement="right">
-                <Icon hover={hover} type={activePen as any} className={isActive ? 'active' : ''} />
+                placement="bottom">
+                {/* <Icon hover={hover} type={activePen as any} className={isActive ? 'active' : ''} /> */}
+                <img src={isActive ? IconPenActive:IconPen}/>
                 <Icon type="triangle-down" className="triangle-icon" />
             </Popover>
             </div>

@@ -1,6 +1,6 @@
 .whiteboard-tab {
 	position: absolute;
-	top: 17px;
+	top: 84px;
 	left: 40px;
 	right: 40px;
 	overflow-x: scroll;
@@ -11,13 +11,13 @@
 	height: 50px !important;
 	padding: 0 !important;
 	background: #E4E4E4 !important;
-	border-radius: 5px;
-
+	border-radius: 5px !important;
 }
 .whiteboard-tab .tabs-tab-active {
 	background: white !important;
-	border: none !important;
+	border: 1px solid #38AE48 !important;
 }
+
 .whiteboard-tab .tabs-tab .tabs-tab-btn {
 	text-align: center;
 	width: 100% !important;
@@ -30,6 +30,7 @@
 	font-weight: 600  !important;
 	color: #B3B3B3  !important;
 }
+
 .whiteboard-tab .tabs-tab-active .tabs-tab-btn {
 	color: #38AE48  !important;
 }

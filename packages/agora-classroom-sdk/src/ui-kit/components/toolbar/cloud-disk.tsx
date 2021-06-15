@@ -4,12 +4,14 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 
+import IconCloud from './assets/icon-cloud.png'
 export interface CloudDiskProps extends ToolItem {
   label: string;
   children?: React.ReactElement;
+  onClick: (value: string) => void;
 }
 
-export const CloudDisk: FC<CloudDiskProps> = ({ label, children }) => {
+export const CloudDisk: FC<CloudDiskProps> = ({ onClick, label, children }) => {
   // const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
 
   // const actionClose = useCallback(() => {
@@ -36,7 +38,8 @@ export const CloudDisk: FC<CloudDiskProps> = ({ label, children }) => {
         content={<Content />}
         placement="right"> */}
       <div className="tool">
-        <Icon type="cloud" />
+        {/* <Icon type="cloud" /> */}
+        <img src={IconCloud} onClick={_ => onClick('cloud')}/>
       </div>
       {/* </Popover> */}
     </Tooltip>

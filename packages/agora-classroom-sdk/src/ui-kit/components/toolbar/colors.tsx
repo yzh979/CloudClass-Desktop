@@ -4,6 +4,7 @@ import { Popover } from '~components/popover';
 import { ToolItem } from './tool';
 import { Slider } from '~components/slider'
 import { Tooltip } from '~components/tooltip';
+import IconColor from './assets/icon-color.png'
 
 const defaultColors = [
   '#ffffff',
@@ -77,18 +78,19 @@ export const Colors: FC<ColorsProps> = ({
     </div>
   ), [colors, activeColor]);
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
         overlayClassName="expand-tools-popover"
         trigger="hover"
         content={content}
-        placement="right">
+        placement="bottom">
         <div className="tool">
-          <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor, 0.5)}`}}>
+          {/* <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor, 0.5)}`}}>
             <div className="circle" style={{backgroundColor: activeColor}}></div>
-          </div>
+          </div> */}
+          <img src={IconColor}/>
           {/* <Icon type="circle" hover={hover} color={activeColor} /> */}
           <Icon type="triangle-down" className="triangle-icon"/>
         </div>  

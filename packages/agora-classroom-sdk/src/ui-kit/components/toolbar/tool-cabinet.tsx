@@ -3,7 +3,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-
+import IconTools from './assets/icon-tools.png'
 export interface CabinetItem {
     id: string;
     icon: React.ReactElement;
@@ -40,16 +40,17 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
         </div>
     ), [activeItem])
     return (
-        <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+        <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
             <Popover
                 visible={popoverVisible}
                 onVisibleChange={(visible) => setPopoverVisible(visible)}
                 overlayClassName="expand-tools-popover"
                 trigger="hover"
                 content={content}
-                placement="right">
+                placement="bottom">
                 <div className="tool">
-                    <Icon type="tools" hover={hover} />
+                    {/* <Icon type="tools" hover={hover} /> */}
+                    <img src={IconTools}/>
                     <Icon type="triangle-down" className="triangle-icon"/>
                 </div>
             </Popover>

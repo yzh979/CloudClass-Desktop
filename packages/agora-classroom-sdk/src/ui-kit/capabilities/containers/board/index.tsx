@@ -10,14 +10,41 @@ import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabiliti
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
-
+import { CloudDisk } from '@/ui-kit/components';
 import './index.css'
+import { Tooltip } from '~components/tooltip';
 
+import IconClear from './assets/icon-clear.png'
+import IconMove from './assets/icon-move.png'
+import IconMoveActive from './assets/icon-move-active.png'
+import IconText from './assets/icon-text.png'
+import IconTextActive from './assets/icon-text-active.png'
+import IconEase from './assets/icon-ease.png'
+import IconEaseActive from './assets/icon-ease-active.png'
+import IconMouse from './assets/icon-mouse.png'
+import IconMouseActive from './assets/icon-mouse-active.png'
 export const allTools: ToolItem[] = [
   {
     value: 'selection',
-    label: 'scaffold.selector',
-    icon: 'select'
+    label: '选择',
+    icon: 'select',
+    component: ({isActive, onClick}) => {
+      return (
+        <Tooltip title='选择' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={isActive ? IconMouseActive:IconMouse} onClick={_ => onClick('selection')}/>
+          </div>
+        </Tooltip>
+      )
+    }
+  },
+  {
+    value: 'color',
+    label: 'scaffold.color',
+    icon: 'circle',
+    component: (props: any) => {
+      return <ColorsContainer {...props}/>
+    }
   },
   {
     value: 'pen',
@@ -29,40 +56,79 @@ export const allTools: ToolItem[] = [
   },
   {
     value: 'text',
-    label: 'scaffold.text',
-    icon: 'text'
-  },
-  {
-    value: 'eraser',
-    label: 'scaffold.eraser',
-    icon: 'eraser'
-    
-  },
-  {
-    value: 'color',
-    label: 'scaffold.color',
-    icon: 'circle',
-    component: (props: any) => {
-      return <ColorsContainer {...props}/>
+    label: '文本',
+    icon: 'text',
+    component: ({isActive, onClick}) => {
+      return (
+        <Tooltip title='文本' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={isActive ? IconTextActive:IconText} onClick={_ => onClick('text')}/>
+          </div>
+        </Tooltip>
+      )
     }
   },
   {
-    value: 'blank-page',
-    label: 'scaffold.blank_page',
-    icon: 'blank-page'
+    value: 'eraser',
+    label: '橡皮',
+    icon: 'eraser',
+    component: ({isActive, onClick}) => {
+      return (
+        <Tooltip title='橡皮' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+          <img src={isActive ? IconEaseActive:IconEase} onClick={_ => onClick('eraser')}/>
+          </div>
+        </Tooltip>
+      )
+    }
   },
   {
+    value: 'clear',
+    label: '清空',
+    icon: 'clear',
+    component: ({isActive, onClick}) => {
+      return (
+        <Tooltip title='清空' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={IconClear} onClick={_ => onClick('clear')}/>
+          </div>
+        </Tooltip>
+      )
+    }
+  },
+  // {
+  //   value: 'blank-page',
+  //   label: 'scaffold.blank_page',
+  //   icon: 'blank-page'
+  // },
+  {
     value: 'hand',
-    label: 'scaffold.move',
-    icon: 'hand'
+    label: '移动',
+    icon: 'hand',
+    component: ({isActive, onClick}) => {
+      return (
+        <Tooltip title='移动' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={isActive ? IconMoveActive:IconMove} onClick={_ => onClick('hand')}/>
+          </div>
+        </Tooltip>
+      )
+    }
   },
   {
     value: 'cloud',
-    label: 'scaffold.cloud_storage',
-    icon: 'cloud'
-    // component: () => {
-    //   return <CloudDiskContainer />
-    // }
+    label: '云盘',
+    icon: 'cloud',
+    component: ({onClick}) => {
+      return (
+        <CloudDisk
+          value="cloud"
+          label="云盘"
+          icon="cloud"
+          onClick={onClick}
+        />
+      )
+    }
   },
   {
     value: 'tools',
@@ -72,16 +138,16 @@ export const allTools: ToolItem[] = [
       return <ToolCabinetContainer/>
     }
   },
-  {
-    value: 'register',
-    label: 'scaffold.user_list',
-    icon: 'register'
-  },
-  {
-    value: 'student_list',
-    label: 'scaffold.student_list',
-    icon: 'register'
-  }
+  // {
+  //   value: 'register',
+  //   label: 'scaffold.user_list',
+  //   icon: 'register'
+  // },
+  // {
+  //   value: 'student_list',
+  //   label: 'scaffold.student_list',
+  //   icon: 'register'
+  // }
 ]
 
 export type WhiteBoardState = {

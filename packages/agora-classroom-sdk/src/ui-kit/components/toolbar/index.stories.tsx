@@ -1,7 +1,18 @@
 import { Meta } from '@storybook/react';
 import React, { FC, useState, useRef } from 'react';
 import { Icon } from '~components/icon';
-import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
+import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem  } from '~components/toolbar';
+import { Tooltip } from '~components/tooltip';
+
+import IconClear from './assets/icon-clear.png'
+import IconMove from './assets/icon-move.png'
+import IconMoveActive from './assets/icon-move-active.png'
+import IconText from './assets/icon-text.png'
+import IconTextActive from './assets/icon-text-active.png'
+import IconEase from './assets/icon-ease.png'
+import IconEaseActive from './assets/icon-ease-active.png'
+import IconMouse from './assets/icon-mouse.png'
+import IconMouseActive from './assets/icon-mouse-active.png'
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -22,6 +33,31 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'selection',
       label: '选择',
       icon: 'select',
+      component: ({isActive, onClick}) => {
+        return (
+          <Tooltip title='选择' placement="bottom" >
+            <div className={`tool ${isActive ? 'active' : ''}`}>
+              <img src={isActive ? IconMouseActive:IconMouse} onClick={_ => onClick('selection')}/>
+            </div>
+          </Tooltip>
+        )
+      }
+    },
+    {
+      value: 'color',
+      label: '颜色',
+      icon: 'color',
+      component: () => {
+        return (
+          <Colors
+            value='color'
+            label='颜色'
+            icon='color'
+            activeColor={activeColor}
+            onClick={(color) => updateColor(color)}
+          />
+        )
+      },
     },
     {
       value: 'pen',
@@ -43,37 +79,62 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'text',
       label: '文本',
       icon: 'text',
+      component: ({isActive, onClick}) => {
+        return (
+          <Tooltip title='文本' placement="bottom" >
+            <div className={`tool ${isActive ? 'active' : ''}`}>
+              <img src={isActive ? IconTextActive:IconText} onClick={_ => onClick('text')}/>
+            </div>
+          </Tooltip>
+        )
+      }
     },
     {
       value: 'eraser',
       label: '橡皮',
       icon: 'eraser',
-    },
-    {
-      value: 'color',
-      label: '颜色',
-      icon: 'color',
-      component: () => {
+      component: ({isActive, onClick}) => {
         return (
-          <Colors
-            value='color'
-            label='颜色'
-            icon='color'
-            activeColor={activeColor}
-            onClick={(color) => updateColor(color)}
-          />
+          <Tooltip title='橡皮' placement="bottom" >
+            <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={isActive ? IconEaseActive:IconEase} onClick={_ => onClick('eraser')}/>
+            </div>
+          </Tooltip>
         )
-      },
+      }
     },
     {
-      value: 'blank-page',
-      label: '新增空白页',
-      icon: 'blank-page',
+      value: 'clear',
+      label: '清空',
+      icon: 'clear',
+      component: ({isActive, onClick}) => {
+        return (
+          <Tooltip title='清空' placement="bottom" >
+            <div className={`tool ${isActive ? 'active' : ''}`}>
+              <img src={IconClear} onClick={_ => onClick('clear')}/>
+            </div>
+          </Tooltip>
+        )
+      }
     },
+    // {
+    //   value: 'blank-page',
+    //   label: '新增空白页',
+    //   icon: 'blank-page',
+    // },
     {
       value: 'hand',
       label: '举手',
       icon: 'hand',
+      component: ({isActive, onClick}) => {
+        return (
+          <Tooltip title='橡皮' placement="bottom" >
+            <div className={`tool ${isActive ? 'active' : ''}`}>
+              <img src={isActive ? IconMoveActive:IconMove} onClick={_ => onClick('hand')}/>
+            </div>
+          </Tooltip>
+        )
+      }
     },
     {
       value: 'cloud',
@@ -89,11 +150,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
         )
       }
     },
-    {
-      value: 'follow',
-      label: '视角跟随',
-      icon: 'follow',
-    },
+    // {
+    //   value: 'follow',
+    //   label: '视角跟随',
+    //   icon: 'follow',
+    // },
     {
       value: 'tools',
       label: '工具箱',
@@ -120,11 +181,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
         )
       }
     },
-    {
-      value: 'register',
-      label: '用户列表',
-      icon: 'register',
-    }
+    // {
+    //   value: 'register',
+    //   label: '用户列表',
+    //   icon: 'register',
+    // }
   ];
   return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>
 };
