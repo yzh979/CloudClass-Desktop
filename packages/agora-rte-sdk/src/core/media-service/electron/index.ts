@@ -296,6 +296,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       ret = this.client.initialize(this.appId, area)
     }
     this.area = area
+    console.log('[GA-Electorn] initialize area ', this.area)
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,
@@ -1278,9 +1279,21 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           excludeWindowCount: 0
         }
       }
+      Object.assign(config, {
+        param: {
+          width: 0, height: 0, bitrate: 500, frameRate: 15,
+          captureMouseCursor: true,
+          windowFocus:false,
+          excludeWindowList:[],
+          excludeWindowCount: 0,
+        }
+      })
+      // if (config)
       EduLogger.info('startScreenShare#options', options)
       EduLogger.info('startScreenShare ', JSON.stringify(config))
       try {
+        console.log('[GA-Electorn] videoSourceInitialize area ', this.area)
+        //@ts-ignore
         let ret = this.client.videoSourceInitialize(this.appId, this.area)
         if (ret < 0) {
           reject({

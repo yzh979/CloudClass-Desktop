@@ -174,7 +174,9 @@ export class EduScenarioAppStore {
         // @ts-ignore
         agoraRtc: window.rtcEngine,
         // agoraRtc: window,
+        //@ts-ignore
         rtcArea: config.rtcArea,
+        //@ts-ignore
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType
@@ -188,7 +190,9 @@ export class EduScenarioAppStore {
         logLevel: '' as any,
         logDirectoryPath: '',
         codec: 'vp8',
+        //@ts-ignore
         rtcArea: config.rtcArea,
+        //@ts-ignore
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType
