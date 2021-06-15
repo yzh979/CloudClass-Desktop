@@ -260,6 +260,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   cpuUsage: number = 0
   gatewayRtt: number = 0
   lastMileDelay: number = 0
+  area: number = 0xFFFFFFFF
 
   constructor(options: ElectronWrapperInitOption) {
     super();
@@ -287,12 +288,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     //@ts-ignore
     this.client = options.AgoraRtcEngine
     let ret = -1
+    const area = convertNativeAreaCode(`${options.area}`)
     if (this._cefClient) {
       ret = this.client.initialize(this._cefClient)
     } else {
       //@ts-ignore
-      ret = this.client.initialize(this.appId, convertNativeAreaCode(`${options.area}`))
+      ret = this.client.initialize(this.appId, area)
     }
+    this.area = area
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,
@@ -1278,7 +1281,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info('startScreenShare#options', options)
       EduLogger.info('startScreenShare ', JSON.stringify(config))
       try {
-        let ret = this.client.videoSourceInitialize(this.appId)
+        let ret = this.client.videoSourceInitialize(this.appId, this.area)
         if (ret < 0) {
           reject({
             message: `videoSourceInitialize with APPID: ${this.appId} failured`,
