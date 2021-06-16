@@ -1492,6 +1492,24 @@ export class SceneStore extends SimpleInterval {
     } as any]
   }
 
+
+  
+  @action.bound
+  async pauseClass() {
+    try {
+      await eduSDKApi.updateClassState({
+        roomUuid: `${this.roomUuid}`,
+        state: 0
+      })
+      // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStart)
+      // this.classState = 0
+      this.appStore.uiStore.fireToast('toast.course_paused_successfully')
+    } catch (err) {
+      BizLogger.info(err)
+      this.appStore.uiStore.fireToast('toast.setting_start_failed')
+    }
+  }
+
   @action.bound
   async startClass() {
     try {
@@ -1515,6 +1533,7 @@ export class SceneStore extends SimpleInterval {
         roomUuid: `${this.roomUuid}`,
         state: 2
       })
+      // this.classState = 2
       // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStop)
       this.appStore.uiStore.fireToast('toast.the_course_ends_successfully')
     } catch (err) {

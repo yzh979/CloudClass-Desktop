@@ -110,14 +110,14 @@ export const Calendar: FC<CalendarProps> = ({
       <div className="ag-calendar-time-select-container">
         <div className="ag-calendar-hour-select ag-calendar-time-select">
           {[...Array(24).keys()].map(idx => 
-            <li className="ag-calendar-time-item">
+            <li className="ag-calendar-time-item" key={idx}>
               <button data-hour={idx} ref={(selectedHour === idx) ? hourRef : null} className={(selectedHour === idx) ? "selected w-full" : "w-full"} onClick={onSelectHour}>{`${idx}`.padStart(2, '0')}</button>
             </li>
           )}
         </div>
         <div className="ag-calendar-minutes-select ag-calendar-time-select">
           {[...Array(60).keys()].map(idx => 
-            <li className="ag-calendar-time-item">
+            <li className="ag-calendar-time-item" key={idx}>
               <button data-minute={idx} ref={(selectedMinute === idx) ? minuteRef : null} className={(selectedMinute === idx) ? "selected w-full" : "w-full"} onClick={onSelectMinute}>{`${idx}`.padStart(2, '0')}</button>
             </li>
           )}

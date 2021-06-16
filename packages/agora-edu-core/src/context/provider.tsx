@@ -179,6 +179,12 @@ export const useRoomContext = () => {
     liveClassStatus
   } = useRoomStore()
 
+  const {
+    pauseClass,
+    startClass,
+  } = useSceneStore()
+
+
   return {
     sceneType,
     destroyRoom,
@@ -198,6 +204,8 @@ export const useRoomContext = () => {
     unmuteVideo,
     muteAudio,
     unmuteAudio,
+    pauseClass,
+    startClass
   }
 }
 

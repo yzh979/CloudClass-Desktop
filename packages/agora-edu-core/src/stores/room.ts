@@ -393,7 +393,6 @@ export class RoomStore extends SimpleInterval {
           duration: this.classroomSchedule ? Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0) : -1
         }
     }
-
     return {
       classState: 'default',
       duration,

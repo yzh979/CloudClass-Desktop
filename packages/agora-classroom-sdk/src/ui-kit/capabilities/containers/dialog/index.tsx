@@ -393,6 +393,12 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
     stopRecording
   } = useRecordingContext()
 
+  const {
+    pauseClass,
+    startClass,
+  } = useRoomContext()
+
+
   const recordingTitle = starting ? 'toast.stop_recording.title' : 'toast.start_recording.title'
 
   const recordingContent = starting ? 'toast.stop_recording.body' : 'toast.start_recording.body'
@@ -402,8 +408,10 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
       onOk={async () => {
         try {
           if (starting) {
+            await pauseClass()
             await stopRecording()
           } else {
+            await startClass()
             await startRecording()
           }
           const recordingToast = starting ? 'toast.stop_recording.success' : 'toast.start_recording.success'

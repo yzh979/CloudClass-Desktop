@@ -9,6 +9,7 @@ import './index.css'
 import { HomeModule } from '~utilities/types'
 import { Modal } from '~components/modal'
 import { HomeAbout, Disclaimer } from '~components/home-about'
+import { DatePicker } from '@/ui-kit/components/date-picker'
 
 export interface HomeAttributes {
   roomId: string,
@@ -18,6 +19,7 @@ export interface HomeAttributes {
   role: string,
   scenario: string,
   duration: number,
+  startDate: Date,
   language: string,
   region: string,
   debug: boolean;
@@ -53,6 +55,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeUserId,
   onChangeUserName,
   onChangeRoomName,
+  onChangeStartDate,
   onChangeDebug,
   onClick
 }) => {
@@ -298,7 +301,7 @@ export const Home: React.FC<HomeProps> = ({
             <Row className="home-row-item">
               <Col>
                 <Input disabled inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.duration')}>{transI18n('home.duration')}</span>} id="duration" className="block w-full" value={duration + transI18n('home.duration_unit')} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
-                {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
+                <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/>
               </Col>
             </Row>
             

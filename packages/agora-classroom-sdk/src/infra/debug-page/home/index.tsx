@@ -125,6 +125,7 @@ export const HomePage = observer(() => {
       role={userRole}
       scenario={curScenario}
       duration={duration}
+      startDate={startDate}
       region={region}
       debug={debug}
       onChangeDebug={onChangeDebug}
@@ -135,9 +136,9 @@ export const HomePage = observer(() => {
       onChangeUserId={onChangeUserId}
       onChangeRoomName={onChangeRoomName}
       onChangeUserName={onChangeUserName}
-      // onChangeStartDate={(date: Date) => {
-      //   setStartDate(date)
-      // }}
+      onChangeStartDate={(date: Date) => {
+        setStartDate(date)
+      }}
       onChangeDuration={(duration: number) => {
         setDuration(duration)
       }}

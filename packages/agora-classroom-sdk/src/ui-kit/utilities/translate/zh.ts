@@ -122,7 +122,7 @@ export const zh = {
     'recording_failed': '开启云录制失败, 原因：{reason}',
     'start_recording': {
       'title': '录制提示',
-      'body': '你确定要开始录制吗?',
+      'body': '你确定要开始直播并录制吗?',
       'success': '录制开启成功'
     },
     'stop_recording': {
@@ -180,7 +180,8 @@ export const zh = {
     'publish_business_flow_successfully': '发布业务流成功',
     'media_method_call_failed': '媒体方法调用失败',
     'successfully_left_the_business_channel': '离开业务频道成功',
-    'course_started_successfully': '课程开始成功',
+    'course_started_successfully': '开始直播成功',
+    'course_paused_successfully': '结束上课成功',
     'setting_start_failed': '设置开始失败',
     'the_course_ends_successfully': '课程结束成功',
     'setting_ended_failed': '设置结束失败',
