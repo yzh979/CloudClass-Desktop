@@ -14,6 +14,7 @@ import { CloudDisk } from '@/ui-kit/components';
 import './index.css'
 import { Tooltip } from '~components/tooltip';
 
+import IconCloud from './assets/icon-cloud.png'
 import IconClear from './assets/icon-clear.png'
 import IconMove from './assets/icon-move.png'
 import IconMoveActive from './assets/icon-move-active.png'
@@ -32,7 +33,7 @@ export const allTools: ToolItem[] = [
       return (
         <Tooltip title='选择' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
-            <img src={isActive ? IconMouseActive:IconMouse} onClick={_ => onClick('selection')}/>
+            <img src={isActive ? IconMouseActive:IconMouse} onClick={onClick}/>
           </div>
         </Tooltip>
       )
@@ -62,7 +63,7 @@ export const allTools: ToolItem[] = [
       return (
         <Tooltip title='文本' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
-            <img src={isActive ? IconTextActive:IconText} onClick={_ => onClick('text')}/>
+            <img src={isActive ? IconTextActive:IconText} onClick={onClick}/>
           </div>
         </Tooltip>
       )
@@ -76,7 +77,7 @@ export const allTools: ToolItem[] = [
       return (
         <Tooltip title='橡皮' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
-          <img src={isActive ? IconEaseActive:IconEase} onClick={_ => onClick('eraser')}/>
+          <img src={isActive ? IconEaseActive:IconEase} onClick={onClick}/>
           </div>
         </Tooltip>
       )
@@ -85,12 +86,12 @@ export const allTools: ToolItem[] = [
   {
     value: 'clear',
     label: '清空',
-    icon: 'clear',
+    icon: 'eraser',
     component: ({isActive, onClick}) => {
       return (
         <Tooltip title='清空' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
-            <img src={IconClear} onClick={_ => onClick('clear')}/>
+            <img src={IconClear} onClick={onClick}/>
           </div>
         </Tooltip>
       )
@@ -109,7 +110,7 @@ export const allTools: ToolItem[] = [
       return (
         <Tooltip title='移动' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
-            <img src={isActive ? IconMoveActive:IconMove} onClick={_ => onClick('hand')}/>
+            <img src={isActive ? IconMoveActive:IconMove} onClick={onClick}/>
           </div>
         </Tooltip>
       )
@@ -119,14 +120,13 @@ export const allTools: ToolItem[] = [
     value: 'cloud',
     label: '云盘',
     icon: 'cloud',
-    component: ({onClick}) => {
+    component: ({isActive, onClick}) => {
       return (
-        <CloudDisk
-          value="cloud"
-          label="云盘"
-          icon="cloud"
-          onClick={onClick}
-        />
+        <Tooltip title='移动' placement="bottom" >
+          <div className={`tool ${isActive ? 'active' : ''}`}>
+            <img src={IconCloud} onClick={onClick}/>
+          </div>
+        </Tooltip>
       )
     }
   },
