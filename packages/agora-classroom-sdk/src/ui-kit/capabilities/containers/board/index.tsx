@@ -10,7 +10,6 @@ import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabiliti
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
-import { CloudDisk } from '@/ui-kit/components';
 import './index.css'
 import { Tooltip } from '~components/tooltip';
 

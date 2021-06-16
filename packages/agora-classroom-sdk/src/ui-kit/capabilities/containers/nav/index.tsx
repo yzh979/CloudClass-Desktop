@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
 import { SettingContainer } from '../setting'
-import { StudentUserListDialog } from '~capabilities/containers/dialog'
+import { UserListDialog } from '~capabilities/containers/dialog'
 
 export const NavigationBar = observer(() => {
   const {
@@ -47,7 +47,7 @@ export const NavigationBar = observer(() => {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
     'record': () => addRecordDialog(),
-    'roster': () => addDialog(StudentUserListDialog),
+    'roster': () => addDialog(UserListDialog),
   }
 
   function handleClick (type: string) {

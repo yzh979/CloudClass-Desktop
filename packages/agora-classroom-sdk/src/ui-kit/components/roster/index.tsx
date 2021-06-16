@@ -122,7 +122,7 @@ export const Roster: FC<RosterProps> = ({
           }}></Icon>
         </div>
         <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
+          花名册
         </div>
         <div className="roster-container">
           <div className="roster-header">
