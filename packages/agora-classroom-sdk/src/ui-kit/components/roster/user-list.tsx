@@ -7,46 +7,50 @@ import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import PodiumSvg from '~components/icon/assets/svg/podium.svg'
 import { canOperate, getCameraState, getMicrophoneState, ProfileRole, studentListSort } from './base'
+import { HandsUpState } from '~components/hands-up';
+import IconHand from './assets/hand.png'
+import IconCoVideo from './assets/covideo.png'
+import IconCoVideoActive from './assets/covideo-active.png'
+import IconPen from './assets/pen.png'
+import IconPenActive from './assets/pen-active.png'
+import IconStar from './assets/star.png'
+import IconStarActive from './assets/star-active.png'
+
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
   name: string;
   action?: ActionTypes;
-  visibleRoles?: string[];
-  render?: (text: string, profile: StudentRosterProfile, hover: boolean, userType?: string) => ReactNode;
+  render?: (text: string, profile: StudentRosterProfile) => ReactNode;
 }
 
 export interface StudentRosterProfile {
   uid: string | number;
   name: string;
-  cameraEnabled: boolean;
-  micEnabled: boolean;
   onPodium: boolean;
+  canCoVideo: boolean;
+  whiteboardGranted: boolean;
+  canGrantBoard: boolean;
+  isUphand: boolean;
 }
 
 export type StudentRosterActionTypes =
-  | 'cameraEnabled'
-  | 'micEnabled'
-  | 'kickOut'
+  | 'covideo'
+  | 'whiteboard'
+  | 'star'
   | string
 
 export type StudentRosterColumnKey = 
-  | 'cameraEnabled'
-  | 'micEnabled'
-  | 'kickOut'
+  | 'covideo'
+  | 'whiteboard'
+  | 'star'
   | 'name'
 
 export type StudentRosterProps = {
-  isDraggable: boolean;
   columns?: StudentRosterColumn[];
-  title?: string;
   dataSource?: StudentRosterProfile[];
-  teacherName: string;
   localUserUuid: string;
-  role: ProfileRole;
-  userType?: 'teacher' | 'student';
   onClick?: (action: StudentRosterActionTypes, uid: string | number) => void;
-  onChange: (evt: any) => void;
 }
 
 const defaultStudentColumns: StudentRosterColumn[] = [
@@ -57,114 +61,78 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       return (
         <div className="student-username">
           <span title={profile.name}>{profile.name}</span>
-          {profile.onPodium ? <img src={PodiumSvg} style={{marginLeft: 2}}/> : null}
+          {profile.isUphand ? <img src={IconHand}/> : null}
         </div>
       )
     },
   },
   {
-    key: 'cameraEnabled',
-    name: 'student.camera',
-    action: 'camera',
-    render: (_, profile, canOperate) => {
-      const {
-        operateStatus,
-        cameraStatus,
-        type,
-      } = getCameraState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${cameraStatus}`]: 1,
-      })
+    key: 'covideo',
+    name: 'student.covideo',
+    action: 'podium',
+    render: (_, profile ) => {
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <img src={profile.onPodium ? IconCoVideoActive:IconCoVideo}/>
       )
     },
   },
   {
-    key: 'micEnabled',
-    name: 'student.microphone',
-    action: 'mic',
-    render: (_, profile, canOperate) => {
-      const {
-        operateStatus,
-        microphoneStatus,
-        type,
-      } = getMicrophoneState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${microphoneStatus}`]: 1,
-      })
+    key: 'whiteboard',
+    name: 'student.whiteboard',
+    action: 'whiteboard',
+    render: (_, profile) => {
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <img src={profile.whiteboardGranted ? IconPenActive:IconPen}/>
       )
     },
   },
   {
-    key: 'kickOut',
-    name: 'student.operation',
-    action: 'kickOut',
-    visibleRoles: ['assistant', 'teacher'],
-    // FIXME: 不能点击时的样式
-    render: (_, profile, hover) => {
+    key: 'star',
+    name: 'student.star',
+    action: 'reward',
+    render: (_, profile) => {
       return (
-        <span className="kick-out">
-          <Icon iconhover={hover} type="exit" />
-        </span>
+        <img src={IconStar}/>
       )
     },
   }
 ]
 
 export const StudentRoster: React.FC<StudentRosterProps> = ({
-  isDraggable = true,
-  title,
-  teacherName,
   localUserUuid,
   dataSource = [],
   columns = defaultStudentColumns,
-  role,
-  userType,
   onClick,
-  onChange
 }) => {
-
-  const studentList = studentListSort(dataSource)
-
-  const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
   return (
       <div className="agora-board-resources roster-user-list-wrap">
         <div className="roster-container">
-          <div className="roster-header">
+          <div className="roster-button-group">
             <button>全体奖励</button>
             <button>全体静音</button>
             <button>全体下台</button>
           </div>
+          
           <Table className="roster-table">
             <Table className="table-container">
-              {studentList?.map((data: StudentRosterProfile) => (
+              {dataSource?.map((data: StudentRosterProfile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
-                  {cols.map((col: StudentRosterColumn, idx: number) => (
+                  {columns.map((col: StudentRosterColumn, idx: number) => (
                     <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       <span
                         title={col.name}
-                        className={
-                          `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
-                        }
                         style={{
                           paddingLeft: idx !== 0 ? 0 : 25
                         }}
                         onClick={
-                          canOperate(role, localUserUuid, data, col)
-                            ? () =>
-                              col.action &&
-                              onClick &&
-                              onClick(col.action, data.uid)
-                            : undefined
+                          () =>
+                            col.action &&
+                            onClick &&
+                            onClick(col.action, data.uid)
                         }>
                         {col.render
-                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType)
+                          ? col.render((data as any)[col.key], data)
                           : (data as any)[col.key]}
                       </span>
                     </Col>

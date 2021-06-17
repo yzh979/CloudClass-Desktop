@@ -6,12 +6,27 @@
   margin: 0;
 }
 
+.student-username {
+  @apply flex flex-row items-center;
+}
+
 .student-username>span{
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #2D353A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.student-username>img {
+  width: 14px;
+  height: 16px;
+  margin-left: 10px;
+}
+
 
 .roster-table .table-row-item .table-col-item:first-child {
   flex:1;
@@ -74,12 +89,10 @@
 }
 
 .roster-user-list-wrap {
-  width: 350px;
-  height: 402px;
+  width: 360px;
+  height: 100%;
   background: #fff;
-  box-shadow: 0 2px 6px 0 rgba(47,65%,146%,15%);
   border-radius: 6px;
-  border: 1px solid #e3e3ec;
   position: relative;
   overflow-y: hidden;
 }
@@ -108,7 +121,7 @@
 .roster-container {
   display:flex;
   flex-direction: column;
-  height: calc(100% - 45px);
+  height: 100%;
 }
 
 .roster-container .roster-table {
@@ -119,7 +132,7 @@
 .roster-table .table-container .table-row-item .table-col-item {
   @apply box-content;
   color: #191919;
-  height: 40px;
+  height: 60px;
 }
 
 .roster-table .table-container .table-row-item .iconfont {
@@ -269,4 +282,41 @@
 
 .search-header .input-search-wrapper .input-prefix {
   opacity: 0.5;
+}
+
+.roster-button-group {
+  padding: 5px 0;
+  @apply flex flex-row items-center justify-around;
+}
+
+.roster-button-group > button {
+  outline: none;
+  border: none;
+  width: 80px;
+  height: 32px;
+  background: #EFEFEF;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2D353A;
+}
+
+.roster-button-group > button:hover {
+  border: 1px solid #38AE48;
+  color: #38AE48;
+}
+
+.roster-user-list-wrap .table-container {
+  height: 100% !important;
+}
+
+.roster-user-list-wrap .table-col-item:first-child{
+  width: 160px !important;
+  flex: none !important;
+}
+
+.roster-user-list-wrap .table-col-item > span > img{
+  width: 19px;
+  height: 19px;
+  cursor: pointer;
 }

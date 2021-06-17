@@ -472,6 +472,7 @@ export const useHandsUpContext = () => {
 
 export const useVideoControlContext = () => {
 
+  const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
   const smallClassStore = useSmallClassStore()
@@ -510,8 +511,8 @@ export const useVideoControlContext = () => {
   }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
 
   const onSendStar = useCallback(async (uid: any) => {
-
-  }, [userRole, sceneStore])
+    await roomStore.sendReward(uid, 1)
+  }, [userRole, roomStore])
 
   const onWhiteboardClick = useCallback(async (userUuid: any) => {
     const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)

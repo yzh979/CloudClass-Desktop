@@ -2,9 +2,10 @@ import { EduMediaStream, useGlobalContext, useRoomContext, useUserListContext, u
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
+import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer,  } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Tabs, TabPane } from '~components/tabs';
+import { StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { Button} from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import EmptyImage from './assets/empty_seat.png'
@@ -132,6 +133,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 
   const {
     myRole,
+    rosterUserList
 } = useUserListContext()
 
 
@@ -224,9 +226,15 @@ export const VideoMarqueeStudentContainer = observer(() => {
                 <Button className="video-marquee-tab-btn">全部学员</Button>
               </> 
             } key="1">
-              <div>我的云盘</div>
-              <div>我的云盘</div>
-              <div>我的云盘</div>
+              {
+                rosterUserList.length ?
+                  <StudentUserListContainer/>
+                :
+                  <div className="video-marquee-pin-empty">
+                    <img src={EmptyImage}/>
+                    <span>直播间暂无学员</span>
+                  </div>
+              }
             </TabPane>
           </Tabs>
         </>

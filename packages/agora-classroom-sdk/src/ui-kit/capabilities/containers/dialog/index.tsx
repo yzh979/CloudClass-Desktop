@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
+import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
@@ -130,32 +130,6 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   return (
     <UserListContainer onClose={onCancel} />
-  )
-})
-
-export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
-  const {
-    setTool,
-    room,
-    hasPermission
-  } = useBoardContext()
-
-  const {removeDialog} = useGlobalContext()
-
-  const onCancel = useCallback(() => {
-    if (room) {
-      if (hasPermission) {
-        const tool = room.state.memberState.currentApplianceName
-        setTool(tool)
-      } else {  
-        setTool('reset')
-      }
-    }
-    removeDialog(id)
-  }, [room, removeDialog, setTool, hasPermission])
-
-  return (
-    <StudentUserListContainer onClose={onCancel} />
   )
 })
 

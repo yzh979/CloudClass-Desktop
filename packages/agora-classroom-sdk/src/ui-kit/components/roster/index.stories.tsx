@@ -85,8 +85,17 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
     updateList(newList)
   }, [list, updateList])
 
+
   const handleActionState = (item: Profile, action: string) => {
     switch (action) {
+      case 'podium': {
+        item.onPodium = !item.onPodium
+        break;
+      }
+      case 'whiteboard': {
+        item.whiteboardGranted = !item.whiteboardGranted
+        break;
+      }
       case 'camera': {
         item.cameraEnabled = !item.cameraEnabled
         break;
@@ -99,20 +108,9 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
     return item
   }
 
-  const [keyword, setKeyword] = useState<string>('')
-
-  const dataList = useMemo(() => {
-    return list.filter((item: any) => item.name.includes(keyword))
-  }, [keyword, list])
-
-  const handleChange = useCallback((value: any) => {
-    setKeyword(value)
-  }, [list, setKeyword])
-
   return (
       <StudentRoster
-          onChange={handleChange}
-          dataSource={dataList} {...restProps}
+          dataSource={list} {...restProps}
           onClick={handleClick}
           userType="teacher"/>
   )
