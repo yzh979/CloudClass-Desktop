@@ -14,7 +14,7 @@ const meta: Meta = {
     // dataSource: JSON.parse('[{"uid":"webzzz2","name":"webzzz","onPodium":false,"onlineState":true,"micDevice":false,"cameraDevice":false,"cameraEnabled":true,"micEnabled":false,"whiteboardGranted":false,"canGrantBoard":false,"stars":0},{"name":"maczzz","uid":"maczzz2","onlineState":true,"onPodium":false,"micDevice":false,"cameraDevice":false,"cameraEnabled":false,"micEnabled":false,"whiteboardGranted":false,"canCoVideo":false,"canGrantBoard":false,"stars":34},{"name":"winzzz","uid":"winzzz2","onlineState":true,"onPodium":true,"micDevice":false,"cameraDevice":false,"cameraEnabled":true,"micEnabled":false,"whiteboardGranted":false,"canCoVideo":false,"canGrantBoard":false,"stars":3},{"name":"winz1zz","uid":"win1zzz2","onlineState":true,"onPodium":true,"micDevice":false,"cameraDevice":false,"cameraEnabled":true,"micEnabled":false,"whiteboardGranted":false,"canCoVideo":false,"canGrantBoard":false,"stars":3}]')
     dataSource: '.'.repeat(11).split('.').map((_: any, i: number) => ({
       uid: i,
-      name: 'Lily True',
+      name: 'Lily'+i,
       onPodium: i < 5 ? true : false,
       whiteboardGranted: true,
       cameraEnabled: false,
@@ -26,6 +26,7 @@ const meta: Meta = {
       onlineState: true,
       canCoVideo: true,
       canGrantBoard: true,
+      isUphand : false,
     })),
   }
 };
@@ -36,7 +37,7 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
 
   const handleClick = useCallback((action: string, uid: any) => {
     const newList = list.map((item) => (
-      item.uid === uid ? {...item, ...handleActionState(item, action)} : {...item}
+        item.uid === uid ? {...item, ...handleActionState(item, action)} : {...item}
     ))
     updateList(newList)
   }, [list, updateList])
@@ -65,7 +66,7 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
   }
 
   return (
-    <Roster dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} userType="student"/>
+      <Roster dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} userType="student"/>
   )
 };
 
@@ -79,7 +80,7 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
 
   const handleClick = useCallback((action: string, uid: any) => {
     const newList = list.map((item) => (
-      item.uid === uid ? {...item, ...handleActionState(item, action)} : {...item}
+        item.uid === uid ? {...item, ...handleActionState(item, action)} : {...item}
     ))
     updateList(newList)
   }, [list, updateList])
@@ -109,7 +110,11 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
   }, [list, setKeyword])
 
   return (
-    <StudentRoster onChange={handleChange} dataSource={dataList} {...restProps} onClick={handleClick} userType="teacher"/>
+      <StudentRoster
+          onChange={handleChange}
+          dataSource={dataList} {...restProps}
+          onClick={handleClick}
+          userType="teacher"/>
   )
 };
 
@@ -117,5 +122,12 @@ Docs.parameters = {
   layout: 'fullscreen'
 }
 
-
 export default meta;
+
+
+
+
+
+
+
+

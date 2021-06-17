@@ -274,7 +274,6 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             dataSource={dataList}
             userType={userType}
             onClick={onClick}
-            onClose={props.onClose}
             onChange={(text: string) => {
                 setKeyword(text)
             }}

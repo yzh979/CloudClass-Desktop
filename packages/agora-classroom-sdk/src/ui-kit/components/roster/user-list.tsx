@@ -46,7 +46,6 @@ export type StudentRosterProps = {
   role: ProfileRole;
   userType?: 'teacher' | 'student';
   onClick?: (action: StudentRosterActionTypes, uid: string | number) => void;
-  onClose?: () => void;
   onChange: (evt: any) => void;
 }
 
@@ -126,7 +125,6 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   columns = defaultStudentColumns,
   role,
   userType,
-  onClose = () => console.log('onClose'),
   onClick,
   onChange
 }) => {
@@ -135,43 +133,15 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
 
   const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
-    return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
-  }, [isDraggable])
-
   return (
-    <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-user-list-wrap">
-        <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
-            onClose()
-          }}></Icon>
-        </div>
-        <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
-        </div>
         <div className="roster-container">
-          <div className="search-header roster-header">
-            <div className="search-teacher-name">
-              <label>{t('roster.teacher_name')}</label>
-              <span title={teacherName} className="roster-username">{teacherName}</span>
-            </div>
-            {
-              userType === 'teacher' ?
-              <Search
-                onSearch={onChange}
-                prefix={<img src={SearchSvg} />}
-                inputPrefixWidth={32}
-                placeholder={transI18n('scaffold.search')}
-              /> : null
-            }
+          <div className="roster-header">
+            <button>全体奖励</button>
+            <button>全体静音</button>
+            <button>全体下台</button>
           </div>
           <Table className="roster-table">
-            <TableHeader>
-              {cols.map((col: StudentRosterColumn) => (
-                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
-              ))}
-            </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: StudentRosterProfile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
@@ -205,6 +175,5 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           </Table>
         </div>
       </div>
-    </DraggableContainer>
   )
 }
