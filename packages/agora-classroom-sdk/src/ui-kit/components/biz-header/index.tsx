@@ -112,7 +112,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="biz-header_md">
           { userType == 'teacher' &&
             <>
-              { classState == 'in-class' &&
+              { classState == 'pre-class' &&
                 <Button className="biz-header_md-join"  onClick={() => onClick('record')}>
                   <img src ={IconJoin}/>
                   <span>开始直播</span>
