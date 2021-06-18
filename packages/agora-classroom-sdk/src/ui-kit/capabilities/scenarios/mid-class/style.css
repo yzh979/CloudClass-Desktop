@@ -33,5 +33,11 @@
 .pin-right {
   position: absolute;
   right: 40px;
-  bottom: 7px;
+  bottom: 20px !important;
+}
+
+.pin-left {
+  position: absolute;
+  left: 40px;
+  bottom: 20px; 
 }

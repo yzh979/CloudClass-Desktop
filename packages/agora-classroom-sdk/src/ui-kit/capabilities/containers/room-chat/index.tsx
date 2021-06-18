@@ -5,48 +5,7 @@ import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core
 import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
 
-// const useRoomChat = (store: RoomChatUIKitStore) => {
-
-//   const {
-//     isHost,
-//     uid:meUid,
-//     canChatting,
-//     collapse,
-//     messages: messageList,
-//     chatText,
-//   } = store
-
-//   return {
-//     isHost,
-//     meUid,
-//     canChatting,
-//     collapse,
-//     messageList,
-//     chatText,
-//     onCanChattingChange: (canChatting: boolean) => {
-//       store.setCanChatting(canChatting)
-//     },
-//     onChangeText: (text: string) => {
-//       store.setChatText(text)
-//     },
-//     onChangeCollapse: () => {
-//       store.toggleCollapse()
-//     },
-//     refreshMessageList: async () => {
-//       await store.refreshMessageList()
-//     },
-//     handleSendText: async () => {
-//       await store.handleSendText()
-//     },
-//     handleClickMinimize: async () => {
-//       await store.toggleMinimize()
-//     },
-//     unreadMessageCount: store.unreadCount,
-//   }
-// }
-
 export const RoomChat = observer(() => {
-
   const {
     chatCollapse,
     canChatting,
@@ -96,10 +55,11 @@ export const RoomChat = observer(() => {
   }, [isMounted])
 
   const onCanChattingChange = async (canChatting: boolean) => {
+    console.log('>>>>>>>>>>canChat', canChatting)
     if (canChatting) {
-      await muteChat()
-    } else {
       await unmuteChat()
+    } else {
+      await muteChat()
     }
   }
 
@@ -115,7 +75,6 @@ export const RoomChat = observer(() => {
   
   return (
     <Chat
-      className="small-class-chat"
       collapse={chatCollapse}
       onCanChattingChange={onCanChattingChange}
       canChatting={canChatting}

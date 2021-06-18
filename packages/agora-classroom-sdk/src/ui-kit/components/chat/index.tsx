@@ -4,14 +4,13 @@ import { Affix, AffixProps } from '~components/affix';
 import { Button } from '~components/button';
 import { Icon } from '~components/icon';
 import { Placeholder } from '~components/placeholder';
-import { ChatMessage } from './chat-message';
-import { ChatMin } from './chat-min';
 import './index.css';
 import { Message } from './interface';
 
-import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
-
-export interface ChatProps extends AffixProps {
+export interface ChatProps {
+  className?:string
+  collapse: boolean;
+  onCollapse?: () => void;
   /**
    * 消息列表
    */
@@ -60,11 +59,12 @@ export interface ChatProps extends AffixProps {
 }
 
 export const Chat: FC<ChatProps> = ({
+  className,
   messages = [],
   canChatting,
   uid,
   isHost,
-  chatText,
+  chatText = '',
   showCloseIcon = false,
   unreadCount = 0,
   collapse = false,
@@ -78,15 +78,20 @@ export const Chat: FC<ChatProps> = ({
 
   const { t } = useTranslation()
 
-  const [focused, setFocused] = useState<boolean>(false);
 
-  const handleFocus = () => setFocused(true);
+  const handleFocus = () => {
+    if(collapse && onCollapse){// 已关闭情况下打开
+      onCollapse()
+    }
+  };
 
   const handleBlur = () => {
     if (!!chatText) {
       return;
     }
-    setFocused(false);
+    // if(!collapse && onCollapse){// 已打开情况下关闭
+    //   onCollapse()
+    // }
   };
 
   const chatHistoryRef = useRef<HTMLDivElement | null>(null)
@@ -108,7 +113,7 @@ export const Chat: FC<ChatProps> = ({
     }
   }
 
-  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeypress = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       if (event.ctrlKey) {
         event.currentTarget.value += '\n'
@@ -125,7 +130,6 @@ export const Chat: FC<ChatProps> = ({
     scrollDirection.current = 'bottom'
   }
 
-
   useEffect(() => {
     if (scrollDirection.current === 'bottom') {
       chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
@@ -134,10 +138,36 @@ export const Chat: FC<ChatProps> = ({
       const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
       chatHistoryRef.current.scrollTo(0, position)
     }
-  }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
-
+  }, [canChatting,messages.length, chatHistoryRef.current, scrollDirection.current]);
   return (
-    <Affix
+    <div className={`chat-wrap ${className}`}>
+      <div className="chat-panel" style={{visibility: collapse ? 'hidden':'visible'}} ref={chatHistoryRef} onScroll={handleScroll}>
+      {
+        messages.map((msg, idx) => {
+          return (
+            <div className="chat-message" key={idx}>
+              <span>{msg.username}：</span>
+              <span>{msg.content}</span>
+            </div>
+          )
+        })
+      }
+      { !canChatting &&
+        <div className="muted-tips">老师已开启禁言</div>
+      }
+      </div>
+      <div className="chat-input">
+        <input value={chatText} onKeyPress={handleKeypress} disabled={!canChatting}  onBlur={handleBlur} onFocus={handleFocus}  onChange={(e) => onText(e.currentTarget.value)} placeholder={canChatting ? '输入你想说的话':'老师已开启禁言'}/>
+        { isHost &&
+          <button onClick={() => onCanChattingChange(!canChatting)} style={{color: canChatting ? '#2D353A':'#FF854B'}}>{canChatting ? '全体禁言':'取消禁言'}</button>
+        }
+        <button onClick={_ => onCollapse&&onCollapse()}>{collapse ? '展开':'收起'}</button>
+      </div>
+    </div>
+  );
+};
+/**
+<Affix
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
@@ -206,5 +236,5 @@ export const Chat: FC<ChatProps> = ({
         </div>
       </div>
     </Affix>
-  );
-};
+ 
+ */

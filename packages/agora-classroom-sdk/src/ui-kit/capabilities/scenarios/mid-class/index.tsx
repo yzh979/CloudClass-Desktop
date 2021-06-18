@@ -43,7 +43,6 @@ export const MidClassScenario = observer(() => {
         <Aside>
           <VideoPlayerTeacher />
           <VideoMarqueeStudentContainer />
-          {/* <RoomChat /> */}
         </Aside>
         <Content className="column">
           <div className="board-box">
@@ -52,6 +51,9 @@ export const MidClassScenario = observer(() => {
           </div>
           <div className="pin-right">
             <HandsUpContainer/>
+          </div>
+          <div className="pin-left">
+            <RoomChat />
           </div>
         </Content>
         

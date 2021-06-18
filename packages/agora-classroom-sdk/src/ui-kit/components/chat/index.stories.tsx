@@ -50,9 +50,10 @@ let count = 10
 export const Docs: FC<ChatProps> = (props) => {
   const [text, setText] = useState<string>();
   const [collapse, setCollapse] = useState(true);
+  const [canChatting, setCanChatting] = useState(props.canChatting);
 
 
-  const [messages, updateMessages] = useState<any[]>([])
+  const [messages, updateMessages] = useState<any[]>(props.messages)
 
   const newMessageList = () => {
     if (!count) return []
@@ -68,9 +69,8 @@ export const Docs: FC<ChatProps> = (props) => {
       content: `test-${+Date.now()}-refreshed`
     }))
   }
-
   return (
-    <div className="h-screen w-screen bg-black">
+    <div className="h-screen w-screen">
       <div
         className="p-5"
         style={{
@@ -90,8 +90,6 @@ export const Docs: FC<ChatProps> = (props) => {
           onCollapse={() => {
             setCollapse(!collapse);
           }}
-          top="30%"
-          left="40%"
           chatText={text}
           onText={(val) => setText(val)}
           onSend={
@@ -109,7 +107,8 @@ export const Docs: FC<ChatProps> = (props) => {
           onClickMiniChat={() => {
             
           }}
-          canChatting={false}
+          onCanChattingChange={setCanChatting}
+          canChatting={canChatting}
           showCloseIcon={true}
         />
       </div>
