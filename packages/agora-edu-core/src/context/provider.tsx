@@ -176,7 +176,8 @@ export const useRoomContext = () => {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus
+    liveClassStatus,
+    liveRecordStatus
   } = useRoomStore()
 
   const {
@@ -200,6 +201,7 @@ export const useRoomContext = () => {
     kickOutBan,
     kickOutOnce,
     liveClassStatus,
+    liveRecordStatus,
     muteVideo,
     unmuteVideo,
     muteAudio,
@@ -411,6 +413,7 @@ export const useRecordingContext = () => {
 
   const {
     isRecording,
+    recordStartTime,
     roomUuid
   } = useSceneStore()
 
@@ -434,6 +437,7 @@ export const useRecordingContext = () => {
   }
 
   return {
+    recordStartTime,
     isRecording,
     startRecording,
     stopRecording,

@@ -121,14 +121,14 @@ export const zh = {
     'screen_sharing_failed': '屏幕分享失败, 原因：{reason}',
     'recording_failed': '开启云录制失败, 原因：{reason}',
     'start_recording': {
-      'title': '开始直播',
-      'body': '你确定要开始直播吗?',
-      'success': '直播开启成功'
+      'title': '开始录制',
+      'body': '你确定要开始录制吗?',
+      'success': '录制开启成功'
     },
     'stop_recording': {
       'title': '停止直播',
-      'body': '你确定要停止直播吗?',
-      'success': '直播停止成功'
+      'body': '你确定要停止录制吗?',
+      'success': '录制停止成功'
     },
     'recording_too_short': '录制太短，至少15秒',
     'rtm_login_failed': '房间登录失败, 请检查网络设置',

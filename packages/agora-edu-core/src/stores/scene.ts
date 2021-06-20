@@ -142,7 +142,11 @@ export class SceneStore extends SimpleInterval {
   @observable
   recordState: boolean = false
 
+  @observable
+  recordStartTime: number = 0;
+  
   startTime: number = 0
+
 
   @observable
   sharing: boolean = false;

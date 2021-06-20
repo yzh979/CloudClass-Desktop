@@ -361,6 +361,23 @@ export class RoomStore extends SimpleInterval {
   }
 
   @computed
+  get liveRecordStatus() {
+    let isRecording = this.sceneStore.isRecording
+    let recordStartTime = this.sceneStore.recordStartTime
+    if(!isRecording || recordStartTime == 0){
+      return {
+        isRecording: false,
+        duration: 0
+      }
+    }
+
+    return {
+      isRecording,
+      duration: this.calibratedTime - recordStartTime
+    }
+  }
+
+  @computed
   get liveClassStatus() {
     let timeText = ""
     const duration = this.classTimeDuration
@@ -1143,6 +1160,7 @@ export class RoomStore extends SimpleInterval {
             const state = record.state
             if (state === 1) {
               this.sceneStore.recordState = true
+              this.sceneStore.recordStartTime = record.startTime
             } else {
               if (state === 0 && this.sceneStore.recordState) {
                 // this.addChatMessage({

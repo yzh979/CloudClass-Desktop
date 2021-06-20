@@ -67,9 +67,14 @@ export interface BizHeaderProps {
   monitor: MonitorInfo;
 
   /**
-   * 时间
+   * 上课时间
    */
-  formatTime: string;
+  classFormatTime: string;
+
+  /**
+   * 录制时间
+   */
+  recordFormatTime: string;
 
   /**
    * 花名册中学生数
@@ -95,7 +100,8 @@ export const BizHeader: FC<BizHeaderProps> = ({
   isNative = false,
   signalQuality,
   title,
-  formatTime,
+  classFormatTime,
+  recordFormatTime,
   monitor,
   userType = 'student',
   onClick,
@@ -112,22 +118,17 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="biz-header_md">
           { userType == 'teacher' &&
             <>
-              { classState == 'pre-class' &&
+              { !isRecording &&
                 <Button className="biz-header_md-join"  onClick={() => onClick('record')}>
                   <img src ={IconJoin}/>
-                  <span>开始直播</span>
+                  <span>开始录制</span>
                 </Button>
               }
-              { classState == 'in-class' &&
+              { isRecording &&
                 <Button className="biz-header_md-stop" onClick={() => onClick('record')}>
                   <img src ={IconStop}/>
-                  <span>{formatTime}</span>
+                  <span>{recordFormatTime}</span>
                 </Button>
-              }
-              { classState == 'end-class' &&
-                <div className="biz-header_md-done">
-                  已结束
-                </div>
               }
             </>
           }
@@ -140,7 +141,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
               }
               { classState == 'in-class' &&
                 <div className="biz-header_md-done">
-                  {formatTime}
+                  {classFormatTime}
                 </div>
               }
               { classState == 'end-class' &&

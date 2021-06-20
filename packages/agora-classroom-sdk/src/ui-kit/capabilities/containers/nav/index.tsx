@@ -10,15 +10,19 @@ import { SettingContainer } from '../setting'
 import { UserListDialog } from '~capabilities/containers/dialog'
 
 export const NavigationBar = observer(() => {
-  const {
-    isRecording
-  } = useRecordingContext()
+  // const {
+  //   isRecording,
+  //   recordStartTime
+  // } = useRecordingContext()
+
+
   const {
     roomInfo,
-    liveClassStatus
+    liveClassStatus,
+    liveRecordStatus
   } = useRoomContext()
 
-  console.log('NavigationBar# isRecording', isRecording, 'roomInfo', roomInfo)
+  console.log('NavigationBar# isRecording', liveRecordStatus.isRecording, 'roomInfo', roomInfo)
 
   const {
     isNative,
@@ -40,8 +44,8 @@ export const NavigationBar = observer(() => {
     rosterUserList
   } = useUserListContext()
   const addRecordDialog = useCallback(() => {
-    return addDialog(Record, {starting: isRecording})
-  }, [addDialog, Record, isRecording])
+    return addDialog(Record, {starting: liveRecordStatus.isRecording})
+  }, [addDialog, Record, liveRecordStatus.isRecording])
 
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
@@ -63,10 +67,16 @@ export const NavigationBar = observer(() => {
     }
   }
 
-  const formatTime = useMemo(() => {
-    const {duration} = liveClassStatus
+  const classFormatTime = useMemo(() => {
+    const {duration} = liveRecordStatus
     return formatCountDown(duration, TimeFormatType.Timeboard)
-  }, [JSON.stringify(liveClassStatus), formatCountDown])
+  }, [JSON.stringify(liveRecordStatus), formatCountDown])
+
+  const recordFormatTime = useMemo(() => {
+    const {duration} = liveRecordStatus
+    return formatCountDown(duration, TimeFormatType.Timeboard)
+  }, [JSON.stringify(liveRecordStatus), formatCountDown])
+  
 
   const userType = useMemo(() => {
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
@@ -79,9 +89,10 @@ export const NavigationBar = observer(() => {
     <BizHeader
       userType={userType}
       isNative={isNative}
-      formatTime={formatTime}
+      classFormatTime={classFormatTime}
       classState={liveClassStatus.classState as BizClassStatus}
-      isRecording={isRecording}
+      isRecording={liveRecordStatus.isRecording}
+      recordFormatTime={recordFormatTime}
       title={roomInfo.roomName}
       signalQuality={networkQuality as any}
       monitor={{
