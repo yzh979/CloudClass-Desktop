@@ -142,8 +142,6 @@ export class SceneStore extends SimpleInterval {
   @observable
   recordState: boolean = false
 
-  startTime: number = 0
-
   @observable
   sharing: boolean = false;
 
@@ -250,7 +248,6 @@ export class SceneStore extends SimpleInterval {
     this.settingVisible = false
     this.autoplay = false
     this.recordState = false
-    this.startTime = 0
     this.sharing = false;
     this._hasCamera = undefined
     this._hasMicrophone = undefined

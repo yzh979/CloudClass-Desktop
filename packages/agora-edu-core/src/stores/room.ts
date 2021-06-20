@@ -186,10 +186,6 @@ export enum RoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
 }
 
-const delay = 2000
-
-const ms = 500
-
 export const networkQualities: { [key: string]: string } = {
   'excellent': 'network-good',
   'good': 'network-good',
@@ -1162,16 +1158,7 @@ export class RoomStore extends SimpleInterval {
           // update scene store
           if (newClassState !== undefined && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState
-            if (this.sceneStore.classState === 1) {
-              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0)
-              this.addInterval('timer', () => {
-                this.appStore.updateTime(+get(classroom, 'roomStatus.startTime', 0))
-              }, ms)
-            } else {
-              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0)
-              BizLogger.info("end time", this.sceneStore.startTime)
-              this.delInterval('timer')
-            }
+            this.classroomSchedule && (this.classroomSchedule.startTime = get(classroom, 'roomStatus.startTime', 0))
           }
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
           console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom)
@@ -1244,17 +1231,10 @@ export class RoomStore extends SimpleInterval {
       })
 
       const roomInfo = roomManager.getClassroomInfo()
-      this.sceneStore.startTime = +get(roomInfo, 'roomStatus.startTime', 0)
 
       const mainStream = roomManager.data.streamMap['main']
 
       // this.sceneStore.classState = roomInfo.roomStatus.courseState
-
-      if (this.sceneStore.classState === 1) {
-        this.addInterval('timer', () => {
-          this.appStore.updateTime(+get(roomInfo, 'roomStatus.startTime', 0))
-        }, ms)
-      }
       // this.sceneStore.canChatting = !roomInfo.roomStatus.isStudentChatAllowed
 
       await this.sceneStore.joinRTC({

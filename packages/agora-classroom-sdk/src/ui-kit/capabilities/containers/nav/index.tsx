@@ -17,7 +17,7 @@ export const NavigationBar = observer(() => {
     liveClassStatus
   } = useRoomContext()
 
-  console.log('NavigationBar# isRecording', isRecording, 'roomInfo', roomInfo)
+  // console.log('NavigationBar# isRecording', isRecording, 'roomInfo', roomInfo)
 
   const {
     isNative,

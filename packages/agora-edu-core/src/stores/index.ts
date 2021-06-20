@@ -98,9 +98,6 @@ export class EduScenarioAppStore {
   delay: number = 0
 
   @observable
-  time: number = 0
-
-  @observable
   cpuRate: number = 0
 
   @observable
@@ -129,7 +126,6 @@ export class EduScenarioAppStore {
     this.roomManager = undefined
     this.groupClassroomManager = undefined
     this.delay = 0
-    this.time = 0
     this.cpuRate = 0
     this.waitingShare = false
     this._screenVideoRenderer = undefined;
@@ -192,9 +188,9 @@ export class EduScenarioAppStore {
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
-        const data = toJS(this)
+        const roomInfo = toJS(this.roomInfo)
         GlobalStorage.save('agora_edu_room', {
-          roomInfo: data.roomInfo,
+          roomInfo,
         })
         this
       })
@@ -207,9 +203,9 @@ export class EduScenarioAppStore {
     }
 
     autorun(() => {
-      const data = toJS(this)
+      const deviceInfo = toJS(this.deviceInfo)
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo: data.deviceInfo
+        deviceInfo: deviceInfo
       })
     })
 
@@ -317,18 +313,6 @@ export class EduScenarioAppStore {
   @action.bound
   updateCpuRate(rate: number) {
     this.cpuRate = rate
-  }
-
-  updateTime(startTime: number) {
-    if (startTime) {
-      const preState = Math.abs(Date.now() - startTime)
-      this.time = preState
-    }
-  }
-  
-
-  resetTime() {
-    this.time = 0
   }
 
   @action.bound
