@@ -27,7 +27,7 @@ export const useChatContext = () => {
     muteChat: sceneStore.muteChat,
     unmuteChat: sceneStore.unmuteChat,
     chatCollapse: uiStore.chatCollapse,
-    toggleChatMinimize: uiStore.toggleChatMinimize,
+    setChatCollapse: uiStore.setChatCollapse,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
     addChatMessage: roomStore.addChatMessage

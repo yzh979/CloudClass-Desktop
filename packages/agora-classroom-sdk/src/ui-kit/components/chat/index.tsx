@@ -10,7 +10,7 @@ import { Message } from './interface';
 export interface ChatProps {
   className?:string
   collapse: boolean;
-  onCollapse?: () => void;
+  onCollapse: (collapse:boolean) => void;
   /**
    * 消息列表
    */
@@ -76,12 +76,9 @@ export const Chat: FC<ChatProps> = ({
   ...resetProps
 }) => {
 
-  const { t } = useTranslation()
-
-
   const handleFocus = () => {
     if(collapse && onCollapse){// 已关闭情况下打开
-      onCollapse()
+      onCollapse(false)
     }
   };
 
@@ -89,9 +86,9 @@ export const Chat: FC<ChatProps> = ({
     if (!!chatText) {
       return;
     }
-    // if(!collapse && onCollapse){// 已打开情况下关闭
-    //   onCollapse()
-    // }
+    if(!collapse && onCollapse){// 已打开情况下关闭
+      onCollapse(true)
+    }
   };
 
   const chatHistoryRef = useRef<HTMLDivElement | null>(null)
@@ -161,7 +158,7 @@ export const Chat: FC<ChatProps> = ({
         { isHost &&
           <button onClick={() => onCanChattingChange(!canChatting)} style={{color: canChatting ? '#2D353A':'#FF854B'}}>{canChatting ? '全体禁言':'取消禁言'}</button>
         }
-        <button onClick={_ => onCollapse&&onCollapse()}>{collapse ? '展开':'收起'}</button>
+        <button onClick={_ => onCollapse(!collapse)}>{collapse ? '展开':'收起'}</button>
       </div>
     </div>
   );

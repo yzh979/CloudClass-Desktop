@@ -74,7 +74,7 @@ export class UIStore {
   activeAppPlugins: Set<IAgoraExtApp> = new Set<IAgoraExtApp>()
 
   @observable
-  chatCollapse: boolean = false
+  chatCollapse: boolean = true
 
   @observable
   checked: boolean = false;
@@ -158,9 +158,10 @@ export class UIStore {
     this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
   }
 
+
   @action.bound
-  toggleChatMinimize() {
-    this.chatCollapse = !this.chatCollapse
+  setChatCollapse(collapse:boolean){
+    this.chatCollapse = collapse
   }
 
   @observable

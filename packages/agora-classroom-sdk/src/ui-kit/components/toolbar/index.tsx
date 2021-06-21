@@ -34,7 +34,7 @@ export const Toolbar: FC<ToolbarProps> = ({
   return (
     <div className='toolbar-position'>
       <div className={className} style={style}>
-        <div className="tools">
+        <div className={`${tools.length ? "tools":""}`}>
           {tools.map(({ value, ...restProps }) => (
             <Tool
               key={value}

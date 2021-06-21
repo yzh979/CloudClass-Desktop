@@ -14,7 +14,7 @@ export const RoomChat = observer(() => {
     unreadMessageCount,
     muteChat,
     unmuteChat,
-    toggleChatMinimize,
+    setChatCollapse,
     messageList,
     sendMessage,
     addChatMessage
@@ -29,10 +29,8 @@ export const RoomChat = observer(() => {
   } = useGlobalContext()
 
   useEffect(() => {
-    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
-      // 第一个条件 点击全屏默认聊天框最小化
-      // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
-      toggleChatMinimize()
+    if(isFullScreen && !chatCollapse){
+      setChatCollapse(true)
     }
   }, [isFullScreen])
 
@@ -55,7 +53,6 @@ export const RoomChat = observer(() => {
   }, [isMounted])
 
   const onCanChattingChange = async (canChatting: boolean) => {
-    console.log('>>>>>>>>>>canChat', canChatting)
     if (canChatting) {
       await unmuteChat()
     } else {
@@ -85,9 +82,7 @@ export const RoomChat = observer(() => {
       onText={(textValue: string) => {
         setText(textValue)
       }}
-      onCollapse={() => {
-        toggleChatMinimize()
-      }}
+      onCollapse={setChatCollapse}
       onSend={handleSendText}
       showCloseIcon={isFullScreen}
       onPullFresh={refreshMessageList}

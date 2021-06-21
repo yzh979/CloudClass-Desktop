@@ -193,70 +193,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     [`${className}`]: !!className,
   });
 
-
-  // const tools = (
-  //   <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-  //     <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
-  //       <Icon
-  //         className={micEnabled ? '' : 'red'}
-  //         type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
-  //         onClick={() => onMicClick(uid)}
-  //       />
-  //     </Tooltip>
-  //     <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
-  //       <Icon
-  //         className={cameraEnabled ? '' : 'red'}
-  //         type={cameraEnabled ? 'camera' : 'camera-off'}
-  //         onClick={() => onCameraClick(uid)}
-  //       />
-  //     </Tooltip>
-  //     {isHost ? (
-  //       <>
-  //         {hideOffAllPodium ? null : (
-  //           <Tooltip title={t('Clear Podiums')} placement={placement}>
-  //             <Icon
-  //               hover={canHoverHideOffAllPodium}
-  //               type="invite-to-podium"
-  //               onClick={() => onOffAllPodiumClick()}
-  //             />
-  //           </Tooltip>
-  //         )}
-  //         {hideOffPodium ? null : (
-  //           <Tooltip title={t('Clear Podium')} placement={placement}>
-  //             <Icon
-  //               type="invite-to-podium"
-  //               className={isOnPodium ? 'no_podium' : 'podium'}
-  //               onClick={() => onOffPodiumClick(uid)}
-  //             />
-  //           </Tooltip>
-  //         )}
-  //         {hideBoardGranted ? null :
-  //           <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
-  //             <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
-  //           </Tooltip>
-  //         }
-  //         {hideStars ? null : (
-  //           <Tooltip title={t('Star')} placement={placement}>
-  //             <Icon
-  //               type="star-outline"
-  //               onClick={() => {
-  //                 onSendStar(uid)
-  //               }}
-  //             />
-  //           </Tooltip>
-  //         )}
-  //         {hidePrivateChat ? null : (
-  //           <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
-  //             <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
-  //               onPrivateChat(uid)
-  //             }}></div>
-  //           </Tooltip>
-  //         )}
-  //       </>
-  //     ) : null}
-  //   </div>
-  // );
-
   const handleMicClick = useCallback(() => {
     if(!hideControl){
       onMicClick(uid)
@@ -321,21 +257,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </div>
             <span className="username">{username}</span>
         </div>
-        {/* <div className="bottom-left-info">
-          <div>
-            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
-            <Icon
-              className={micStateCls}
-              type={micEnabled ? 'microphone-on' : 'microphone-off'}
-            />
-          </div>
-          <span title={username} className="username">{username}</span>
-        </div> */}
-        {/* <div className="bottom-right-info">
-          {(whiteboardGranted && userType === 'student') ? (
-            <div className="bottom-right-granted"></div>
-          ) : null}
-        </div> */}
       </div>
     </Popover>
   );
