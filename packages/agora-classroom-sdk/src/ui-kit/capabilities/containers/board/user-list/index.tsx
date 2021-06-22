@@ -115,16 +115,22 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             }
         }
     }, [rosterUserList, roomInfo.roomUuid, roomInfo.userRole])
-
+    const [keyword, setKeyword] = useState<string>('')
+    const dataList = useMemo(() => {
+    return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+    }, [keyword, rosterUserList])
     return (
         <Roster
             isDraggable={true}
             localUserUuid={localUserUuid}
             role={myRole as any}
             teacherName={teacherName}
-            dataSource={rosterUserList}
+            dataSource={dataList}
             onClick={onClick}
             onClose={props.onClose}
+            onSearch={(text: string) => {
+                setKeyword(text)
+            }}
         />
     )
 })

@@ -7,6 +7,8 @@ const meta: Meta = {
   title: 'Components/Roster',
   component: Roster,
   args: {
+    onChange: (text:string) => console.log(text),
+
     onClick: (action: ActionTypes, uid: string | number) => console.log(action, uid),
     teacherName: 'Lily Chou',
     role: 'teacher',
@@ -64,9 +66,17 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
     }
     return item
   }
+  const [keyword, setKeyword] = useState<string>('')
 
+  const dataList = useMemo(() => {
+    return list.filter((item: any) => item.name.includes(keyword))
+  }, [keyword, list])
+
+  const handleChange = useCallback((value: any) => {
+    setKeyword(value)
+  }, [list, setKeyword])
   return (
-      <Roster dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} userType="student"/>
+      <Roster  dataSource={dataList} onSearch={e => console.log(e)} columns={defaultColumns} onClick={handleClick} userType="student"/>
   )
 };
 

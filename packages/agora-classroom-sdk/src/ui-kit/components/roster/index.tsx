@@ -7,6 +7,8 @@ import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
 import { canOperate, ProfileRole, studentListSort } from './base';
+import { Search } from '~components/input'
+import SearchSvg from '~components/icon/assets/svg/search.svg'
 
 export * from './user-list';
 
@@ -90,6 +92,7 @@ export interface RosterProps extends ModalProps {
    * onClose
    */
   onClose?: () => void;
+  onSearch: (evt: any) => void;
 }
 
 export const Roster: FC<RosterProps> = ({
@@ -102,7 +105,8 @@ export const Roster: FC<RosterProps> = ({
   localUserUuid,
   title,
   isDraggable = true,
-  userType = 'teacher'
+  userType = 'teacher',
+  onSearch
 }) => {
 
   const studentList = studentListSort(dataSource)
@@ -112,7 +116,6 @@ export const Roster: FC<RosterProps> = ({
   const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
     return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
-
   return (
     <DraggableContainer>
       <div className="agora-board-resources roster-wrap">
@@ -122,17 +125,30 @@ export const Roster: FC<RosterProps> = ({
           }}></Icon>
         </div>
         <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
+          <label>花名册</label>
+          <div>(<span>1</span>/15)</div>
         </div>
         <div className="roster-container">
           <div className="roster-header">
-            <label>{t('roster.teacher_name')}</label>
-            <span className="roster-username">{teacherName}</span>
+            <div className="roster-header_lf">
+              <Search
+                onSearch={t => onSearch(t)}
+                prefix={<img src={SearchSvg} />}
+                inputPrefixWidth={32}
+                placeholder="请输入学员姓名"
+              />
+            </div>
+            <div className="roster-header_rh">
+              <button>全体奖励</button>
+              <button>全体静音</button>
+              <button>全体下台</button>
+            </div>
           </div>
+          
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{justifyContent: 'center'}}>{col.name}</Col>
               ))}
             </TableHeader>
             <Table className="table-container">
@@ -165,7 +181,7 @@ export const Roster: FC<RosterProps> = ({
               ))}
             </Table>
           </Table>
-        </div>
+        </div> 
       </div>
     </DraggableContainer>
   );

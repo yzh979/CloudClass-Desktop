@@ -6,11 +6,11 @@ import {getCameraState, getMicrophoneState} from './base';
 export const defaultColumns: Column[] = [
   {
     key: 'name',
-    name: 'roster.student_name',
+    name: '学员姓名',
   },
   {
     key: 'onPodium',
-    name: 'roster.student_co_video',
+    name: '上台',
     action: 'podium',
     render: (_, profile, canOperate) => {
       const type =  !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
@@ -27,7 +27,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'whiteboardGranted',
-    name: 'roster.granted',
+    name: '授权画笔',
     action: 'whiteboard',
     render: (_, profile, canOperate) => {
       const type =  !!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard';
@@ -44,7 +44,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'cameraEnabled',
-    name: 'roster.camera_state',
+    name: '摄像头',
     action: 'camera',
     render: (_, profile, canOperate) => {
       const {
@@ -63,7 +63,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'micEnabled',
-    name: 'roster.microphone_state',
+    name: '连麦',
     action: 'mic',
     render: (_, profile, canOperate) => {
       const {
@@ -82,7 +82,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'stars',
-    name: 'roster.reward',
+    name: '奖杯',
     render: (text, profile: Profile, canOperate) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
@@ -98,7 +98,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'kickOut',
-    name: 'roster.kick',
+    name: '移出',
     action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
     render: (_, profile, canOperate) => {

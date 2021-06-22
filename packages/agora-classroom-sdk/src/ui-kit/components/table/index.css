@@ -30,7 +30,6 @@
   background-color: #F9F9FC;
   padding: 10px 0;
   padding-left: 19px;
-  @apply border-bottom-width-1;
   line-height: 20px;
 }
 
@@ -86,7 +85,7 @@
 .table-container {
   overflow-y: auto;
   box-sizing: content-box;
-  height: 275px;
+  height: 350px;
 }
 
 /* .indeterminate {
