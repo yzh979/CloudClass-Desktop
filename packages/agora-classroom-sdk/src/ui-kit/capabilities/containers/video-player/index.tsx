@@ -138,7 +138,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 
 
   const videoStreamList = useMemo(() => {
-    return studentStreams.map((stream: EduMediaStream) => ({
+    return studentStreams.filter(item => item.renderer && item.renderer.videoTrack).map((stream: EduMediaStream) => ({
       isHost: sceneVideoConfig.isHost,
       hideOffPodium: sceneVideoConfig.hideOffPodium,
       username: stream.account,
@@ -200,7 +200,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
                 <Button className="video-marquee-tab-btn">上台学员</Button>
               </>
             } key="0">
-              <div className="video-marquee-pin">
               {
                 videoStreamList.length ?
                   <VideoMarqueeList
@@ -219,7 +218,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
                     <span>还未有学员上台</span>
                   </div>
               }
-              </div>
             </TabPane>
             <TabPane tab={
               <>
@@ -241,8 +239,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
       )
   }else{
     return (
-      <div className="video-marquee-pin">
-      {
         videoStreamList.length ?
           <VideoMarqueeList
             hideStars={sceneType === 2}
@@ -259,8 +255,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
             <img src={EmptyImage}/>
             <span>还未有学员上台</span>
           </div>
-      }
-      </div>
     )
   }
 })

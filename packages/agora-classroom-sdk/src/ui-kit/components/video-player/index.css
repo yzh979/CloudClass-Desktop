@@ -193,10 +193,11 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  overflow-x: scroll;
+  overflow-y: scroll;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: 100%;
 }
 
 .video-container::-webkit-scrollbar {

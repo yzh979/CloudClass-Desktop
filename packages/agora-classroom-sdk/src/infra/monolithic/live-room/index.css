@@ -100,6 +100,14 @@ html, body, #root {
   white-space: nowrap;
   max-width: 71px;
 }
+.video-marquee-tab {
+  flex: 1;
+}
+
+.video-marquee-tab .tabs-content{
+  height: 100%;
+}
+
 .video-marquee-tab  .tabs-nav-list{
   width: 100%;
   flex-direction: row;
@@ -141,11 +149,6 @@ html, body, #root {
   width: 100% !important;
 }
 
-.video-marquee-pin {
-  margin-top: 15px;
-  width: 360px;
-  height: 100%;
-}
 
 .video-marquee-pin ~ .board-box {
   margin-top: 165px;
