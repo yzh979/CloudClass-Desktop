@@ -185,8 +185,11 @@
   color: #2D353A;
 }
 
-
-
+.roster-wrap .table-col-item > span > img{
+  width: 19px;
+  height: 19px;
+  cursor: pointer;
+}
 .roster-container .roster-table {
   flex: 1;
   min-height: 0;
