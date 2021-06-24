@@ -13,6 +13,8 @@ import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
 import { UploadContainer } from './upload';
+import { Search } from '~components/input'
+import SearchSvg from '~components/icon/assets/svg/search.svg'
 
 export const calcUploadFilesMd5 = async (file: File) => {
   return new Promise(resolve => {
@@ -209,25 +211,32 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
 
   return (
     <Draggable>
-      <div className="agora-board-resources">
+      <div className="agora-board-resources cloud-wrap">
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onCancel()
           }}></Icon>
         </div>
         <Tabs activeKey={activeKey} onChange={handleChange}>
-          <TabPane tab={transI18n('cloud.publicResources')} key="1">
-            <StorageContainer />
-          </TabPane>
-          <TabPane tab={transI18n('cloud.personalResources')} key="2">
-            <Row style={{paddingLeft:19}} className="btn-group margin-gap">
+          <TabPane tab="我的媒体库" key="1">
+            <Row className="search-file-wrap">
+              <Search
+                  onSearch={t => console.log(t)}
+                  prefix={<img src={SearchSvg} />}
+                  inputPrefixWidth={32}
+                  placeholder="请输入文件名称"
+                />
+            </Row>
+  
+            <UploadContainer handleUpdateCheckedItems={captureCheckedItems} />
+            <Row className="btn-group margin-gap">
               <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
                 onChange={handleUpload} type="file">
               </input>
-              <Button type="primary" onClick={triggerUpload}>
+              <button className="upload-btn" onClick={triggerUpload}>
                 {transI18n('cloud.upload')}
-              </Button>
-              <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
+              </button>
+              {/* <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button> */}
               {showUploadToast ? (<Toast closeToast={()=>{}} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
               {showUploadModal ? (
                 <Modal
@@ -252,16 +261,14 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
                     }
                   />
                 </Modal>
-
               ) : ""}
-
             </Row>
-            <UploadContainer handleUpdateCheckedItems={captureCheckedItems} />
           </TabPane>
-          <TabPane tab={transI18n('cloud.downloadResources')} key="3">
-            <DownloadContainer />
+          <TabPane tab="公共媒体库" key="2">
+            <StorageContainer/>
           </TabPane>
         </Tabs>
+        
       </div>
     </Draggable>
   )

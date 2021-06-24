@@ -8,7 +8,7 @@ export const StorageContainer = observer(() => {
   const {publicResources, openCloudResource} = useBoardContext()
 
   return (
-    <Table>
+    <Table className="public-resource">
     <TableHeader>
       <Col>{transI18n('cloud.fileName')}</Col>
       <Col>{transI18n('cloud.size')}</Col>

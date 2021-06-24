@@ -85,7 +85,8 @@
 .table-container {
   overflow-y: auto;
   box-sizing: content-box;
-  height: 350px;
+  height: 250px;
+  flex: none !important;
 }
 
 /* .indeterminate {
@@ -104,8 +105,8 @@ input.indeterminate:indeterminate {
 }
 
 .agora-board-resources {
-  width: 606px;
-  height: 540px;
+  width: 600px;
+  height: 528px;
   background: #FFFFFF;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
@@ -120,6 +121,110 @@ input.indeterminate:indeterminate {
 
 .agora-board-resources .tabs-nav {
   background-color: #F9F9FC;
+}
+
+.cloud-wrap .fileIcon {
+  width: 19px;
+  height: 19px;
+}
+
+.cloud-wrap .upload-stat {
+  font-size: 15px;
+  font-weight: 400;
+  justify-content: flex-end;
+}
+
+.cloud-wrap .upload-fail {
+  color: #888888;
+}
+
+.cloud-wrap .upload-succ {
+  color: #2D353A;
+
+}
+.cloud-wrap .public-resource {
+  margin-top: 25px;
+}
+
+.cloud-wrap .fileName {
+  font-size: 15px !important;
+  font-weight: 400  !important;
+  color: #2D353A  !important;
+  margin-left: 15px;
+}
+
+.cloud-wrap .table-row-item  {
+  height: 45px !important;
+}
+
+.cloud-wrap .tabs-tab-btn{
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  color: #2D353A !important;
+}
+.cloud-wrap .tabs-nav {
+  background-color: white !important;
+}
+.cloud-wrap .upload-btn {
+  width: 167px;
+  height: 50px;
+  background: #38AE48;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  border: none;
+  outline: none;
+}
+
+.search-file-wrap {
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.cloud-wrap .tabs-ink-bar {
+  width: 41px !important;
+  height: 4px !important;
+  background: #38AE48 !important;
+  border-radius: 2px !important;
+  margin-left: 22px !important;
+}
+.cloud-wrap .input-wrapper{
+  width: 240px;
+  height: 40px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #B2B2B2;
+}
+.cloud-wrap .input-prefix > img{
+  width: 20px;
+  height: 20px;
+}
+
+
+.cloud-wrap .tabs-top > .tabs-nav::before, .tabs-bottom > .tabs-nav::before, .tabs-top > div > .tabs-nav::before, .tabs-bottom > div > .tabs-nav::before{
+  border-bottom: none !important;
+}
+
+.cloud-wrap {
+  padding: 20px;
+}
+.cloud-wrap .tabs-nav-list {
+  padding-left: 0 !important;
+}
+
+.cloud-wrap .tabs-tab {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  color: #2D353A !important;
+  padding: 5 !important;
+}
+
+.cloud-wrap input {
+}
+.cloud-wrap .btn-group {
+  margin-top: 20px;
+  justify-content: flex-end;
 }
 
 .agora-board-resources .rc-tabs-nav {
