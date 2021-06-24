@@ -22,7 +22,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         grantBoardPermission,
     } = useBoardContext()
     const {
-        onSendStar
+        onSendStar,
+        onOffAllPodiumClick
     } = useVideoControlContext()
     const {
         streamList
@@ -48,6 +49,26 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         revokeCoVideo,
         teacherAcceptHandsUp,
     } = useUserListContext()
+
+    const onMuteAll = useCallback(async () => {
+        const userList = rosterUserList
+        userList.forEach(async user => {
+            const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === user.uid)
+            if (targetStream) {
+                const isLocal = roomInfo.userUuid === user.uid
+                if (targetStream.hasAudio && user.micEnabled) {// 有音频流且音频打开
+                    await muteAudio(user.uid, isLocal)
+                }
+            }
+        })
+    }, [rosterUserList, muteAudio])
+
+    const onSendRewardAll = useCallback(async () => {
+        const userList = rosterUserList
+        userList.forEach(async user => {
+            await onSendStar(user.uid)
+        })
+    }, [rosterUserList, onSendStar])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = rosterUserList
@@ -125,9 +146,12 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             localUserUuid={localUserUuid}
             role={myRole as any}
             teacherName={teacherName}
+            onMuteAll={onMuteAll}
+            onSendRewardAll={onSendRewardAll}
             dataSource={dataList}
             onClick={onClick}
             onClose={props.onClose}
+            onOffAllPodiumClick={onOffAllPodiumClick}
             onSearch={(text: string) => {
                 setKeyword(text)
             }}
@@ -139,18 +163,19 @@ export type StudentUserListContainerProps = {
 }
 
 export const StudentUserListContainer: React.FC<StudentUserListContainerProps> = observer((props) => {
+
     const {
-        onSendStar
+        onSendStar,
+        onOffAllPodiumClick
     } = useVideoControlContext()
-
-
     const {
         revokeBoardPermission,
         grantBoardPermission,
     } = useBoardContext()
 
     const {
-        roomInfo
+        roomInfo,
+        muteAudio,
     } = useRoomContext()
 
     const {
@@ -159,7 +184,9 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
         revokeCoVideo,
         teacherAcceptHandsUp
     } = useUserListContext()
-
+    const {
+        streamList
+    } = useStreamListContext()
 
     const dataList = rosterUserList
 
@@ -200,8 +227,30 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
         }
     }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
 
+    const onMuteAll = useCallback(async () => {
+        const userList = rosterUserList
+        userList.forEach(async user => {
+            const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === user.uid)
+            if (targetStream) {
+                const isLocal = roomInfo.userUuid === user.uid
+                if (targetStream.hasAudio && user.micEnabled) {// 有音频流且音频打开
+                    await muteAudio(user.uid, isLocal)
+                }
+            }
+        })
+    }, [rosterUserList, muteAudio])
+
+    const onSendRewardAll = useCallback(async () => {
+        const userList = rosterUserList
+        userList.forEach(async user => {
+            await onSendStar(user.uid)
+        })
+    }, [rosterUserList, onSendStar])
     return (
         <StudentRoster
+            onMuteAll={onMuteAll}
+            onSendRewardAll={onSendRewardAll}
+            onOffAllPodiumClick={onOffAllPodiumClick}
             localUserUuid={localUserUuid}
             dataSource={dataList}
             onClick={onClick}

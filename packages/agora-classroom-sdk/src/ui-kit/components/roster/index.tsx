@@ -93,6 +93,9 @@ export interface RosterProps extends ModalProps {
    */
   onClose?: () => void;
   onSearch: (evt: any) => void;
+  onOffAllPodiumClick:() => Promise<void>;
+  onMuteAll:() => Promise<void>;
+  onSendRewardAll:() => Promise<void>;
 }
 
 export const Roster: FC<RosterProps> = ({
@@ -106,6 +109,9 @@ export const Roster: FC<RosterProps> = ({
   title,
   isDraggable = true,
   userType = 'teacher',
+  onMuteAll,
+  onSendRewardAll,
+  onOffAllPodiumClick,
   onSearch
 }) => {
 
@@ -139,9 +145,9 @@ export const Roster: FC<RosterProps> = ({
               />
             </div>
             <div className="roster-header_rh">
-              <button>全体奖励</button>
-              <button>全体静音</button>
-              <button>全体下台</button>
+              <button onClick={onSendRewardAll}>全体奖励</button>
+              <button onClick={onMuteAll}>全体静音</button>
+              <button onClick={onOffAllPodiumClick}>全体下台</button>
             </div>
           </div>
           

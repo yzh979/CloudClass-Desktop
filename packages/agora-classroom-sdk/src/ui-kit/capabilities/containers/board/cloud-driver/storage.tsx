@@ -3,6 +3,11 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
 
+import IconImg from './assets/img.png'
+import IconPpt from './assets/ppt.png'
+import IconWord from './assets/word.png'
+
+
 export const StorageContainer = observer(() => {
 
   const {publicResources, openCloudResource} = useBoardContext()
@@ -20,7 +25,12 @@ export const StorageContainer = observer(() => {
           <Col style={{cursor: 'pointer', paddingLeft: 19}} onClick={async () => {
             await openCloudResource(id)
           }}>
-            <IconBox iconType={type} style={{ marginRight: '6px' }} />
+            { 
+              ['image', 'pdf', 'word'].indexOf(type) !== -1?
+                <img className="fileIcon" src={type == 'image' ? IconImg:(type=='pdf'?IconPpt:IconWord)}/>
+              :
+              <IconBox iconType={type} style={{ width: '19px'}} />
+            }
             <Inline className="filename" color="#191919">{name}</Inline>
           </Col>
           <Col>

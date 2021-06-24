@@ -518,6 +518,7 @@ export const useVideoControlContext = () => {
     await roomStore.sendReward(uid, 1)
   }, [userRole, roomStore])
 
+
   const onWhiteboardClick = useCallback(async (userUuid: any) => {
     const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)
     if (isHost) {

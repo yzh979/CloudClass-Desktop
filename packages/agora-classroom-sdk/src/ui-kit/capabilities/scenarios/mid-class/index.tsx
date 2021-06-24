@@ -55,11 +55,10 @@ export const MidClassScenario = observer(() => {
           <div className="pin-left">
             <RoomChat />
           </div>
+          <DialogContainer />
+          <LoadingContainer />
         </Content>
-        
       </Layout>
-      <DialogContainer />
-      <LoadingContainer />
     </Layout>
   )
 })

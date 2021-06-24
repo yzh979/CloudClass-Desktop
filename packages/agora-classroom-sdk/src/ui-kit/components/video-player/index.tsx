@@ -244,9 +244,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-info">
             <div className="bottom-info_lf">
-              <Tooltip title="下台" placement={placement}>
-                <img className={`close-video ${hideControl ? '':'show-control'}`} onClick={handleCovClick} src={CoVideo}/>
-              </Tooltip>
+              {userType == 'student' && 
+                <Tooltip title="下台" placement={placement}>
+                  <img className={`close-video ${hideControl ? '':'show-control'}`} onClick={handleCovClick} src={CoVideo}/>
+                </Tooltip>
+              }
+          
               <Tooltip title={cameraEnabled ? '禁用视频':'启用视频'} placement={placement}>
                 <img className={`camera ${hideControl ? '':'show-control'}`} onClick={handleCamClick} src={cameraEnabled ? CameraOn:CameraOff}/>
               </Tooltip>

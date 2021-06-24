@@ -85,14 +85,6 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
 
   return (
     <Table>
-      {/* <TableHeader>
-        <Col width={9}>
-          <CheckBox checked={isSelectAll} indeterminate={isSelectAll ? false : hasSelected} onClick={handleSelectAll}></CheckBox>
-        </Col>
-        <Col>{transI18n('cloud.fileName')}</Col>
-        <Col>{transI18n('cloud.size')}</Col>
-        <Col>{transI18n('cloud.updated_at')}</Col>
-      </TableHeader> */}
       <Table className="table-container">
         {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>
           <Row height={10} key={idx}>
@@ -103,7 +95,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
                 ['image', 'pdf', 'word'].indexOf(type) !== -1?
                   <img className="fileIcon" src={type == 'image' ? IconImg:(type=='pdf'?IconPpt:IconWord)}/>
                 :
-                <IconBox iconType={type} style={{ width: '19px', marginRight: '6px' }} />
+                <IconBox iconType={type} style={{ width: '19px'}} />
               }
               <Inline className="fileName" color="#191919">{name}</Inline>
             </Col>
@@ -112,7 +104,6 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
             </Col> */}
             <Col className="upload-stat">
               <Inline className="upload-succ">上传成功</Inline>
-              {/* <Inline color="#586376">{dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss")}</Inline> */}
             </Col>
           </Row>
         ) : <Placeholder placeholderType="noFile"/>}

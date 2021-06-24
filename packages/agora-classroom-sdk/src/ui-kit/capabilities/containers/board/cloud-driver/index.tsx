@@ -236,7 +236,6 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
               <button className="upload-btn" onClick={triggerUpload}>
                 {transI18n('cloud.upload')}
               </button>
-              {/* <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button> */}
               {showUploadToast ? (<Toast closeToast={()=>{}} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
               {showUploadModal ? (
                 <Modal

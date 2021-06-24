@@ -190,7 +190,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
     sceneType,
     roomInfo
   } = useRoomContext()
-
   if(roomInfo.userRole === EduRoleTypeEnum.teacher){
       return (
         <>

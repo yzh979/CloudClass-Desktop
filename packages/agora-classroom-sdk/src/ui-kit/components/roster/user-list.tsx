@@ -51,6 +51,9 @@ export type StudentRosterProps = {
   dataSource?: StudentRosterProfile[];
   localUserUuid: string;
   onClick?: (action: StudentRosterActionTypes, uid: string | number) => void;
+  onOffAllPodiumClick:() => Promise<void>;
+  onMuteAll:() => Promise<void>;
+  onSendRewardAll:() => Promise<void>;
 }
 
 const defaultStudentColumns: StudentRosterColumn[] = [

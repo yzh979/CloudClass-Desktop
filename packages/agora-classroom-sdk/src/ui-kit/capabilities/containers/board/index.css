@@ -17,7 +17,14 @@
 	background: white !important;
 	border: 1px solid #38AE48 !important;
 }
-
+.whiteboard-placeholder {
+	position: absolute;
+	left: 40px;
+	top: 84px;
+	right: 40px;
+	bottom: 83px;
+	background: white;
+}
 .whiteboard-tab .tabs-tab .tabs-tab-btn {
 	text-align: center;
 	width: 100% !important;
