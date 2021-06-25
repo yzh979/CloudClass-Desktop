@@ -29,6 +29,7 @@ export const defaultColumns: Column[] = [
   {
     key: 'stars',
     name: '奖杯',
+    action: 'reward',
     render: (text, profile: Profile, canOperate) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
@@ -77,7 +78,7 @@ export const defaultColumns: Column[] = [
       })
       return (
         // <Icon type={type} className={cls} iconhover={canOperate}/>
-        <img src={profile.cameraEnabled ? Camera:CameraDisable}/>
+        <img src={profile.cameraEnabled ? Camera:CameraDisable} style={{width:profile.cameraEnabled ? "16px":"20px", height: "19px"}}/>
       )
     },
   },
@@ -97,7 +98,7 @@ export const defaultColumns: Column[] = [
       })
       return (
         // <Icon type={type} className={cls} iconhover={canOperate}/>
-        <img src={profile.micEnabled ? Microphone:MicrophoneDisable}/>
+        <img src={profile.micEnabled ? Microphone:MicrophoneDisable}  style={{width:profile.micEnabled ? "15px":"19px", height: "20px"}}/>
       )
     },
   },

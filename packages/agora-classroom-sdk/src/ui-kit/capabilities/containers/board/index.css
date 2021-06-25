@@ -24,6 +24,7 @@
 	right: 40px;
 	bottom: 83px;
 	background: white;
+	border-radius: 5px;
 }
 .whiteboard-tab .tabs-tab .tabs-tab-btn {
 	text-align: center;

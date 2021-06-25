@@ -122,6 +122,7 @@
   font-weight: 500  !important;
   color: #787878  !important;
   flex: none !important;
+  padding: 0 !important;
 }
 
 
@@ -185,7 +186,7 @@
   color: #2D353A;
 }
 
-.roster-wrap .table-col-item > span > img{
+.roster-wrap .table-col-item > span img{
   width: 19px;
   height: 19px;
   cursor: pointer;

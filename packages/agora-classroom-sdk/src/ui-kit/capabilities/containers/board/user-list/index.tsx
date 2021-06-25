@@ -71,6 +71,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     }, [rosterUserList, onSendStar])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
+        console.log('>>>>>>>>>actionType', actionType)
+
         const userList = rosterUserList
         const user = userList.find((user: RosterUserInfo) => user.uid === uid)
 
@@ -138,8 +140,9 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     }, [rosterUserList, roomInfo.roomUuid, roomInfo.userRole])
     const [keyword, setKeyword] = useState<string>('')
     const dataList = useMemo(() => {
-    return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+        return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
     }, [keyword, rosterUserList])
+
     return (
         <Roster
             isDraggable={true}

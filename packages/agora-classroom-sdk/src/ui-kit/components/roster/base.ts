@@ -8,7 +8,7 @@ export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 export const canOperate = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
   //任何角色的星星不可点击
   if(col.key === 'stars'){
-    return false;
+    return true;
   }
 
   if (['assistant', 'teacher'].includes(role)) {

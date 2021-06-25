@@ -139,7 +139,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 
 
   const videoStreamList = useMemo(() => {
-    return studentStreams.filter(item => item.renderer && item.renderer.videoTrack).map((stream: EduMediaStream) => ({
+    return studentStreams.map((stream: EduMediaStream) => ({
       isHost: sceneVideoConfig.isHost,
       hideOffPodium: sceneVideoConfig.hideOffPodium,
       username: stream.account,

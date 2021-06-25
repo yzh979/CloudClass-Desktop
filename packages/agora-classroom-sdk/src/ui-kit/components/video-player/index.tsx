@@ -11,6 +11,7 @@ import { SvgaPlayer } from '~components/svga-player'
 import { v4 as uuidv4 } from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 
+import Reward from './assets/reward.png'
 import CoVideo from './assets/covideo.png'
 import CameraOn from './assets/camera_on.png'
 import CameraOff from './assets/camera_off.png'
@@ -237,8 +238,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <div className="top-right-info">
           {stars > 0 ? (
             <>
-              <Icon className="stars" type="star" />
-              <span className="stars-label">x{stars}</span>
+              <img className="reward" src={Reward}/>
+              <span className="reward-label">{stars}</span>
             </>
           ) : null}
         </div>

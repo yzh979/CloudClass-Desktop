@@ -10,8 +10,9 @@
 }
 
 .top-right-info {
-  @apply absolute top-0 right-0 flex items-center;
-  padding: 8px;
+  @apply absolute flex items-center;
+  top: 20px;
+  right: 20px;
 }
 
 .bottom-left-info {
@@ -35,6 +36,24 @@
 .stars {
   font-size: 18px;
   color: #f58723;
+}
+
+.reward {
+  width: 30px;
+}
+
+.reward-label {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: #FF7700;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  line-height: 16px;
 }
 
 .stars-label {
