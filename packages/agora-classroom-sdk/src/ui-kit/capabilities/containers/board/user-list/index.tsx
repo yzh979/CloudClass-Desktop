@@ -1,7 +1,7 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useVideoControlContext } from 'agora-edu-core';
+import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useVideoControlContext, useHandsUpContext } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
@@ -188,7 +188,21 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
         streamList
     } = useStreamListContext()
 
-    const dataList = rosterUserList
+
+    const {
+        handsUpStudentList,
+    } = useHandsUpContext()
+
+    const studentList = useMemo(() => {
+        return handsUpStudentList.filter((student) => !student.coVideo)
+    }, [handsUpStudentList])
+    const dataList = useMemo(() => {
+    const handsUpUids = studentList.map(student => student.userUuid);
+    return rosterUserList.map(user => {
+        user.isUphand = handsUpUids.indexOf(user.uid) !== -1
+        return user
+    })
+    }, [studentList, rosterUserList])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = dataList

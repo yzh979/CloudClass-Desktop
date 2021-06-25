@@ -87,6 +87,7 @@ export const NavigationBar = observer(() => {
 
   return (
     <BizHeader
+      isFullScreen={isFullScreen}
       userType={userType}
       isNative={isNative}
       classFormatTime={classFormatTime}

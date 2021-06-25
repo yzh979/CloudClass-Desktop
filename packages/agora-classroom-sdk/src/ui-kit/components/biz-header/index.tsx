@@ -11,6 +11,7 @@ import IconStop from './assets/stop.png'
 import IconExit from './assets/exit.png'
 import IconWifi from './assets/wifi.png'
 import IconFullscreen from './assets/fullscreen.png'
+import IconExitFullscreen from './assets/exit-fullscreen.png'
 import { useGlobalContext, useUserListContext, useBoardContext } from 'agora-edu-core'
 const SIGNAL_QUALITY_TEXT: {[key:string]:string} = {
   excellent: '优',
@@ -91,7 +92,9 @@ export interface BizHeaderProps {
    */
   onClick: (itemType: string) => void;
 
-  userType?: 'teacher' | 'student'
+  userType?: 'teacher' | 'student';
+
+  isFullScreen: boolean
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
@@ -106,7 +109,8 @@ export const BizHeader: FC<BizHeaderProps> = ({
   userType = 'student',
   onClick,
   studentInRoomCnt = 0,
-  studentInClassCnt = 0
+  studentInClassCnt = 0,
+  isFullScreen=false
 }) => {
 
   return (
@@ -171,8 +175,8 @@ export const BizHeader: FC<BizHeaderProps> = ({
             <span>{SIGNAL_QUALITY_TEXT[signalQuality]}</span>
           </div>
           <div className="biz-header_rh-item fullscreen" onClick={() => onClick('fullscreen')}>
-            <img src={IconFullscreen}/>
-            <span>全屏学习</span>
+            <img src={isFullScreen ? IconExitFullscreen:IconFullscreen}/>
+            <span>{isFullScreen?'退出全屏':'全屏学习'}</span>
           </div>
           <div className="biz-header_rh-item exit" onClick={() => onClick('exit')}>
             <img src={IconExit}/>

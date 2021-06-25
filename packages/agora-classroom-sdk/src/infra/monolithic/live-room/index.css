@@ -140,6 +140,14 @@ html, body, #root {
   color: #2D353A;
 }
 
+.video-marquee-tab-btn > img {
+  width: 15px;
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .tabs-tab-active .video-marquee-tab-btn {
   background: #38AE48  !important;
   color: #FFFFFF;

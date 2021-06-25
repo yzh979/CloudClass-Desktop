@@ -1,4 +1,4 @@
-import { EduMediaStream, useGlobalContext, useRoomContext, useUserListContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { EduMediaStream, useGlobalContext, useRoomContext, useUserListContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext, useHandsUpContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -9,6 +9,7 @@ import { StudentUserListContainer } from '~capabilities/containers/board/user-li
 import { Button} from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import EmptyImage from './assets/empty_seat.png'
+import IconHand from './assets/icon-hand.png'
 export const VideoPlayerTeacher = observer(({ style }: any) => {
   const {
     teacherStream: userStream,
@@ -185,11 +186,18 @@ export const VideoMarqueeStudentContainer = observer(() => {
       await onStartPrivateChat(`${toUuid}`)
     }
   }
-
+  const {
+    handsUpStudentList,
+  } = useHandsUpContext()
   const {
     sceneType,
     roomInfo
   } = useRoomContext()
+
+  const studentList = useMemo(() => {
+    return handsUpStudentList.filter((student) => !student.coVideo)
+  }, [handsUpStudentList])
+
   if(roomInfo.userRole === EduRoleTypeEnum.teacher){
       return (
         <>
@@ -220,7 +228,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
             </TabPane>
             <TabPane tab={
               <>
-                <Button className="video-marquee-tab-btn">全部学员</Button>
+                <Button className="video-marquee-tab-btn">全部学员{studentList.length != 0 ? <img src={IconHand}/>:null}</Button>
               </> 
             } key="1">
               {
