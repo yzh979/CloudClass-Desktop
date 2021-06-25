@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import { RendererPlayer } from '~utilities/renderer-player'
-import { IconButton, Icon } from '~ui-kit'
+import { IconButton, Icon, transI18n } from '~ui-kit'
 import { useCallback } from 'react'
 import { useScreenShareContext } from 'agora-edu-core'
 
@@ -18,7 +18,7 @@ export const ScreenSharePlayerContainer = observer(() => {
     
     return (
         screenShareStream ? <div className="screen-share-player-container">
-            {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""}
+            {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText={transI18n("scaffold.stop_screen_share")} buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""}
             {
                   screenShareStream.renderer ?
                     <RendererPlayer
