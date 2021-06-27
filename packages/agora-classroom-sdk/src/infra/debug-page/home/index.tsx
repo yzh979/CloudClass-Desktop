@@ -133,7 +133,7 @@ export const HomePage = observer(() => {
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
-          language: language as LanguageEnum,
+          language: 'zh' as LanguageEnum,
           userUuid: userId,
           rtmToken,
           roomUuid: roomId,

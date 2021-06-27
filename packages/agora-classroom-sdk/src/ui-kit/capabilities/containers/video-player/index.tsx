@@ -2,7 +2,7 @@ import { EduMediaStream, useGlobalContext, useRoomContext, useUserListContext, u
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer,  } from '~ui-kit';
+import { CameraPlaceHolder, TeacherCameraPlaceHolder, VideoMarqueeList, VideoPlayer,  } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Tabs, TabPane } from '~components/tabs';
 import { StudentUserListContainer } from '~capabilities/containers/board/user-list'
@@ -22,9 +22,10 @@ export const VideoPlayerTeacher = observer(({ style }: any) => {
     sceneVideoConfig,
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
-
+  
   return (
     <VideoPlayer
+      className="teacher-video-player"
       isHost={sceneVideoConfig.isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -32,6 +33,7 @@ export const VideoPlayerTeacher = observer(({ style }: any) => {
       uid={userStream.userUuid}
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
+      displayControl={userStream.holderState !== 'loading'}
       hideControl={userStream.hideControl}
       whiteboardGranted={userStream.whiteboardGranted}
       hideBoardGranted={true}
@@ -60,7 +62,7 @@ export const VideoPlayerTeacher = observer(({ style }: any) => {
               />
               : null
           }
-          <CameraPlaceHolder state={userStream.holderState} />
+          <TeacherCameraPlaceHolder state={userStream.holderState} />
         </>
       }
     </VideoPlayer>)

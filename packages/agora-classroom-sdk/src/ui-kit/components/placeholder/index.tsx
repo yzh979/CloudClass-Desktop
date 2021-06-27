@@ -68,3 +68,22 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
     </div>
   )
 }
+export const TeacherCameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
+  children,
+  state = 'loading',
+  className,
+}) => {
+  const cls = classnames({
+    [`camera-placeholder`]: 1,
+    [`camera-${state}-placeholder`]: !!state,
+    [`${className}`]: !!className,
+  });
+
+  return (
+    <div className={cls}>
+      {children}
+    </div>
+  )
+}
+
+

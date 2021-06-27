@@ -113,7 +113,7 @@ export const Home: React.FC<HomeProps> = ({
             >
             </Select>
           </div>
-          <div style={{ marginRight: 17, width: 185 }} className={[language === 'en' ? "language-en-div" : "language-zh-div"].join(" ")}>
+          {/* <div style={{ marginRight: 17, width: 185 }} className={[language === 'en' ? "language-en-div" : "language-zh-div"].join(" ")}>
             <Select
               prefix={<span className="home-label">{transI18n('home.language')}</span>}
               id="language"
@@ -126,7 +126,7 @@ export const Home: React.FC<HomeProps> = ({
             // defaultMenuIsOpen={true}
             >
             </Select>
-          </div>
+          </div> */}
           <div
             className="header-right-about"
             onClick={() => {

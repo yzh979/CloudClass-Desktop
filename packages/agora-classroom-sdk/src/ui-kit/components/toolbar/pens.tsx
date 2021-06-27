@@ -57,7 +57,7 @@ export const Pens: FC<PensProps> = ({
         }
     }, [handleClick, isActive])
     return (
-        <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
+        // <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
             <div className="tool" onClick={() => {
                 handleClickTool(activePen)
             }}>
@@ -76,6 +76,6 @@ export const Pens: FC<PensProps> = ({
             </Popover>
             </div>
 
-        </Tooltip>
+        // </Tooltip>
     );
 };

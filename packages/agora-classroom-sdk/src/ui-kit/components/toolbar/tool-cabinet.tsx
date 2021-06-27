@@ -40,7 +40,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
         </div>
     ), [activeItem])
     return (
-        <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
+        // <Tooltip title={label} placement="top" overlayClassName="translated-tooltip">
             <Popover
                 visible={popoverVisible}
                 onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -54,6 +54,6 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
                     <Icon type="triangle-down" className="triangle-icon"/>
                 </div>
             </Popover>
-        </Tooltip>
+        // </Tooltip>
     )
 }

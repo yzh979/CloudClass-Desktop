@@ -28,8 +28,10 @@ export interface BaseVideoPlayerProps {
    * 摄像头关闭时的占位图
    */
   placeholder?: string | ReactNode;
+
+  displayControl?: boolean;
   /**
-   * 是否现实控制条
+   * 是否可以控制
    */
   hideControl?: boolean;
   /**
@@ -148,6 +150,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   whiteboardGranted,
   isHost = false,
   hideControl = false,
+  displayControl=true,
   hideOffAllPodium = true,
   hideOffPodium = false,
   hideStars = false,
@@ -243,24 +246,26 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </>
           ) : null}
         </div>
-        <div className="bottom-info">
-            <div className="bottom-info_lf">
-              {userType == 'student' && 
-                <Tooltip title="下台" placement={placement}>
-                  <img className={`close-video ${hideControl ? '':'show-control'}`} onClick={handleCovClick} src={CoVideo}/>
+        { displayControl && 
+          <div className="bottom-info">
+              <div className="bottom-info_lf">
+                {userType == 'student' && 
+                  <Tooltip title="下台" placement={placement}>
+                    <img className={`close-video ${hideControl ? '':'show-control'}`} onClick={handleCovClick} src={CoVideo}/>
+                  </Tooltip>
+                }
+            
+                <Tooltip title={cameraEnabled ? '禁用视频':'启用视频'} placement={placement}>
+                  <img className={`camera ${hideControl ? '':'show-control'}`} onClick={handleCamClick} src={cameraEnabled ? CameraOn:CameraOff}/>
                 </Tooltip>
-              }
-          
-              <Tooltip title={cameraEnabled ? '禁用视频':'启用视频'} placement={placement}>
-                <img className={`camera ${hideControl ? '':'show-control'}`} onClick={handleCamClick} src={cameraEnabled ? CameraOn:CameraOff}/>
-              </Tooltip>
-              <Tooltip title={micEnabled ? '禁用音频':'启用音频'} placement={placement}>
-                <img className={`microphone ${hideControl ? '':'show-control'}`} onClick={handleMicClick} src={micEnabled ? MicrophoneOn: MicrophoneOff}/>
-              </Tooltip>
-              <VolumeIndicator volume={micVolume} />
-            </div>
-            <span className="username">{username}</span>
-        </div>
+                <Tooltip title={micEnabled ? '禁用音频':'启用音频'} placement={placement}>
+                  <img className={`microphone ${hideControl ? '':'show-control'}`} onClick={handleMicClick} src={micEnabled ? MicrophoneOn: MicrophoneOff}/>
+                </Tooltip>
+                <VolumeIndicator volume={micVolume} />
+              </div>
+              <span className="username">{username}</span>
+          </div>
+        }
       </div>
     </Popover>
   );
