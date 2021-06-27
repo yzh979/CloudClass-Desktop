@@ -26,6 +26,13 @@
 	background: white;
 	border-radius: 5px;
 }
+.pre-class-position {
+	position: absolute;
+	left: 40px;
+	right: 38px;
+	top: 82px;
+	bottom: 80px;
+}
 .whiteboard-tab .tabs-tab .tabs-tab-btn {
 	text-align: center;
 	width: 100% !important;

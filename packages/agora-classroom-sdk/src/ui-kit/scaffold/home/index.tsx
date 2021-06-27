@@ -69,8 +69,8 @@ export const Home: React.FC<HomeProps> = ({
   const roleOptions = [
     { label: t('home.role_teacher'), value: 'teacher' },
     { label: t('home.role_student'), value: 'student' },
-    { label: t('home.role_assistant'), value: 'assistant' },
-    { label: t('home.role_audience'), value: 'incognito' },
+    // { label: t('home.role_assistant'), value: 'assistant' },
+    // { label: t('home.role_audience'), value: 'incognito' },
   ]
   const languageOptions = [
     { label: '中文', value: 'zh' },
@@ -109,7 +109,7 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.region_placeholder')}
               options={regionOptions}
-              // defaultMenuIsOpen={true}
+            // defaultMenuIsOpen={true}
             >
             </Select>
           </div>
@@ -123,7 +123,7 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.language_placeholder')}
               options={languageOptions}
-              // defaultMenuIsOpen={true}
+            // defaultMenuIsOpen={true}
             >
             </Select>
           </div>
@@ -143,7 +143,7 @@ export const Home: React.FC<HomeProps> = ({
             setShowAbout(false)
           }}
         >
-          <HomeAbout 
+          <HomeAbout
             onLookDeclare={() => {
               setShowAbout(false)
               setShowDisclaimer(true)
@@ -166,7 +166,7 @@ export const Home: React.FC<HomeProps> = ({
       {showDisclaimer ? (
         <Modal
           width={560}
-          style={{height: language === 'en' ? 475 : 370}}
+          style={{ height: language === 'en' ? 475 : 370 }}
           title={transI18n('disclaimer.title')}
           modalType="back"
           onCancel={() => {
@@ -181,57 +181,49 @@ export const Home: React.FC<HomeProps> = ({
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
           {/* <div className="form-title">{transI18n('home.form_title')}</div> */}
-          {debug ?
-            <Row className="home-row-item">
-              <Col>
-                <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="RoomId">RoomId</span>} id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder={transI18n('home.roomId_placeholder')} />
-              </Col>
-            </Row>
-            : <></>}
-          {debug ?
-            <Row className="home-row-item">
-              <Col>
-                <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="UserId">UserId</span>} id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder={transI18n('home.userId_placeholder')} />
-              </Col>
-            </Row>
-            : <></>}
-          <Row className="home-row-item can-error-item">
+          <Row className="home-row-item">
             <Col>
-              <Input 
-                inputPrefixWidth={55} 
-                prefix={<span className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} 
-                id="roomName" 
-                type="text" 
-                className="block w-full" 
-                value={roomName} 
-                onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} 
-                placeholder={transI18n('home.roomName_placeholder')}
-                rule={/^[a-zA-Z0-9]{1,20}$/}
-                errorMsg={transI18n('home.input-error-msg')}
-                errorMsgPositionLeft={75} 
-                maxLength={20}
-              />
+              <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="RoomId">房间ID</span>} rule={/^[a-zA-Z0-9]{1,20}$/} errorMsg={transI18n('home.input-error-msg')} errorMsgPositionLeft={75} id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder="请输入房间ID" />
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="UserId">用户ID</span>} rule={/^[a-zA-Z0-9]{1,20}$/} errorMsg={transI18n('home.input-error-msg')} errorMsgPositionLeft={75} id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder="请输入用户ID" />
             </Col>
           </Row>
           <Row className="home-row-item can-error-item">
             <Col>
-              <Input 
-                inputPrefixWidth={55} 
-                prefix={<span className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} 
-                id="userName" 
-                type="text" 
-                className="block w-full" 
-                value={userName} 
-                onChange={(evt) => onChangeUserName(evt.currentTarget.value)} 
-                placeholder={transI18n('home.nickName_placeholder')} 
-                rule={/^[a-zA-Z0-9]{1,20}$/}
+              <Input
+                inputPrefixWidth={55}
+                prefix={<span className="home-label" title="房间名">房间名</span>}
+                id="roomName"
+                type="text"
+                className="block w-full"
+                value={roomName}
+                onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}
+                placeholder={transI18n('home.roomName_placeholder')}
                 errorMsg={transI18n('home.input-error-msg')}
                 errorMsgPositionLeft={75}
                 maxLength={20}
               />
             </Col>
           </Row>
-          <Row className="home-row-item">
+          <Row className="home-row-item can-error-item">
+            <Col>
+              <Input
+                inputPrefixWidth={55}
+                prefix={<span className="home-label" title="用户名">用户名</span>}
+                id="userName"
+                type="text"
+                className="block w-full"
+                value={userName}
+                onChange={(evt) => onChangeUserName(evt.currentTarget.value)}
+                placeholder="请输入用户名"
+                maxLength={20}
+              />
+            </Col>
+          </Row>
+          {/* <Row className="home-row-item">
             <Col>
               <Select
                 prefix={<span className="home-label" title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
@@ -245,7 +237,7 @@ export const Home: React.FC<HomeProps> = ({
               >
               </Select>
             </Col>
-          </Row>
+          </Row> */}
           <Row className="home-row-item">
             <Col>
               <Select
@@ -258,7 +250,6 @@ export const Home: React.FC<HomeProps> = ({
                 placeholder={transI18n('home.role_placeholder')}
                 options={roleOptions}
               >
-
               </Select>
             </Col>
           </Row>
@@ -275,7 +266,6 @@ export const Home: React.FC<HomeProps> = ({
                   placeholder={transI18n('home.language_placeholder')}
                   options={languageOptions}
                 >
-
                 </Select>
               </Col>
             </Row>
@@ -297,15 +287,15 @@ export const Home: React.FC<HomeProps> = ({
               </Col>
             </Row>
             : <></>}
-          
-            <Row className="home-row-item">
-              <Col>
-                <Input disabled inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.duration')}>{transI18n('home.duration')}</span>} id="duration" className="block w-full" value={duration + transI18n('home.duration_unit')} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
-                <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/>
-              </Col>
-            </Row>
-            
-          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario && /^[a-zA-Z0-9]{1,20}$/.test(roomName) && /^[a-zA-Z0-9]{1,20}$/.test(userName))}>{transI18n('home.enter_classroom')}</Button>
+
+          <Row className="home-row-item">
+            <Col>
+              <Input inputPrefixWidth={55} suffix="分" prefix={<span className="home-label" title="时间">{transI18n('home.duration')}</span>} id="duration" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(Number(evt.currentTarget.value))} placeholder="" />
+              <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate} />
+            </Col>
+          </Row>
+
+          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role)}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
             <div onClick={() => {
               return;

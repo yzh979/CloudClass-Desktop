@@ -1,0 +1,54 @@
+.pre-class {
+	@apply flex flex-col items-center justify-center;
+	background: #000000;
+}
+
+.pre-class > img {
+	width: 142px;
+	height: 145px;
+}
+
+.pre-class > span {
+	font-size: 20px;
+	font-weight: 600;
+	color: #FFFFFF;
+	margin-top: 3px;
+}
+
+
+.end-class {
+	@apply flex flex-col items-center justify-center;
+	background: #000000;
+}
+
+.end-class > img {
+	width: 142px;
+	height: 149px;
+}
+
+.end-class-title {
+	font-size: 20px;
+	font-weight: 600;
+	color: #FFFFFF;
+	margin-top: 13px;
+}
+
+.end-class-detail {
+	font-size: 16px;
+	font-weight: 400;
+	color: #FFFFFF;
+	margin-top: 4px;
+}
+
+.end-class > button {
+	margin-top: 30px;
+	width: 151px;
+	height: 44px;
+	background: #38AE48;
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #FFFFFF;
+	border: none;
+	outline: none;
+}

@@ -2,7 +2,7 @@ import { useHomeStore } from "@/infra/hooks"
 import { changeLanguage, Home } from "@/ui-kit"
 import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
-import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
+import { EduRoleTypeEnum, EduRoomTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
 import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
@@ -59,19 +59,7 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const userUuid = useMemo(() => {
-    if(!debug) {
-      return `${userName}${role}`
-    }
-    return `${userId}`
-  }, [role, userName, debug, userId])
 
-  const roomUuid = useMemo(() => {
-    if(!debug) {
-      return `${roomName}${scenario}`
-    }
-    return `${roomId}`
-  }, [scenario, roomName, debug, roomId])
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -81,27 +69,20 @@ export const HomePage = observer(() => {
     setScenario(value)
   }
 
-  const text: Record<string, CallableFunction> = {
-    'roomId': setRoomId,
-    'userName': setUserName,
-    'roomName': setRoomName,
-    'userId': setUserId,
-  }
-
   const onChangeRoomId = (newValue: string) => {
-    text['roomId'](newValue)
+    setRoomId(newValue)
   }
 
   const onChangeUserId = (newValue: string) => {
-    text['userId'](newValue)
+    setUserId(newValue)
   }
 
   const onChangeRoomName = (newValue: string) => {
-    text['roomName'](newValue)
+    setRoomName(newValue)
   }
 
   const onChangeUserName = (newValue: string) => {
-    text['userName'](newValue)
+    setUserName(newValue)
   }
 
   const onChangeDebug = (newValue: boolean) => {
@@ -118,8 +99,8 @@ export const HomePage = observer(() => {
       version={REACT_APP_BUILD_VERSION}
       SDKVersion={SDKVersion}
       publishDate={REACT_APP_PUBLISH_DATE}
-      roomId={roomUuid}
-      userId={userUuid}
+      roomId={roomId}
+      userId={userId}
       roomName={roomName}
       userName={userName}
       role={userRole}
@@ -145,7 +126,7 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        let {rtmToken} = await homeApi.login(userUuid)
+        let {rtmToken} = await homeApi.login(userId)
         console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
           // rtmUid: userUuid,
@@ -153,10 +134,10 @@ export const HomePage = observer(() => {
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           language: language as LanguageEnum,
-          userUuid: `${userUuid}`,
+          userUuid: userId,
           rtmToken,
-          roomUuid: `${roomUuid}`,
-          roomType: scenario,
+          roomUuid: roomId,
+          roomType: EduRoomTypeEnum.RoomSmallClass,
           roomName: `${roomName}`,
           userName: userName,
           roleType: role,

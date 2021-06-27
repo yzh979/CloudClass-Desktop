@@ -42,3 +42,11 @@
   left: 40px;
   bottom: 20px; 
 }
+.end-class-position {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}

@@ -68,9 +68,9 @@ export const NavigationBar = observer(() => {
   }
 
   const classFormatTime = useMemo(() => {
-    const {duration} = liveRecordStatus
+    const {duration} = liveClassStatus 
     return formatCountDown(duration, TimeFormatType.Timeboard)
-  }, [JSON.stringify(liveRecordStatus), formatCountDown])
+  }, [JSON.stringify(liveClassStatus), formatCountDown])
 
   const recordFormatTime = useMemo(() => {
     const {duration} = liveRecordStatus

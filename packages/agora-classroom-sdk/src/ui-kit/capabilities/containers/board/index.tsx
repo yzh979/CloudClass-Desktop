@@ -8,7 +8,7 @@ import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
 import { CloseConfirm, UserListDialog } from '~capabilities/containers/dialog'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController, PreClass } from '~ui-kit'
 import { useEffect } from 'react'
 import './index.css'
 import { Tooltip } from '~components/tooltip';
@@ -208,7 +208,8 @@ export const WhiteboardContainer = observer(() => {
   } = useGlobalContext()
 
   const {
-    roomInfo
+    roomInfo,
+    liveClassStatus,
   } = useRoomContext()
 
   const {
@@ -288,13 +289,22 @@ export const WhiteboardContainer = observer(() => {
     }
     toolbarMap[type] && toolbarMap[type]()
   }
-
+  const userType = useMemo(() => {
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      return 'teacher'
+    }
+    return 'student'
+  }, [roomInfo.userRole])
   return (
     <div className="whiteboard">
       {
         ready ? 
         <div id="netless" ref={mountToDOM} ></div> : <div className="whiteboard-placeholder"></div>
       }
+      { userType == 'student' && liveClassStatus.classState == 'pre-class' &&
+        <PreClass className="pre-class-position"/>
+      }
+
       {showTab ? 
       <TabsContainer /> : null}
       {showToolBar ? 
