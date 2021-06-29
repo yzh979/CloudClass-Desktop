@@ -201,6 +201,7 @@ export class MediaStore {
       }
       if (evt.screen) {
         // 屏幕共享 点击停止共享发送请求
+        this.appStore.roomManager?.userService.stopShareScreen()
       }
       BizLogger.info("track-ended", evt)
     })
