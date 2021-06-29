@@ -201,7 +201,8 @@ export class MediaStore {
       }
       if (evt.screen) {
         // TODO: rtc screen end stop screen share stream
-        this.appStore.roomStore.roomManager?.userService.stopShareScreen()
+        this.appStore.roomStore.sceneStore.stopWebSharing()
+        // this.appStore.roomStore.roomManager?.userService.stopShareScreen()
       }
       BizLogger.info("track-ended", evt)
     })
