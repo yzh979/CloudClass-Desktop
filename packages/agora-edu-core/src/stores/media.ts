@@ -200,8 +200,8 @@ export class MediaStore {
         this.appStore.sceneStore.resetMicrophoneTrack()
       }
       if (evt.screen) {
-        // 屏幕共享 点击停止共享发送请求
-        this.appStore.roomManager?.userService.stopShareScreen()
+        // TODO: rtc screen end stop screen share stream
+        this.appStore.roomStore.roomManager?.userService.stopShareScreen()
       }
       BizLogger.info("track-ended", evt)
     })
