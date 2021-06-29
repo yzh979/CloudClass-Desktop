@@ -22,7 +22,7 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
-  const [region, setRegion] = useState<AgoraRegion>('CN')
+  const [region, setRegion] = useState<AgoraRegion>('NA')
   const [debug, setDebug] = useState<boolean>(false)
 
   useEffect(() => {
