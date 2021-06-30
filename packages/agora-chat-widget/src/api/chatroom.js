@@ -153,7 +153,11 @@ export const logoutChatroom = () => {
     WebIM.conn.quitChatRoom({
         roomId: roomId,// 聊天室id
         success: function (res) {
-            console.log('quitChatRoom>>>', res)
+            console.log('quitChatRoom_Success>>>', res)
+            WebIM.conn.close()
+        },
+        error: function (err) {
+            console.log('quitChatRoom_Error>>>', err)
             WebIM.conn.close()
         }
     });

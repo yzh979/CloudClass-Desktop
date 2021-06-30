@@ -19,8 +19,15 @@ export const setUserInfo = () => {
 }
 
 // 获取用户属性
-export const getUserInfo = (member) => {
-    WebIM.conn.fetchUserInfoById(member).then((res) => {
-        store.dispatch(memberInfo(res.data))
-    })
+export const getUserInfo = async (member, callback = null) => {
+    let count = 0;
+    while (member.length > count) {
+        let curmembers = member.slice(count, count + 100);
+        await WebIM.conn.fetchUserInfoById(curmembers).then((res) => {
+            store.dispatch(memberInfo(res.data))
+            callback()
+        })
+        count += 100;
+    }
+
 }

@@ -7,8 +7,9 @@ import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
 
 // 助教端 提问消息列表
-const QaMessage = (props) => {
+const QaMessage = () => {
     const qaList = useSelector(state => state.messages.qaList) || [];
+    const currentUser= useSelector(state => state.currentUser);;
     const [newUser, setNewUser] = useState([]);
     const [maxImg, setMaxImg] = useState(false);
     const [maxImgUrl, setMaxImgUrl] = useState('');
@@ -29,12 +30,12 @@ const QaMessage = (props) => {
     }
 
     useEffect(() => {
-        setNewUser(qaList[props.currentUser]?.msg)
-    }, [qaList[props.currentUser]])
+        setNewUser(qaList[currentUser]?.msg)
+    }, [qaList[currentUser]])
 
     useEffect(() => {
         scrollPageBottom()
-    }, [qaList[props.currentUser]])
+    }, [qaList[currentUser]])
 
     const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')

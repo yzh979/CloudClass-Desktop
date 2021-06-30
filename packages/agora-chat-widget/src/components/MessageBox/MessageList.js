@@ -26,6 +26,8 @@ const MessageList = ({ activeKey }) => {
   // 控制 Toolbar 组件是否展示图片 
   const [isTool, setIsTool] = useState(false);
   const [qaUser, setQaUser] = useState('');
+
+  const [roomUserList, setRoomUserList] = useState([])
   // 是否已登陆
   const isLogin = useSelector(state => state.isLogin)
   // 获取当前登陆ID，RoomId，及成员数
@@ -95,15 +97,10 @@ const MessageList = ({ activeKey }) => {
     setQaUser(user)
   }
 
-  // 加载成员信息
-  let speakerTeacher = []
-  let coachTeacher = []
-  let student = []
-  let audience = []
 
   // 遍历群组成员，过滤owner
   const newRoomUsers = []
-  roomUsers.map(item => {
+  roomUsers.map((item, key) => {
     if (item.owner) {
       return null
     }
@@ -111,11 +108,48 @@ const MessageList = ({ activeKey }) => {
   })
 
   useEffect(() => {
+    // 加载成员信息
+    let _speakerTeacher = []
+    let _coachTeacher = []
+    let _student = []
+    let _audience = []
     if (isLogin) {
       setTimeout(() => {
-        getUserInfo(newRoomUsers)
+        getUserInfo(newRoomUsers, () => {
+          let val
+          roomUsers.map((item) => {
+            if (roomListInfo) {
+              val = roomListInfo && roomListInfo[item.member]
+            } else {
+              return
+            }
+            let newVal
+            switch (val && val.ext) {
+              case '0':
+                newVal = _.assign(val, { id: item.member })
+                _audience.push(newVal)
+                break;
+              case '1':
+                newVal = _.assign(val, { id: item.member })
+                _speakerTeacher.push(newVal)
+                break;
+              case '2':
+                newVal = _.assign(val, { id: item.member })
+                _student.push(newVal)
+                break;
+              case '3':
+                newVal = _.assign(val, { id: item.member })
+                _coachTeacher.push(newVal)
+                break;
+              default:
+                break;
+            }
+          })
+          setRoomUserList(_.concat(_speakerTeacher, _coachTeacher, _audience, _student))
+        })
       }, 500);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomUsers])
 
@@ -123,38 +157,7 @@ const MessageList = ({ activeKey }) => {
     let scrollElement = document.getElementById('chat-box-tag')
     scrollElementToBottom(scrollElement)
   }, [messageList])
-
   // 遍历成员列表，拿到成员数据，结构和 roomAdmin 统一
-  roomUsers.map((item) => {
-    let val
-    if (roomListInfo) {
-      val = roomListInfo && roomListInfo[item.member]
-    } else {
-      return
-    }
-    let newVal = {}
-    switch (val && val.ext) {
-      case '0':
-        newVal = _.assign(val, { id: item.member })
-        audience.push(newVal)
-        break;
-      case '1':
-        newVal = _.assign(val, { id: item.member })
-        speakerTeacher.push(newVal)
-        break;
-      case '2':
-        newVal = _.assign(val, { id: item.member })
-        student.push(newVal)
-        break;
-      case '3':
-        newVal = _.assign(val, { id: item.member })
-        coachTeacher.push(newVal)
-        break;
-      default:
-        break;
-    }
-  })
-  const roomUserList = _.concat(speakerTeacher, coachTeacher, audience, student)
   return (
     <div className='message'>
       {hasEditPermisson ? (
@@ -162,7 +165,7 @@ const MessageList = ({ activeKey }) => {
           {
             CHAT_TABS.map(({ key, name, component: Component, className }) => (
               <TabPane tab={<Flex>
-                <Text whiteSpace="nowrap">{name === '成员' ? `${name}(${roomUsers.length - 1})` : name}</Text>
+                <Text whiteSpace="nowrap">{name === '成员' && userCount > 0 ? `${name}(${userCount - 1})` : name}</Text>
                 {name === '提问' && bool && bool.showRedNotice && (
                   // <Text ml="6px" whiteSpace="nowrap" color="red" fontSize='40px'>·</Text>
                   <div className="msg-red-dot"></div>
@@ -182,8 +185,7 @@ const MessageList = ({ activeKey }) => {
                       id: 'chat-box-tag'
                     }
                   } {...key === CHAT_TABS_KEYS.qa && {
-                    getClickUser,
-                    tabKey
+                    getClickUser
                   }} {...key === CHAT_TABS_KEYS.user && {
                     roomUserList
                   }} />
@@ -193,31 +195,31 @@ const MessageList = ({ activeKey }) => {
           }
         </Tabs>
       ) : (
-          <>
-            {/* 通过isHiedQuestion控制学生端消息列表/提问列表的显示隐藏 */}
-            <Flex flexDirection="column" className="member-msg" style={{ display: isHiedQuestion ? '' : 'none' }}>
-              {Number(isTeacher) === 2 && <div className="qa-student-tips">
-                提示：提问内容仅你和老师可见
-              </div>}
-              {isLoadGif && <div className='load'></div>}
-              <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
-            </Flex>
-            <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
-              {isLoadGif && <div className='load'></div>}
-              {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+        <>
+          {/* 通过isHiedQuestion控制学生端消息列表/提问列表的显示隐藏 */}
+          <Flex flexDirection="column" className="member-msg" style={{ display: isHiedQuestion ? '' : 'none' }}>
+            {Number(isTeacher) === 2 && <div className="qa-student-tips">
+              提示：提问内容仅你和老师可见
+            </div>}
+            {isLoadGif && <div className='load'></div>}
+            <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
+          </Flex>
+          <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
+            {isLoadGif && <div className='load'></div>}
+            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
 
-              {
-                messageList.length > 0 ? (
-                  <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
-                ) : (
-                    <div>
-                      {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
-                    </div>
-                  )
-              }
-            </div>
-          </>
-        )}
+            {
+              messageList.length > 0 ? (
+                <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
+              ) : (
+                <div>
+                  {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
+                </div>
+              )
+            }
+          </div>
+        </>
+      )}
       <ToolBar tabKey={tabKey} hide={hide} isTool={isTool} qaUser={qaUser} activeKey={activeKey} />
     </div>
   )

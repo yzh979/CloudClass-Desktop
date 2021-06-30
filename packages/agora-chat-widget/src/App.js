@@ -19,6 +19,7 @@ const App = function (props) {
   const isRoomAllMute = useSelector(state => state.isRoomAllMute)
   //const new_IM_Data = useSelector(state => state.extData)
   // const roomUserList = useSelector(state => state.room.users)
+  // const userCount = useSelector(state => state.room.info.affiliations_count)
   const [isEditNotice, isEditNoticeChange] = useState(0) // 0 显示公告  1 编辑公告  2 展示更多内容
   const activeKey = useSelector(state => state.activeKey)
 
@@ -101,11 +102,11 @@ const App = function (props) {
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
-            store.dispatch(roomUsers({ member: message.from }, 'addMember'))
             let ary = []
             roomUserList.map((v, k) => {
               ary.push(v.member)
             })
+            store.dispatch(roomUsers({ member: message.from }, 'addMember'))
             if (!(ary.includes(message.from))) {
               store.dispatch(roomUserCount({ type: 'add', userCount: userCount }))
             }

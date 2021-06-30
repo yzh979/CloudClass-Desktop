@@ -23,6 +23,7 @@ const defaultState = {
         }
     },
     activeKey: CHAT_TABS_KEYS.chat,
+    currentUser: '',
     isUserMute: false,   //单人禁言
     isMoreHistory: true, //展示更多
     isLoadGif: false,
@@ -261,9 +262,10 @@ const reducer = (state = defaultState, action) => {
             };
         //聊天室成员属性
         case 'SAVE_MEMBER_INFO':
+            let newInfo = _.assign(state.userListInfo, data)
             return {
                 ...state,
-                userListInfo: data
+                userListInfo: newInfo
             };
         // 更多消息
         case 'MORE_HISTORY':
@@ -278,6 +280,11 @@ const reducer = (state = defaultState, action) => {
             };
         case 'CLEAR_STORE':
             return defaultState;
+        case 'SAVE_CURRENT_USER':
+            return {
+                ...state,
+                currentUser: data
+            }
         default:
             return state;
     }
