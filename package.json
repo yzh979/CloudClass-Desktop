@@ -49,13 +49,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/agoraio-community/CloudClass-Desktop.git"
+    "url": "git+https://github.com/malimali-tech/web-cloud-room.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/agoraio-community/CloudClass-Desktop/issues"
+    "url": "https://github.com/malimali-tech/web-cloud-room/issues"
   },
-  "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme"
+  "homepage": "https://github.com/malimali-tech/web-cloud-room#readme"
 }
