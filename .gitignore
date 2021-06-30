@@ -1,14 +1,13 @@
 Jenkinsfile_bitbucket.groovy
 packages/agora-apaas-demo/public/bundle/bundle.js
 node_modules
-.env
+
 .DS_Store
 *.sh
 *.sh~
 release
 build
 dist
-.env
 *.ts~
 *.*~
 pkgs/
