@@ -1,5 +1,5 @@
 import { BizPagePath, BizPageRouter } from '@/infra/types';
-import { HomePage } from '@/infra/debug-page/home';
+import { TestHomePage, ProdHomePage } from '@/infra/debug-page/home';
 import { LaunchPage } from '@/infra/debug-page/launch';
 // import { OneToOne } from '@/ui-components/one-to-one';
 // import { PretestPage } from '@/ui-components/pretest';
@@ -12,6 +12,8 @@ import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '@/ui-kit/capabilities/scenarios/mid-class';
 import {BigClassScenario} from '@/ui-kit/capabilities/scenarios/big-class';
 import { RecordPage } from '../debug-page/record';
+
+const isProd = process.env.NODE_ENV !== 'production'
 
 export type AppRouteComponent = {
   path: string
@@ -70,8 +72,12 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/pretest',
     component: () => PageSFC(PretestScenarioPage)
   },
-  [BizPageRouter.TestHomePage]: {
+  [BizPageRouter.HomePage]: {
     path: '/',
-    component: () => PageSFC(HomePage)
-  }
+    component: () => PageSFC(isProd ? ProdHomePage:TestHomePage)
+  },
+  // [BizPageRouter.ProdHomePage]: {
+  //   path: '/:roomUuid/:userUuid/:role/:rtmToken',
+  //   component: () => PageSFC(TestHomePage)
+  // },
 }

@@ -4,12 +4,13 @@ import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduRoomTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
-import React, { useState, useMemo, useEffect } from "react"
+import React, { useState, useMemo, useEffect, useCallback } from "react"
 import { useHistory } from "react-router"
-import { AgoraRegion } from "@/infra/api"
+import { AgoraEduSDK, AgoraRegion, LaunchOption } from "@/infra/api"
 import AgoraRTC from 'agora-rtc-sdk-ng'
+const isProd = process.env.NODE_ENV === 'production'
 
-export const HomePage = observer(() => {
+export const TestHomePage = observer(() => {
 
   const homeStore = useHomeStore()
 
@@ -150,3 +151,54 @@ export const HomePage = observer(() => {
     />
   )
 })
+
+/**
+ * TODO 
+ * 1. AgoraEduSDK.launch(url, options)
+ * 2. 监听参数变化，必传参数url路径，可选参数postMessage
+ * 3. 进入直播间
+ */
+
+export const ProdHomePage =  observer(() => {
+  const history = useHistory()
+  const homeStore = useHomeStore()
+  
+  useEffect(() => {
+    window.addEventListener("message", async (event) => {
+      // 正式环境需要判断消息来源
+      if(isProd && event.origin.indexOf("lookingedu.com") === -1){
+        return 
+      }
+      const lauchOptions:LaunchOption = event.data
+      let {rtmToken} = await homeApi.login(lauchOptions.userUuid)
+      console.log('## rtm Token', rtmToken)
+      homeStore.setLaunchConfig(lauchOptions)
+      history.push('/launch')
+    }, false)
+  }, [])
+  /**
+  const handleClick = useCallback(() => {
+    AgoraEduSDK.launchByUrl("http://localhost:3000", {
+      pretest: true,
+      courseWareList: [],
+      personalCourseWareList: [],
+      language: 'zh' as LanguageEnum,
+      userUuid: "123",
+      rtmToken: "123",
+      roomUuid: "123",
+      roomType: EduRoomTypeEnum.RoomSmallClass,
+      roomName: `123`,
+      userName: "123",
+      roleType: 1,
+      startTime: new Date().getTime(),
+      region: "CN",
+      duration: 1 * 60,
+    })
+  }, [])
+  */
+  return (
+    <div>
+    </div>
+  )
+})
+
