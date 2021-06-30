@@ -158,37 +158,21 @@ export const ProdHomePage =  observer(() => {
   
   useEffect(() => {
     window.addEventListener("message", async (event) => {
-      // 正式环境需要判断消息来源
-      if(isProd && event.origin.indexOf("lookingedu.com") === -1){
-        return 
+      //TODO 需要加上origin判断，防止非法的参数传递
+      if(!event.data){
+        return
       }
+      window.opener.postMessage("recieved", "*")
       const lauchOptions:LaunchOption = event.data
+      // TODO 调用服务端生成token
       let {rtmToken} = await homeApi.login(lauchOptions.userUuid)
       console.log('## rtm Token', rtmToken)
+      // TODO 参数校验
       homeStore.setLaunchConfig(lauchOptions)
       history.push('/launch')
     }, false)
   }, [])
-  /**
-  const handleClick = useCallback(() => {
-    AgoraEduSDK.launchByUrl("http://localhost:3000", {
-      pretest: true,
-      courseWareList: [],
-      personalCourseWareList: [],
-      language: 'zh' as LanguageEnum,
-      userUuid: "123",
-      rtmToken: "123",
-      roomUuid: "123",
-      roomType: EduRoomTypeEnum.RoomSmallClass,
-      roomName: `123`,
-      userName: "123",
-      roleType: 1,
-      startTime: new Date().getTime(),
-      region: "CN",
-      duration: 1 * 60,
-    })
-  }, [])
-  */
+
   return (
     <div>
     </div>

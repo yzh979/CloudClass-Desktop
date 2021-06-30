@@ -15,8 +15,6 @@ if (process.env.NODE_ENV === "development") {
   stopReportingRuntimeErrors(); // disables error overlays
 }
 
-
-
 GlobalStorage.useSessionStorage()
 //@ts-ignore
 window.AgoraEduSDK = AgoraEduSDK

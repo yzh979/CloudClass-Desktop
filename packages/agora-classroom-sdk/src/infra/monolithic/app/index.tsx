@@ -6,7 +6,8 @@ import { RoomParameters } from '../../api/declare'
 const routes: BizPageRouter[] = [
   BizPageRouter.LaunchPage,
   BizPageRouter.TestRecordPage,
-  BizPageRouter.HomePage,
+  BizPageRouter.TestHomePage,
+  BizPageRouter.ProdHomePage,
 ]
 
 type AppType = {

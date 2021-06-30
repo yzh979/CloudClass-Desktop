@@ -72,7 +72,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/pretest',
     component: () => PageSFC(PretestScenarioPage)
   },
-  [BizPageRouter.HomePage]: {
+  [BizPageRouter.TestHomePage]: {
     path: '/',
     component: () => PageSFC(isProd ? ProdHomePage:TestHomePage)
   },
