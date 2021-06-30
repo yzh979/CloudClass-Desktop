@@ -78,6 +78,6 @@ export const routesMap: Record<string, AppRouteComponent> = {
   },
   // [BizPageRouter.ProdHomePage]: {
   //   path: '/:roomUuid/:userUuid/:role/:rtmToken',
-  //   component: () => PageSFC(TestHomePage)
+  //   component: () => PageSFC(ProdHomePage)
   // },
 }

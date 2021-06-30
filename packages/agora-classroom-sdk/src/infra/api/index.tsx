@@ -179,22 +179,12 @@ export class AgoraEduSDK {
     this.appNode = appNode
   }
 
-  static async launchByUrl(url: string, option: Omit<LaunchOption, 'listener'>) {
-    const opener = window.open(url)
-    if(opener != null){
-      opener.onload = function(evt){
-        console.log("# open with  ", option)
-        opener.postMessage(option, url)
-      }
-    }
-  }
-
   /**
    * 开启在线教育场景
    * @param dom DOM元素
    * @param option LaunchOption
    */
-  static async launchByDom(dom: HTMLElement, option: LaunchOption) {
+  static async launch(dom: HTMLElement, option: LaunchOption) {
     console.log("launch ", dom, " option ", option)
 
     if (controller.appController.hasCalled) {

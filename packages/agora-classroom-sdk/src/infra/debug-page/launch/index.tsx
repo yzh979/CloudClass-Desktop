@@ -51,7 +51,7 @@ export const LaunchPage = observer(() => {
         )
       }
 
-      roomRef.current = await AgoraEduSDK.launchByDom(dom, {
+      roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  这里需要传递开发者自己发布的录制页面地址
         recordUrl: 'https://webdemo.agora.io/flexible-classroom/record_page',
