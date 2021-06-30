@@ -25,7 +25,7 @@ export const getUserInfo = async (member, callback = null) => {
         let curmembers = member.slice(count, count + 100);
         await WebIM.conn.fetchUserInfoById(curmembers).then((res) => {
             store.dispatch(memberInfo(res.data))
-            callback()
+            callback && callback()
         })
         count += 100;
     }

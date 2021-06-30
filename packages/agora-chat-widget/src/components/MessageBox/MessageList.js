@@ -10,7 +10,6 @@ import QuestionMessage from './QaList/QuestionMessage'
 import { CHAT_TABS, CHAT_TABS_KEYS, HISTORY_COUNT } from './constants'
 import store from '../../redux/store'
 import { roomMessages, qaMessages, removeChatNotification, isTabs } from '../../redux/aciton'
-import { getUserInfo } from '../../api/userInfo'
 import { getHistoryMessages } from '../../api/historyMessages'
 import scrollElementToBottom from '../../utils/scrollElementToBottom'
 
@@ -97,16 +96,6 @@ const MessageList = ({ activeKey }) => {
     setQaUser(user)
   }
 
-
-  // 遍历群组成员，过滤owner
-  const newRoomUsers = []
-  roomUsers.map((item, key) => {
-    if (item.owner) {
-      return null
-    }
-    return newRoomUsers.push(item.member);
-  })
-
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = []
@@ -114,44 +103,40 @@ const MessageList = ({ activeKey }) => {
     let _student = []
     let _audience = []
     if (isLogin) {
-      setTimeout(() => {
-        getUserInfo(newRoomUsers, () => {
-          let val
-          roomUsers.map((item) => {
-            if (roomListInfo) {
-              val = roomListInfo && roomListInfo[item.member]
-            } else {
-              return
-            }
-            let newVal
-            switch (val && val.ext) {
-              case '0':
-                newVal = _.assign(val, { id: item.member })
-                _audience.push(newVal)
-                break;
-              case '1':
-                newVal = _.assign(val, { id: item.member })
-                _speakerTeacher.push(newVal)
-                break;
-              case '2':
-                newVal = _.assign(val, { id: item.member })
-                _student.push(newVal)
-                break;
-              case '3':
-                newVal = _.assign(val, { id: item.member })
-                _coachTeacher.push(newVal)
-                break;
-              default:
-                break;
-            }
-          })
-          setRoomUserList(_.concat(_speakerTeacher, _coachTeacher, _audience, _student))
-        })
-      }, 500);
+      let val
+      roomUsers.map((item) => {
+        if (roomListInfo) {
+          val = roomListInfo && roomListInfo[item]
+        }
+        let newVal
+        switch (val && val.ext) {
+          case '0':
+            newVal = _.assign(val, { id: item })
+            _audience.push(newVal)
+            break;
+          case '1':
+            newVal = _.assign(val, { id: item })
+            _speakerTeacher.push(newVal)
+            break;
+          case '2':
+            newVal = _.assign(val, { id: item })
+            _student.push(newVal)
+            break;
+          case '3':
+            newVal = _.assign(val, { id: item })
+            _coachTeacher.push(newVal)
+            break;
+          default:
+            newVal = _.assign(val, { id: item })
+            _student.push(newVal)
+            break;
+        }
+      })
+      setRoomUserList(_.concat(_speakerTeacher, _coachTeacher, _audience, _student))
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomUsers])
+  }, [roomUsers, roomListInfo])
 
   useEffect(() => {
     let scrollElement = document.getElementById('chat-box-tag')
@@ -165,7 +150,7 @@ const MessageList = ({ activeKey }) => {
           {
             CHAT_TABS.map(({ key, name, component: Component, className }) => (
               <TabPane tab={<Flex>
-                <Text whiteSpace="nowrap">{name === '成员' && userCount > 0 ? `${name}(${userCount - 1})` : name}</Text>
+                <Text whiteSpace="nowrap">{name === '成员' && roomUsers.length > 0 ? `${name}(${roomUsers.length})` : name}</Text>
                 {name === '提问' && bool && bool.showRedNotice && (
                   // <Text ml="6px" whiteSpace="nowrap" color="red" fontSize='40px'>·</Text>
                   <div className="msg-red-dot"></div>

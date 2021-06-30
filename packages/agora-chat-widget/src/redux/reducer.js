@@ -1,6 +1,6 @@
 import { CHAT_TABS_KEYS } from '../components/MessageBox/constants'
 import _ from 'lodash'
-const defaultState = {
+let defaultState = {
     extData: {},        //iframe 传递过来的参数
     isLogin: false,     // 是否已登陆  
     loginName: '',      //当前登陆ID
@@ -113,20 +113,26 @@ const reducer = (state = defaultState, action) => {
         //获取聊天室成员
         case 'GET_ROOM_USERS':
             let ary = [];
+            let userInfo = state.userListInfo;
             if (action.option === 'addMember') {
                 ary = ary.concat(data, ...state.room.users)
             } else if (action.option === 'removeMember') {
-                ary = _.pullAllBy(state.room.users, [data], 'member');
+                _.remove(state.room.users, (v) => {
+                    return v == data
+                });
+                ary = state.room.users
+                userInfo = _.omit(userInfo, data)
             } else {
                 ary = state.room.users.concat(data)
             }
-            let newAry = _.unionBy(ary, 'member');
+            let newAry = _.uniq(ary)
             return {
                 ...state,
                 room: {
                     ...state.room,
-                    users: newAry
-                }
+                    users: newAry,
+                },
+                userListInfo: userInfo
             };
         //聊天室禁言列表
         case 'GET_ROOM_MUTE_USERS':
@@ -158,7 +164,6 @@ const reducer = (state = defaultState, action) => {
             if (data.ext.msgId) {
                 msgs = msgs.filter((item) => item.id !== data.ext.msgId)
             }
-            console.log('data>>', data, 'showNotice>>', showNotice);
             return {
                 ...state,
                 messages: {
@@ -262,7 +267,7 @@ const reducer = (state = defaultState, action) => {
             };
         //聊天室成员属性
         case 'SAVE_MEMBER_INFO':
-            let newInfo = _.assign(state.userListInfo, data)
+            let newInfo = _.assign({}, state.userListInfo, data)
             return {
                 ...state,
                 userListInfo: newInfo
@@ -279,7 +284,8 @@ const reducer = (state = defaultState, action) => {
                 isLoadGif: data
             };
         case 'CLEAR_STORE':
-            return defaultState;
+            return _.assign({}, defaultState)
+
         case 'SAVE_CURRENT_USER':
             return {
                 ...state,
