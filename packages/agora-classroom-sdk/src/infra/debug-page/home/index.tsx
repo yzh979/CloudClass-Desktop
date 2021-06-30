@@ -152,13 +152,6 @@ export const TestHomePage = observer(() => {
   )
 })
 
-/**
- * TODO 
- * 1. AgoraEduSDK.launch(url, options)
- * 2. 监听参数变化，必传参数url路径，可选参数postMessage
- * 3. 进入直播间
- */
-
 export const ProdHomePage =  observer(() => {
   const history = useHistory()
   const homeStore = useHomeStore()

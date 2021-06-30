@@ -11,7 +11,7 @@ export default class App {
       AgoraEduSDK.config({
         appId: "13b49217997e44f3a560461ee6b6935d",
       })
-      AgoraEduSDK.launch(
+      AgoraEduSDK.launchByDom(
         document.querySelector(`#${this.elem.id}`), {
           rtmToken: "00613b49217997e44f3a560461ee6b6935dIAAH8eWTuFOvM0NiYcBvIo9Ihv70hQtfGTHF4a8wWUcXWVegUeUAAAAAEAAP4XcJC3zcYAEA6AMAAAAA",
           userUuid: "test",

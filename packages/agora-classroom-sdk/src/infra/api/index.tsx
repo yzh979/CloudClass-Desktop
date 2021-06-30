@@ -10,7 +10,6 @@ import { controller } from './controller';
 import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
 
-const isProd = process.env.NODE_ENV !== 'production'
 export interface AliOSSBucket {
   key: string
   secret: string
