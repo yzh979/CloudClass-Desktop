@@ -1,0 +1,38 @@
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: www-student
+  labels:
+    app: www-student
+  namespace: lkl-peiyou
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: www-student
+  template:
+    metadata:
+      labels:
+        app: www-student
+    spec:
+      containers:
+        - name: www-student
+          image: registry-vpc.cn-shanghai.aliyuncs.com/lkl-review/www-student:0.1
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      dnsPolicy: ClusterFirst

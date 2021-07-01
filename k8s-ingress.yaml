@@ -1,0 +1,24 @@
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/service-weight: ''
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  generation: 1
+  name: www-student
+  namespace: lkl-peiyou
+spec:
+  rules:
+    - host: student-py-dev.zhimo.co
+      http:
+        paths:
+          - backend:
+              serviceName: www-student
+              servicePort: 81
+            path: /
+  tls:
+    - hosts:
+        - student-py-dev.zhimo.co
+      secretName: zhimo.co

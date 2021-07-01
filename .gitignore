@@ -3,14 +3,12 @@ packages/agora-apaas-demo/public/bundle/bundle.js
 node_modules
 
 .DS_Store
-*.sh
-*.sh~
 release
-build
 dist
 *.ts~
 *.*~
 pkgs/
+packages/
 es
 lib
 *.zip
@@ -31,7 +29,6 @@ package-lock.json
 packages/agora-rte-demo/vendor/dev.git/
 .ts.back.txt
 *.ts.back.txt
-*.sh
 packages/agora-rte-demo/env.test.local
 ManyCamSetup.exe
 packages/agora-rte-demo/alcass/
