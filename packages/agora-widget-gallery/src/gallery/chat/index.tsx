@@ -37,7 +37,7 @@ const App = observer(() => {
 
   const {
     isFullScreen,
-    joined
+    isJoined
   } = pluginStore.globalContext
 
   const {
@@ -124,17 +124,39 @@ const App = observer(() => {
   }, [text, setText])
 
   useEffect(() => {
-    if (!joined) return
+    if (!isJoined) return
     refreshMessageList()
     if(pluginStore.context.localUserInfo.roleType === 1) {
       // refresh conv list for teacher
       refreshConversationList()
     }
-  }, [joined])
+  }, [isJoined])
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-      {pluginStore.context.roomInfo.roomType === 0 ? 
+        <SimpleChat
+          className="simple-chat"
+          collapse={false}
+          onCanChattingChange={onCanChattingChange}
+          canChatting={canChatting}
+          isHost={isHost}
+          uid={pluginStore.context.localUserInfo.userUuid}
+          messages={messageList}
+          chatText={text}
+          onText={(_:ChatEvent ,textValue: string) => {
+            setText(textValue)
+          }}
+          onCollapse={() => {
+            // toggleChatMinimize()
+          }}
+          onSend={handleSendText}
+          showCloseIcon={false}
+          onPullRefresh={() => {
+            refreshMessageList()
+          }}
+          unreadCount={unreadMessageCount}
+        />
+      {/* {pluginStore.context.roomInfo.roomType === 0 ? 
         // display simple chat for 1v1
         <SimpleChat
           className="simple-chat"
@@ -192,7 +214,7 @@ const App = observer(() => {
           unreadCount={unreadMessageCount}
           singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
         />
-      }
+      } */}
     </div>
   )
 })

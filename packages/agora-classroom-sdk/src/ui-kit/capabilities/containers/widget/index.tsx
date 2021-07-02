@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { IAgoraWidget, useAppPluginContext} from 'agora-edu-core';
 import './index.css';
 import { Dependencies } from '../ext-app/dependencies';
-import {Adapter} from './adapter'
+import { useAdapter } from './adapter'
 
 
 export interface WidgetProps extends BaseProps {
@@ -23,7 +23,7 @@ export const Widget: FC<WidgetProps> = ({
 
     const {userUuid, userName, userRole, roomName, roomUuid, roomType, language} = contextInfo
     
-    const {events, actions} = Adapter()
+    const {events, actions} = useAdapter()
     const context = {
       // properties: properties,
       events,

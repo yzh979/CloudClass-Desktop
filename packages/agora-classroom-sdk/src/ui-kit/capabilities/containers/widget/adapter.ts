@@ -3,7 +3,7 @@ import { useChatContext, useGlobalContext, useRoomContext } from "agora-edu-core
 import { useEffect, useState } from "react"
 import { BehaviorSubject } from "rxjs"
 
-export const Adapter = () => {
+export const useAdapter = () => {
     const [chatEvents] = useState(() => new BehaviorSubject({}))
     const [roomEvents] = useState(() => new BehaviorSubject({}))
     const [globalEvents] = useState(() => new BehaviorSubject({}))
