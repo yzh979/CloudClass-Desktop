@@ -29,7 +29,8 @@ echo "build <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 rm -rf packages/agora-classroom-sdk/build
 
 # NODE 准备
-nvm use 12.16.2
+# nvm use 12.16.2
+nvm use 12.2
 
 # 安装 JUST
 npm --registry https://registry.npm.taobao.org i just-scripts -g
@@ -43,6 +44,7 @@ yarn bootstrap
 yarn ci:build:web
 # cnpm run build -- $APP_ENV
 
+return 0
 
 
 echo "docker <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
