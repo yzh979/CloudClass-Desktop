@@ -71,7 +71,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     }, [rosterUserList, onSendStar])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
-        console.log('>>>>>>>>>actionType', actionType)
 
         const userList = rosterUserList
         const user = userList.find((user: RosterUserInfo) => user.uid === uid)
