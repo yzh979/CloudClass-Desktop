@@ -206,9 +206,14 @@ const reducer = (state = defaultState, action) => {
             let isShowRedNotice;
             let isTabShowRedNotice;
             if (action.options.isHistory) {
+                if (action.options.unRead) {
+                    isShowRedNotice = action.options.showNotice;
+                    isTabShowRedNotice = isShowRedNotice;
+                } else {
+                    isShowRedNotice = qaList[qaSender]?.showRedNotice;
+                    isTabShowRedNotice = state.messages.notification[CHAT_TABS_KEYS.qa];
+                }
                 qaMsgs = [data, ...(qaList[qaSender]?.msg || [])]
-                isShowRedNotice = qaList[qaSender]?.showRedNotice;
-                isTabShowRedNotice = state.messages.notification[CHAT_TABS_KEYS.qa];
             } else {
                 qaMsgs = [...(qaList[qaSender]?.msg || []), data]
                 isShowRedNotice = action.options.showNotice;

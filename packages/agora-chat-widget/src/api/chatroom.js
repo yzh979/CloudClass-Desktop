@@ -17,18 +17,19 @@ export const joinRoom = async () => {
     }
     await setUserInfo();
     WebIM.conn.mr_cache = [];
-    await WebIM.conn.joinChatRoom(options).then((res) => {
-        message.success('已成功加入聊天室！');
-        setTimeout(() => {
-            message.destroy();
-        }, 3000);
-        if (Number(roleType) === 2 || Number(roleType) === 0) {
-            isChatRoomWhiteUser(roomId, userUuid)
-        }
-        getRoomInfo(options.roomId);
-        getHistoryMessages(false);
-    })
-
+    setTimeout(() => {
+        WebIM.conn.joinChatRoom(options).then((res) => {
+            message.success('已成功加入聊天室！');
+            setTimeout(() => {
+                message.destroy();
+            }, 3000);
+            if (Number(roleType) === 2 || Number(roleType) === 0) {
+                isChatRoomWhiteUser(roomId, userUuid)
+            }
+            getRoomInfo(options.roomId);
+            getHistoryMessages(false);
+        })
+    }, 500);
 };
 
 // 获取聊天室详情

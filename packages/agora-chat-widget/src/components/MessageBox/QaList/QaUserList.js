@@ -5,6 +5,7 @@ import _ from 'lodash'
 import store from '../../../redux/store'
 import { removeShowRed, setCurrentUser } from '../../../redux/aciton'
 import QaMessage from './QaMessage'
+import { getUserInfo } from '../../../api/userInfo'
 import { CHAT_TABS, CHAT_TABS_KEYS } from '../constants'
 import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
@@ -17,9 +18,14 @@ const QaUserList = ({ getClickUser }) => {
     const isQaList = (Object.keys(qaList)).length === 0
     // 遍历，拿到需要的ID和时间
     let newUser = [];
+    let leaveUser = []
     _.forEach(qaList, function (v, k) {
+        if (!(roomListInfo[k])) {
+            leaveUser.push(k)
+        }
         newUser.push({ id: k, time: v.time })
     })
+    leaveUser.length > 0 && getUserInfo(leaveUser)
     // 根据 时间进行排序
     let sortArr = _.orderBy(newUser, ['time'], ['desc'])
 

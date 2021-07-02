@@ -1,20 +1,28 @@
 import store from '../redux/store'
 import { loginInfo, memberInfo } from '../redux/aciton'
 import WebIM from "../utils/WebIM";
+import { setReadMsgId } from "./qaReadMsg"
 
 // 设置自己的用户属性
-export const setUserInfo = () => {
+export const setUserInfo = (val) => {
     const userRoleType = Number(store.getState().extData.roleType);
     const robotAvatarUrl = 'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/recordRobot.webp'
     const userAvatarUrl = userRoleType === 0 ? robotAvatarUrl : store.getState().extData.imAvatarUrl;
     const userNickName = userRoleType === 0 ? "录制机器人" : store.getState().extData.userName;
-    let options = {
+    let isSetMsg = val ? Object.keys(val).length > 0 : false;
+    let options = isSetMsg ? { 'sign': JSON.stringify([val]) } : {
         nickname: userNickName,
         avatarurl: userAvatarUrl,
         ext: userRoleType
     }
     WebIM.conn.updateOwnUserInfo(options).then((res) => {
-        store.dispatch(loginInfo(res.data))
+        if (!res) return
+
+        if (!isSetMsg) {
+            let arr = res.data.sign ? JSON.parse(res.data.sign) : [];
+            arr.length > 0 && setReadMsgId(arr[0])
+            store.dispatch(loginInfo(res.data))
+        }
     })
 }
 

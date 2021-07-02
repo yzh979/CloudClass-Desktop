@@ -5,11 +5,12 @@ import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
 import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
+import { saveReadMsgID } from '../../../api/qaReadMsg'
 
 // 助教端 提问消息列表
 const QaMessage = () => {
     const qaList = useSelector(state => state.messages.qaList) || [];
-    const currentUser= useSelector(state => state.currentUser);;
+    const currentUser = useSelector(state => state.currentUser);
     const [newUser, setNewUser] = useState([]);
     const [maxImg, setMaxImg] = useState(false);
     const [maxImgUrl, setMaxImgUrl] = useState('');
@@ -30,7 +31,13 @@ const QaMessage = () => {
     }
 
     useEffect(() => {
-        setNewUser(qaList[currentUser]?.msg)
+        const currentMsg = qaList[currentUser]?.msg
+        const option = {
+            lastUserId: currentUser,
+            lastUserMsg: currentMsg && (currentMsg[currentMsg.length - 1].time || currentMsg[currentMsg.length - 1].ext.time)
+        }
+        setNewUser(currentMsg)
+        saveReadMsgID(option)
     }, [qaList[currentUser]])
 
     useEffect(() => {
