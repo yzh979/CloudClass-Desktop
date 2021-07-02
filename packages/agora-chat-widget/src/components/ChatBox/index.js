@@ -106,8 +106,6 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     let avatarUrl = userInfo.avatarurl;
     //  从当前登陆用户取的属性昵称
     let userNickName = userInfo.nickname;
-    //  获取当前时间，在ext 中携带，便于排序
-    let timestamp = new Date().getTime()
     //  isTool 是控制是否显示图片标签
     if (isTool) {
         msgType = 2;
