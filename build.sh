@@ -19,7 +19,7 @@ if [ "$ENV" == "prod" ]
 then
     DOCKER_REPO_SPACENAME=zx-prod
 else 
-    DOCKER_REPO_SPACENAME=zx_dev 
+    DOCKER_REPO_SPACENAME=lkl-review #zx_dev 
 fi
 
 echo "build <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"

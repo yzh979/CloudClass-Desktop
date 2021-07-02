@@ -1,11 +1,11 @@
 
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: www-student
+  name: www-cloud-room
   labels:
-    app: www-student
-  namespace: lkl-peiyou
+    app: www-cloud-room
+  namespace: peiyou-review
 spec:
   replicas: 1
   strategy:
@@ -15,15 +15,15 @@ spec:
       maxUnavailable: 25%
   selector:
     matchLabels:
-      app: www-student
+      app: www-cloud-room
   template:
     metadata:
       labels:
-        app: www-student
+        app: www-cloud-room
     spec:
       containers:
-        - name: www-student
-          image: registry-vpc.cn-shanghai.aliyuncs.com/lkl-review/www-student:0.1
+        - name: www-cloud-room
+          image: registry-vpc.cn-shanghai.aliyuncs.com/lkl-review/www-cloud-room:0.1
           imagePullPolicy: Always
           env:
             - name: TZ

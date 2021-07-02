@@ -7,18 +7,18 @@ metadata:
     nginx.ingress.kubernetes.io/service-weight: ''
     nginx.ingress.kubernetes.io/use-regex: 'true'
   generation: 1
-  name: www-student
-  namespace: lkl-peiyou
+  name: www-cloudroom
+  namespace: peiyou-review
 spec:
   rules:
-    - host: student-py-dev.zhimo.co
+    - host: live-dev.lookingedu.com
       http:
         paths:
           - backend:
-              serviceName: www-student
-              servicePort: 81
+              serviceName: www-cloudroom
+              servicePort: 80
             path: /
   tls:
     - hosts:
-        - student-py-dev.zhimo.co
-      secretName: zhimo.co
+        - live-dev.lookingedu.com
+      secretName: lookingedu.com

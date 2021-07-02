@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: www-student
-  namespace: lkl-peiyou
+  name: www-cloudroom
+  namespace: peiyou-review
 spec:
   selector:
-    app: www-student
+    app: www-cloud-room
   ports:
     - protocol: TCP
-      name: www-student
-      port: 81
+      name: www-cloud-room
+      port: 80
       targetPort: 80
   type: ClusterIP
