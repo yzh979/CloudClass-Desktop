@@ -1,4 +1,4 @@
-import { useHomeStore } from "@/infra/hooks"
+import { useAudienceParams, useHomeStore } from "@/infra/hooks"
 import { changeLanguage, Home } from "@/ui-kit"
 import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
@@ -8,10 +8,12 @@ import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
 import AgoraRTC from 'agora-rtc-sdk-ng'
+import { HomeLaunchOption } from "@/infra/stores/app/home"
 
 export const HomePage = observer(() => {
 
   const homeStore = useHomeStore()
+  const params = useAudienceParams()
 
   const [roomId, setRoomId] = useState<string>('')
   const [userId, setUserId] = useState<string>('')
@@ -149,7 +151,7 @@ export const HomePage = observer(() => {
         homeApi.setRegion(region)
         let {rtmToken, appId} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
-        homeStore.setLaunchConfig({
+        let config: HomeLaunchOption = {
           // rtmUid: userUuid,
           appId: appId,
           pretest: true,
@@ -165,8 +167,17 @@ export const HomePage = observer(() => {
           roleType: role,
           startTime: +startDate,
           region,
-          duration: duration * 60,
-        })
+          duration: duration * 60
+        }
+        if(params && params['encryptionKey'] && params['encryptionMode']) {
+          config.mediaOptions = {
+            encryptionConfig: {
+              key: params['encryptionKey'],
+              mode: parseInt(params['encryptionMode'])
+            }
+          }
+        }
+        homeStore.setLaunchConfig(config)
         history.push('/launch')
       }}
     />

@@ -2,7 +2,7 @@ import { GlobalStorage } from '../../utils';
 import { AgoraRegion, LaunchOption } from "@/infra/api";
 import { autorun, observable } from 'mobx';
 
-type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {appId: string}
+export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {appId: string}
 
 const regionKey = `home_store_demo_launch_region`
 const launchKey = `home_store_demo_launch_options`
