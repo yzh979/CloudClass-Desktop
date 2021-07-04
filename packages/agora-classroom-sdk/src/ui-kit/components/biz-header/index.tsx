@@ -85,7 +85,7 @@ export interface BizHeaderProps {
   /**
    * 该课程中学生数
    */
-  studentInClassCnt: number;
+  studentInClassCnt?: number;
 
   /**
    * 

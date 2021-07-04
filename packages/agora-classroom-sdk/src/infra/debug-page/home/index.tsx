@@ -117,7 +117,7 @@ export const TestHomePage = observer(() => {
       url: "https://lkl-whiteboard.oss-cn-shanghai.aliyuncs.com/whiteboard/不等式学生.pdf",
       scenes: sceneInfos,
       conversion: {
-        type: "pdf",
+        type: "static",
       },
   }]
 
@@ -194,9 +194,6 @@ export const ProdHomePage =  observer(() => {
       }
       window.opener.postMessage("recieved", "*")
       const lauchOptions:LaunchOption = event.data
-      // TODO 调用服务端生成token
-      let {rtmToken} = await homeApi.login(lauchOptions.userUuid)
-      console.log('## rtm Token', rtmToken)
       // TODO 参数校验
       homeStore.setLaunchConfig(lauchOptions)
       history.push('/launch')

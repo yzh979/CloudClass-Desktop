@@ -8,7 +8,6 @@ import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
 import { SettingContainer } from '../setting'
 import { UserListDialog } from '~capabilities/containers/dialog'
-
 export const NavigationBar = observer(() => {
   // const {
   //   isRecording,
@@ -84,7 +83,6 @@ export const NavigationBar = observer(() => {
     }
     return 'student'
   }, [roomInfo.userRole])
-
   return (
     <BizHeader
       isFullScreen={isFullScreen}
@@ -103,7 +101,7 @@ export const NavigationBar = observer(() => {
         packetLostRate: packetLostRate,
       }}
       onClick={handleClick}
-      studentInClassCnt={6}
+      studentInClassCnt={roomInfo.studentNum}
       studentInRoomCnt={rosterUserList.length}
     />
   )

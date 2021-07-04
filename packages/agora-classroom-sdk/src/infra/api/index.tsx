@@ -92,6 +92,7 @@ export type LaunchOption = {
   recordUrl?: string, // 回放页地址
   extApps?: IAgoraExtApp[] // app插件
   region?: AgoraRegion
+  studentNum?: number // 学员人数
 }
 
 export type ReplayOption = {
@@ -244,6 +245,7 @@ export class AgoraEduSDK {
           userName: option.userName,
           userRole: option.roleType,
           roomType: +option.roomType,
+          studentNum: option.studentNum
         },
         resetRoomInfo: false,
         mainPath: mainPath,

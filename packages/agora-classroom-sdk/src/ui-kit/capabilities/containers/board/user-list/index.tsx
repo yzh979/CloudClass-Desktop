@@ -157,6 +157,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             onSearch={(text: string) => {
                 setKeyword(text)
             }}
+            studentInClassCnt={roomInfo.studentNum}
+            studentInRoomCnt={rosterUserList.length}
         />
     )
 })

@@ -81,6 +81,7 @@ type RoomInfoParams = {
   userName: string,
   userRole: number,
   userUuid: string,
+  studentNum?: number
 }
 
 export type AgoraRegion = Uppercase<AgoraRegionString>
@@ -145,6 +146,7 @@ export type RoomInfo = {
   rtmToken: string,
   groupName?: string,
   groupUuid?: string,
+  studentNum?: number
 }
 
 export type DeviceInfo = {
