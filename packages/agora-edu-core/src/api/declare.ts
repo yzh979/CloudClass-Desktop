@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, MediaEncryptionConfig } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -98,6 +98,10 @@ export type AgoraRegionString =
   | 'ap'
   | 'na'
 
+export type MediaOptions = {
+  encryptionConfig?: MediaEncryptionConfig
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -120,7 +124,8 @@ export type AppStoreConfigParams = {
     endpoint: string,
   },
   recordUrl: string,
-  extApps?: IAgoraExtApp[]
+  extApps?: IAgoraExtApp[],
+  mediaOptions?: MediaOptions
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -134,7 +139,7 @@ export type AppStoreInitParams = {
   pretest?: boolean,
   mainPath?: string,
   roomPath?: string,
-  resetRoomInfo: boolean,
+  resetRoomInfo: boolean
 }
 
 export type RoomInfo = {

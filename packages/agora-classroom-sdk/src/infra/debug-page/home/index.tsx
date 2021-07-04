@@ -22,7 +22,7 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
-  const [region, setRegion] = useState<AgoraRegion>('NA')
+  const [region, setRegion] = useState<AgoraRegion>(homeStore.region)
   const [debug, setDebug] = useState<boolean>(false)
 
   useEffect(() => {
@@ -30,8 +30,10 @@ export const HomePage = observer(() => {
     setLanguage(language)
   }, [])
 
-  const onChangeRegion = (region: string) => {
-    setRegion(region as AgoraRegion)
+  const onChangeRegion = (r: string) => {
+    let region = r as AgoraRegion
+    setRegion(region)
+    homeStore.region = region
   }
 
   const onChangeLanguage = (language: string) => {

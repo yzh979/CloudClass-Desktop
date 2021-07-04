@@ -433,6 +433,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
+  prepare() {
+    return this.sdkWrapper.prepare()
+  }
+
   async join(option: JoinOption): Promise<any> {
     try {
       // REPORT
@@ -779,8 +783,8 @@ export class MediaService extends EventEmitter implements IMediaService {
     return 100;
   }
 
-  setMediaEncryptionConfig(config: MediaEncryptionConfig) {
-    return this.sdkWrapper.setMediaEncryptionConfig(config)
+  enableMediaEncryptionConfig(enabled:boolean, config: MediaEncryptionConfig) {
+    return this.sdkWrapper.enableMediaEncryptionConfig(enabled, config)
   }
 
   reset(): void {

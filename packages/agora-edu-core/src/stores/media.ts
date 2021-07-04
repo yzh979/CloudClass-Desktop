@@ -5,7 +5,7 @@ import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
-import { LocalVideoRenderState } from 'agora-rte-sdk';
+import { LocalVideoRenderState, MediaEncryptionConfig } from 'agora-rte-sdk';
 
 
 const delay = 2000
@@ -442,7 +442,6 @@ export class MediaStore {
 
   }
 
-
   @action
   resetRoomState() {
     this.remoteUsersRenderer = []
@@ -450,5 +449,9 @@ export class MediaStore {
     this.networkQuality = 'unknown'
     this.autoplay = false
     this._delay = 0
+  }
+
+  enableMediaEncryption(enabled: boolean, config: MediaEncryptionConfig): number {
+    return this.mediaService.enableMediaEncryptionConfig(enabled, config)
   }
 }

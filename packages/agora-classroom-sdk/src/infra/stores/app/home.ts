@@ -1,38 +1,49 @@
 import { GlobalStorage } from '../../utils';
-import { LaunchOption } from "@/infra/api";
-import { autorun, observable, toJS } from 'mobx';
+import { AgoraRegion, LaunchOption } from "@/infra/api";
+import { autorun, observable } from 'mobx';
 
 type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {appId: string}
 
-const key = `home_store_demo_launch_key`
+const regionKey = `home_store_demo_launch_region`
+const launchKey = `home_store_demo_launch_options`
 
 export const clearHomeOption = () => {
-  GlobalStorage.clear(key)
+  GlobalStorage.clear(launchKey)
+  GlobalStorage.clear(regionKey)
 }
 
 export class HomeStore {
 
-  @observable
   launchOption!: HomeLaunchOption
 
-  launchKey: string = key
+  @observable
+  region: AgoraRegion
+
+  regionKey: string = regionKey
+  launchKey: string = launchKey
 
   constructor(context: any) {
+    this.region = GlobalStorage.read(this.regionKey) || "NA"
     this.launchOption = GlobalStorage.read(this.launchKey) || {}
     autorun(() => {
-      const data = toJS(this.launchOption)
-      GlobalStorage.save(this.launchKey, data)
+      const data = this.region
+      GlobalStorage.save(this.regionKey, data)
     })
   }
 
   setLaunchConfig(payload: HomeLaunchOption) {
     this.launchOption = payload
+    if(payload.region) {
+      this.region = payload.region
+    }
+    GlobalStorage.save(this.regionKey, this.region)
     GlobalStorage.save(this.launchKey, this.launchOption)
   }
 
   clear() {
     clearHomeOption()
     //@ts-ignore
+    this.region = GlobalStorage.read(this.regionKey) || "NA"
     this.launchOption = GlobalStorage.read(this.launchKey) || {}
   }
 }
