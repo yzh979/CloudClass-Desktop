@@ -130,6 +130,11 @@ export declare interface MicrophoneOption {
   deviceId: string
 }
 
+export declare interface MediaEncryptionConfig {
+  mode: string,
+  secret: string
+}
+
 /**
  * 
  */
@@ -166,6 +171,8 @@ export declare interface IAgoraRTCModule {
   stopScreenShare(): Promise<any>
 
   changePlaybackVolume(volume: number): void;
+
+  setMediaEncryptionConfig(config:MediaEncryptionConfig): void;
 
   // muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any>
 
