@@ -1,8 +1,8 @@
-import { IAgoraRTCRemoteUser, LocalAudioTrackStats, UID } from 'agora-rtc-sdk-ng';
+import { EncryptionMode, IAgoraRTCRemoteUser, LocalAudioTrackStats, UID } from 'agora-rtc-sdk-ng';
 import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
-import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
+import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, MediaEncryptionConfig, MediaEncryptionMode } from '../interfaces';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import { convertUid, paramsConfig } from '../utils';
 import { AgoraWebStreamCoordinator } from './coordinator';
@@ -343,12 +343,20 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.localUid = await client.join(this.appId, option.channel, option.token, option.uid);
     this.joined = true
     this.channelName = option.channel
-    this._client = client;
     return this.localUid;
   }
 
+  prepare() {
+    this._client = this.agoraWebSdk.createClient(this.clientConfig);
+    return this._client
+  }
+
   registerClientByChannelName(channelName: string) {
-    const client = this.agoraWebSdk.createClient(this.clientConfig);
+    if(!this._client) {
+      this._client = this.prepare()
+    }
+    const client:IAgoraRTCClient = this._client
+
     this.streamCoordinator?.updateRtcClient(client)
     //@ts-ignore
     this.agoraWebSdk.setParameter(paramsConfig)
@@ -1313,5 +1321,31 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
       // throw 'no microphone test track found'
     }
+  }
+
+  rteEncryptionMode2RtcEncryptionMode(mode: MediaEncryptionMode): EncryptionMode {
+    switch(mode) {
+      case MediaEncryptionMode.AES_128_ECB:
+        return 'aes-128-ecb'
+      case MediaEncryptionMode.AES_128_GCM:
+        return 'aes-128-gcm'
+      case MediaEncryptionMode.AES_128_XTS:
+        return 'aes-128-xts'
+      case MediaEncryptionMode.AES_256_GCM:
+        return 'aes-256-gcm'
+      case MediaEncryptionMode.AES_256_XTS:
+        return 'aes-256-xts'
+      case MediaEncryptionMode.SM4_128_ECB:
+        return 'aes-128-ecb'
+    }
+  }
+
+  enableMediaEncryptionConfig(enabled: boolean, config:MediaEncryptionConfig): number {
+    if(!enabled) {
+      this.client.setEncryptionConfig("none", config.key)
+    } else {
+      this.client.setEncryptionConfig(this.rteEncryptionMode2RtcEncryptionMode(config.mode), config.key)
+    }
+    return 0
   }
 }
