@@ -24,17 +24,15 @@ fi
 
 echo "build <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 # 清理
-# rm -rf dist
-# rm -rf packages/agora-classroom-sdk/build/
 rm -rf packages/agora-classroom-sdk/build
 
 # NODE 准备
-# nvm use 12.16.2
-nvm use 12.2
+nvm use 12.16.2
+#nvm use 12.2
 
 # 安装 JUST
 npm --registry https://registry.npm.taobao.org i just-scripts -g
-npm i lerna -g
+npm install lerna -g
 
 # 第三分包
 yarn install 
@@ -42,9 +40,6 @@ yarn bootstrap
 
 # 构建
 yarn ci:build:web
-# cnpm run build -- $APP_ENV
-
-return 0
 
 
 echo "docker <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
