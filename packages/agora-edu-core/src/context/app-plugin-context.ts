@@ -28,13 +28,13 @@ export const useAppPluginContext = () => {
 
   const appPlugins:IAgoraExtApp[] = appStore.params ? appStore.params.config.extApps || [] : []
 
-  const {roomName, roomType, roomUuid, userName,userRole, userUuid} = get(appStore, "params.roomInfoParams", {})
+  const {roomName, roomType, roomUuid, userName,userRole, userUuid, studentNum} = get(appStore, "params.roomInfoParams", {})
   const language = appStore.params ? appStore.params.language : "zh"
 
   return {
     appPlugins,
     activeAppPlugins: uiStore.activeAppPlugins,
-    contextInfo: {roomName, roomType, roomUuid, userName, userRole, userUuid, language},
+    contextInfo: {roomName, roomType, roomUuid, userName, userRole, userUuid, language, studentNum},
     onLaunchAppPlugin,
     onShutdownAppPlugin,
     appPluginProperties

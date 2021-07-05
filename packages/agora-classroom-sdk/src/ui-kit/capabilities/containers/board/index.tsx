@@ -170,31 +170,32 @@ const TabsContainer = observer(() => {
   const {
     addDialog,
   } = useGlobalContext()
-
   return (
     <Tabs className="whiteboard-tab" activeKey={activeSceneName} type="editable-card"
       onChange={changeSceneItem}>
-      {resourcesList.map((item: Resource, key: number) => (
-        <TabPane
-          key={item.resourceUuid}
-          tab={
-            <>
-              {key === 0 ? transI18n("tool.board_name") : item.file.name}
-            </>
-          }
-          closeIcon={
-            <Icon className="whiteboard-tab-item-close" type="close"
-              onClick={() => {
-                addDialog(CloseConfirm, {
-                  resourceUuid: item.resourceUuid,
-                })
-              }}
-            ></Icon>
-          }
-          closable={key !== 0}
-        >
-        </TabPane>
-      ))}
+      {resourcesList.map((item: Resource, key: number) => {
+        return (
+          <TabPane
+            key={item.resourceUuid}
+            tab={
+              <>
+                {key === 0 ? transI18n("tool.board_name") : item.file.name}
+              </>
+            }
+            closeIcon={
+              <Icon className="whiteboard-tab-item-close" type="close"
+                onClick={() => {
+                  addDialog(CloseConfirm, {
+                    resourceUuid: item.resourceUuid,
+                  })
+                }}
+              ></Icon>
+            }
+            closable={key !== 0}
+          >
+          </TabPane>
+        )
+      })}
     </Tabs>
   )
 })

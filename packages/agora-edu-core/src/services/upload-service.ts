@@ -60,6 +60,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
+      scenes: data.scenes
     }
   }
   return {
@@ -363,8 +364,8 @@ export class UploadService extends ApiBase {
                 isTransFile: true,
               })
             },
-            onTaskFail: () => {
-              console.log(' onTaskFail ')
+            onTaskFail: (err) => {
+              console.log(' onTaskFail ', err)
               payload.onProgress({
                 phase: 'finish',
                 progress: 1,

@@ -48,7 +48,6 @@ export const MidClassScenario = observer(() => {
   const handleExit = () => {
     addDialog(Exit)
   }
-
   return (
     <Layout
       className={cls}

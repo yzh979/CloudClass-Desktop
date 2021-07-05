@@ -22,7 +22,6 @@ export const VideoPlayerTeacher = observer(({ style }: any) => {
     sceneVideoConfig,
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
-  console.log('>>>>>>>>>>>>', userStream)
   return (
     <VideoPlayer
       isHost={sceneVideoConfig.isHost}

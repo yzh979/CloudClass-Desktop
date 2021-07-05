@@ -81,6 +81,15 @@ export interface RosterProps extends ModalProps {
    */
   role: ProfileRole;
   /**
+   * 花名册中学生数
+   */
+  studentInRoomCnt: number;
+
+  /**
+  * 该课程中学生数
+  */
+  studentInClassCnt?: number;
+  /**
    * 老师端或学生端人员列表标记
    */
   userType?: 'teacher' | 'student';
@@ -112,7 +121,9 @@ export const Roster: FC<RosterProps> = ({
   onMuteAll,
   onSendRewardAll,
   onOffAllPodiumClick,
-  onSearch
+  onSearch,
+  studentInRoomCnt = 0,
+  studentInClassCnt = 0,
 }) => {
 
   const studentList = studentListSort(dataSource)
@@ -132,7 +143,7 @@ export const Roster: FC<RosterProps> = ({
         </div>
         <div className="main-title">
           <label>花名册</label>
-          <div>(<span>1</span>/15)</div>
+          <div>(<span>{studentInRoomCnt}</span>/{studentInClassCnt})</div>
         </div>
         <div className="roster-container">
           <div className="roster-header">

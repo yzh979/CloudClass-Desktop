@@ -12,7 +12,7 @@
 ```bash
 # global install lerna and yarn
 npm i yarn -g
-npm i lerna
+npm i lerna -g
 
 # install all dependencies via lerna and npm
 yarn bootstrap

@@ -369,7 +369,8 @@ export class EduScenarioAppStore {
       userRole: payload.userRole,
       userUuid: payload.userUuid,
       rtmUid: payload.rtmUid,
-      rtmToken: payload.rtmToken
+      rtmToken: payload.rtmToken,
+      studentNum: payload.studentNum
     }
     this.updateRtmInfo({
       rtmUid: payload.rtmUid,

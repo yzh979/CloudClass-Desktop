@@ -92,7 +92,35 @@ export const TestHomePage = observer(() => {
 
   const history = useHistory()
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
+  // const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
+
+  let resourceUuid = "ec1a72e4-706a-4c19-bd9d-3558738f1a2b"
+  let resourceName = "不等式"
+  let sceneInfos = []
+  let sceneInfo = {
+      name: "1",
+      ppt: {
+          src: "pptx://....",
+          width: 480,
+          height: 360
+      }
+  }
+
+  sceneInfos.push(sceneInfo)
+
+  let courseWareList = [{
+      resourceUuid,
+      resourceName,
+      size:  394.922,
+      updateTime: new Date().getTime(),
+      ext: "pdf",
+      url: "https://lkl-whiteboard.oss-cn-shanghai.aliyuncs.com/whiteboard/不等式学生.pdf",
+      scenes: sceneInfos,
+      conversion: {
+        type: "static",
+      },
+  }]
+
   // @ts-ignore
   const SDKVersion = window.isElectron ? window.rtcEngine.getVersion().version : AgoraRTC.VERSION
   return (
@@ -132,8 +160,10 @@ export const TestHomePage = observer(() => {
         homeStore.setLaunchConfig({
           // rtmUid: userUuid,
           pretest: true,
-          courseWareList: courseWareList.slice(0, 1),
-          personalCourseWareList: courseWareList.slice(1, courseWareList.length),
+          // courseWareList: courseWareList,
+          courseWareList: [],
+          personalCourseWareList: [],
+          // personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           language: 'zh' as LanguageEnum,
           userUuid: userId,
           rtmToken,
@@ -164,9 +194,6 @@ export const ProdHomePage =  observer(() => {
       }
       window.opener.postMessage("recieved", "*")
       const lauchOptions:LaunchOption = event.data
-      // TODO 调用服务端生成token
-      let {rtmToken} = await homeApi.login(lauchOptions.userUuid)
-      console.log('## rtm Token', rtmToken)
       // TODO 参数校验
       homeStore.setLaunchConfig(lauchOptions)
       history.push('/launch')
