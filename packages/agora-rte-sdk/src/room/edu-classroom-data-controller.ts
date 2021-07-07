@@ -1348,13 +1348,15 @@ export class EduClassroomDataController {
         //   assign(properties, newObject)
         // }
         // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
-        let paths = key.split('.')
+        let originalPaths = key.split('.')
 
-        if(paths.length === 0) {
+        if(originalPaths.length === 0) {
           console.error(`[rte] invalid key when batch set room properties ${key}`)
           return properties
         }
 
+
+        const paths = originalPaths.filter((path: string) => path)
         let cursor = properties
         // initialize structs
         for(let path of paths) {
@@ -1363,7 +1365,7 @@ export class EduClassroomDataController {
         }
 
         let anchor = get(properties, paths.join('.'))
-        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'))
+        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
         
         const isObject = (val:any) => (typeof val === 'object' && val !== null)
         const changedValue = changedProperties[key]
