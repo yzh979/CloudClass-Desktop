@@ -1,6 +1,5 @@
 import websdk from 'easemob-websdk'
 import config from './WebIMConfig'
-import { getPageQuery } from './index'
 
 
 export const initIMSDK = (appkey) => {

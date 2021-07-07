@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import App from './App';
-import WebIM from '../src/utils/WebIM'
 import { MemoryRouter } from 'react-router-dom'
 import { logoutChatroom } from './api/chatroom'
-import { logoutIM } from './api/logout'
 
 import './index.css'
 
