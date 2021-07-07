@@ -1,6 +1,6 @@
 import { useUIStore } from '@/infra/hooks'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useDebugContext, useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -38,6 +38,10 @@ export const NavigationBar = observer(() => {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
     'record': () => addRecordDialog(),
+    'uploadLog': async () => {
+      let roomId = await uploadRoomLog()
+      console.log('res', roomId)
+    }
   }
 
   function handleClick (type: string) {
@@ -68,6 +72,19 @@ export const NavigationBar = observer(() => {
     }
     return 'student'
   }, [roomInfo.userRole])
+
+  const { uploadRoomLog } = useDebugContext()
+
+  // export const useDebugContext = () => {
+
+  //   const roomStore = useRoomStore()
+  
+  //   const uploadRoomLog = roomStore.uploadRoomLog
+  
+  //   return {
+  //     uploadRoomLog,
+  //   }
+  // }
 
   return (
     <BizHeader
