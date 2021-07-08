@@ -1961,6 +1961,14 @@
   resolved "https://registry.npm.taobao.org/@netless/fetch-progress/download/@netless/fetch-progress-0.0.1.tgz#e4cc415b92f5acc610b6dd533947e40af39915ec"
   integrity sha1-5MxBW5L1rMYQtt1TOUfkCvOZFew=
 
+"@netless/iframe-bridge@2.0.13":
+  version "2.0.13"
+  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.0.13.tgz#c74cf807e9261427e1b561c371bf06cf8ec14ae7"
+  integrity sha1-x0z4B+kmFCfhtWHDcb8Gz47BSuc=
+  dependencies:
+    eventemitter2 "^6.4.3"
+    react "^16.13.1"
+
 "@netless/iframe-bridge@2.1.4":
   version "2.1.4"
   resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.1.4.tgz#16fe2c3aec5af872c7b8a0f4980c86d030b7f2b7"
@@ -2121,6 +2129,59 @@
   resolved "https://registry.npm.taobao.org/@posthtml/esm/download/@posthtml/esm-1.0.0.tgz#09bcb28a02438dcee22ad1970ca1d85a000ae0cf"
   integrity sha1-CbyyigJDjc7iKtGXDKHYWgAK4M8=
 
+"@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.nlark.com/@protobufjs/aspromise/download/@protobufjs/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
+  integrity sha1-m4sMxmPWaafY9vXQiToU00jzD78=
+
+"@protobufjs/base64@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.nlark.com/@protobufjs/base64/download/@protobufjs/base64-1.1.2.tgz#4c85730e59b9a1f1f349047dbf24296034bb2735"
+  integrity sha1-TIVzDlm5ofHzSQR9vyQpYDS7JzU=
+
+"@protobufjs/codegen@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npm.taobao.org/@protobufjs/codegen/download/@protobufjs/codegen-2.0.4.tgz#7ef37f0d010fb028ad1ad59722e506d9262815cb"
+  integrity sha1-fvN/DQEPsCitGtWXIuUG2SYoFcs=
+
+"@protobufjs/eventemitter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@protobufjs/eventemitter/download/@protobufjs/eventemitter-1.1.0.tgz#355cbc98bafad5978f9ed095f397621f1d066b70"
+  integrity sha1-NVy8mLr61ZePntCV85diHx0Ga3A=
+
+"@protobufjs/fetch@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@protobufjs/fetch/download/@protobufjs/fetch-1.1.0.tgz#ba99fb598614af65700c1619ff06d454b0d84c45"
+  integrity sha1-upn7WYYUr2VwDBYZ/wbUVLDYTEU=
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.1"
+    "@protobufjs/inquire" "^1.1.0"
+
+"@protobufjs/float@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.npm.taobao.org/@protobufjs/float/download/@protobufjs/float-1.0.2.tgz#5e9e1abdcb73fc0a7cb8b291df78c8cbd97b87d1"
+  integrity sha1-Xp4avctz/Ap8uLKR33jIy9l7h9E=
+
+"@protobufjs/inquire@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@protobufjs/inquire/download/@protobufjs/inquire-1.1.0.tgz#ff200e3e7cf2429e2dcafc1140828e8cc638f089"
+  integrity sha1-/yAOPnzyQp4tyvwRQIKOjMY48Ik=
+
+"@protobufjs/path@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.nlark.com/@protobufjs/path/download/@protobufjs/path-1.1.2.tgz#6cc2b20c5c9ad6ad0dccfd21ca7673d8d7fbf68d"
+  integrity sha1-bMKyDFya1q0NzP0hynZz2Nf79o0=
+
+"@protobufjs/pool@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@protobufjs/pool/download/@protobufjs/pool-1.1.0.tgz#09fd15f2d6d3abfa9b65bc366506d6ad7846ff54"
+  integrity sha1-Cf0V8tbTq/qbZbw2ZQbWrXhG/1Q=
+
+"@protobufjs/utf8@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@protobufjs/utf8/download/@protobufjs/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
+  integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
 "@rushstack/node-core-library@3.35.2":
   version "3.35.2"
   resolved "https://registry.nlark.com/@rushstack/node-core-library/download/@rushstack/node-core-library-3.35.2.tgz#21ca879b5051a5ebafa952fafcd648a07a142bcb"
@@ -2229,6 +2290,11 @@
   resolved "https://registry.nlark.com/@types/lodash/download/@types/lodash-4.14.168.tgz?cache=0&sync_timestamp=1621593293742&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Flodash%2Fdownload%2F%40types%2Flodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
   integrity sha1-/iRjLnm3rePxMoka//hsql5c4Ag=
 
+"@types/long@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.nlark.com/@types/long/download/@types/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
+  integrity sha1-RZxl+hhn2v5qjzIsTFFpVmPMVek=
+
 "@types/minimatch@*":
   version "3.0.4"
   resolved "https://registry.nlark.com/@types/minimatch/download/@types/minimatch-3.0.4.tgz#f0ec25dbf2f0e4b18647313ac031134ca5b24b21"
@@ -2253,6 +2319,11 @@
   version "14.14.22"
   resolved "https://registry.nlark.com/@types/node/download/@types/node-14.14.22.tgz#0d29f382472c4ccf3bd96ff0ce47daf5b7b84b18"
   integrity sha1-DSnzgkcsTM872W/wzkfa9be4Sxg=
+
+"@types/node@>=13.7.0":
+  version "16.0.1"
+  resolved "https://registry.nlark.com/@types/node/download/@types/node-16.0.1.tgz#70cedfda26af7a2ca073fdcc9beb2fff4aa693f8"
+  integrity sha1-cM7f2iaveiygc/3Mm+sv/0qmk/g=
 
 "@types/node@^10.12.18":
   version "10.17.60"
@@ -2695,6 +2766,46 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
+agora-classroom-sdk@1.1.0-ga-rc1:
+  version "1.1.0-ga-rc1"
+  resolved "https://registry.nlark.com/agora-classroom-sdk/download/agora-classroom-sdk-1.1.0-ga-rc1.tgz#0d0a3278803032014216e0e1c4329da558bb2d52"
+  integrity sha1-DQoyeIAwMgFCFuDhxDKdpVi7LVI=
+  dependencies:
+    "@netless/fetch-progress" "0.0.1"
+    "@netless/iframe-bridge" "2.0.13"
+    "@tailwindcss/forms" "0.2.1"
+    "@types/react-transition-group" "4.4.1"
+    "@zip.js/zip.js" "2.2.22"
+    adm-zip "0.4.14"
+    agora-access-token "2.0.4"
+    agora-edu-core "1.1.0-ga-rc1"
+    agora-rte-sdk "1.1.0-ga-rc1"
+    animate.css "4.1.1"
+    bowser "1.9.4"
+    classnames "2.2.6"
+    fetch-progress "1.3.0"
+    i18next "20.1.0"
+    jszip "3.6.0"
+    mobx "5.15.4"
+    mobx-react "6.3.1"
+    pinyinlite "1.2.1"
+    rc-notification "4.4.0"
+    rc-select "12.1.6"
+    rc-slider "9.7.1"
+    rc-tabs "11.7.3"
+    rc-tooltip "5.1.0"
+    rc-trigger "5.2.3"
+    rc-util "5.8.1"
+    react "17.0.0"
+    react-dom "17.0.0"
+    react-draggable "4.4.3"
+    react-i18next "11.8.12"
+    react-router "5.2.0"
+    react-select "4.3.0"
+    react-transition-group "4.4.1"
+    workbox-range-requests "6.1.2"
+    workbox-strategies "6.1.1"
+
 agora-classroom-sdk@1.1.2-rc.1:
   version "1.1.2-rc.1"
   resolved "https://registry.nlark.com/agora-classroom-sdk/download/agora-classroom-sdk-1.1.2-rc.1.tgz#6c503ae19510b26ae44a0fd215bec10da64e7c1f"
@@ -2755,12 +2866,33 @@ agora-edu-core@1.0.0:
     uuid "3.3.3"
     white-web-sdk "2.12.14"
 
-agora-electron-sdk@apaas:
-  version "2.9.107-rc.148-build.68"
-  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148-build.68.tgz#1e201faf19e57d37d0de3901b1122c995e1c4fb5"
-  integrity sha1-HiAfrxnlfTfQ3jkBsRIsmV4cT7U=
+agora-edu-core@1.1.0-ga-rc1:
+  version "1.1.0-ga-rc1"
+  resolved "https://registry.nlark.com/agora-edu-core/download/agora-edu-core-1.1.0-ga-rc1.tgz#e97da8a000a045d031d2f3c53bd2c7acda317acd"
+  integrity sha1-6X2ooACgRdAx0vPFO9LHrNoxes0=
   dependencies:
-    bluebird "^3.7.1"
+    "@netless/combine-player" "1.1.4"
+    "@netless/cursor-tool" "0.0.7"
+    "@netless/react-seek-slider" "1.0.4"
+    "@netless/white-audio-plugin" "1.2.23"
+    "@netless/white-audio-plugin2" "2.0.4"
+    "@netless/white-video-plugin" "1.2.23"
+    "@netless/white-video-plugin2" "2.0.4"
+    agora-rte-sdk "1.1.0-ga-rc1"
+    ali-oss "6.15.2"
+    lodash "4.17.21"
+    mobx "5.15.4"
+    mobx-react "6.3.1"
+    react "17.0.0"
+    rxjs "6.6.6"
+    uuid "3.3.3"
+    white-web-sdk "2.13.3"
+
+agora-electron-sdk@3.4.2-rc.1-build.615:
+  version "3.4.2-rc.1-build.615"
+  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-3.4.2-rc.1-build.615.tgz#dbd44487cc3539ee67bfed7a11d5938f741a2f54"
+  integrity sha1-29REh8w1Oe5nv+16EdWTj3QaL1Q=
+  dependencies:
     download "^7.1.0"
     extract-zip "^1.6.7"
     fs-extra "^8.1.0"
@@ -2768,7 +2900,7 @@ agora-electron-sdk@apaas:
     just-task "^0.14.0"
     lodash.isequal "^4.5.0"
     nan "^2.14.0"
-    node-gyp "^5.1.0"
+    node-gyp "7.1.2"
     rimraf "^3.0.0"
     shelljs "^0.8.3"
     yuv-buffer "^1.0.0"
@@ -2779,12 +2911,26 @@ agora-rtc-sdk-ng@4.4.0:
   resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.4.0.tgz#ea036cab115f8f206e654e258ffce175548048ad"
   integrity sha1-6gNsqxFfjyBuZU4lj/zhdVSASK0=
 
+agora-rtc-sdk-ng@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.5.0.tgz#3d4ea890fe2f18df4d398298424c76ac985c4bd7"
+  integrity sha1-PU6okP4vGN9NOYKYQkx2rJhcS9c=
+
 agora-rte-sdk@1.0.0:
   version "1.0.0"
   resolved "https://registry.nlark.com/agora-rte-sdk/download/agora-rte-sdk-1.0.0.tgz#d6cac79001dd4d7926628f20c6b37d84bfc1b2d9"
   integrity sha1-1srHkAHdTXkmYo8gxrN9hL/Bstk=
   dependencies:
     agora-rtc-sdk-ng "4.4.0"
+    agora-rtm-sdk "1.4.2"
+    tslib "2.2.0"
+
+agora-rte-sdk@1.1.0-ga-rc1:
+  version "1.1.0-ga-rc1"
+  resolved "https://registry.nlark.com/agora-rte-sdk/download/agora-rte-sdk-1.1.0-ga-rc1.tgz#2d26090712eac3462e18911e1535619c47f5fabe"
+  integrity sha1-LSYJBxLqw0YuGJEeFTVhnEf1+r4=
+  dependencies:
+    agora-rtc-sdk-ng "4.5.0"
     agora-rtm-sdk "1.4.2"
     tslib "2.2.0"
 
@@ -3433,7 +3579,7 @@ bluebird-lst@^1.0.9:
   dependencies:
     bluebird "^3.5.5"
 
-bluebird@^3.5.1, bluebird@^3.5.3, bluebird@^3.5.5, bluebird@^3.7.1, bluebird@^3.7.2:
+bluebird@^3.5.1, bluebird@^3.5.3, bluebird@^3.5.5, bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.npm.taobao.org/bluebird/download/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha1-nyKcFb4nJFT/qXOs4NvueaGww28=
@@ -6907,7 +7053,7 @@ got@^9.6.0:
     to-readable-stream "^1.0.0"
     url-parse-lax "^3.0.0"
 
-graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
+graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, graceful-fs@^4.2.3:
   version "4.2.6"
   resolved "https://registry.nlark.com/graceful-fs/download/graceful-fs-4.2.6.tgz#ff040b2b0853b23c3d31027523706f1885d76bee"
   integrity sha1-/wQLKwhTsjw9MQJ1I3BvGIXXa+4=
@@ -8649,6 +8795,11 @@ loglevel@^1.6.3, loglevel@^1.6.8:
   resolved "https://registry.npm.taobao.org/loglevel/download/loglevel-1.7.1.tgz?cache=0&sync_timestamp=1606312223003&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Floglevel%2Fdownload%2Floglevel-1.7.1.tgz#005fde2f5e6e47068f935ff28573e125ef72f197"
   integrity sha1-AF/eL15uRwaPk1/yhXPhJe9y8Zc=
 
+long@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npm.taobao.org/long/download/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
+  integrity sha1-mntxz7fTYaGU6lVSQckvdGjVvyg=
+
 loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.nlark.com/loose-envify/download/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
@@ -9422,7 +9573,23 @@ node-forge@^0.10.0:
   resolved "https://registry.nlark.com/node-forge/download/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha1-Mt6ir7Ppkm8C7lzoeUkCaRpna/M=
 
-node-gyp@^5.0.2, node-gyp@^5.1.0:
+node-gyp@7.1.2:
+  version "7.1.2"
+  resolved "https://registry.nlark.com/node-gyp/download/node-gyp-7.1.2.tgz?cache=0&sync_timestamp=1622168206272&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fnode-gyp%2Fdownload%2Fnode-gyp-7.1.2.tgz#21a810aebb187120251c3bcec979af1587b188ae"
+  integrity sha1-IagQrrsYcSAlHDvOyXmvFYexiK4=
+  dependencies:
+    env-paths "^2.2.0"
+    glob "^7.1.4"
+    graceful-fs "^4.2.3"
+    nopt "^5.0.0"
+    npmlog "^4.1.2"
+    request "^2.88.2"
+    rimraf "^3.0.2"
+    semver "^7.3.2"
+    tar "^6.0.2"
+    which "^2.0.2"
+
+node-gyp@^5.0.2:
   version "5.1.1"
   resolved "https://registry.nlark.com/node-gyp/download/node-gyp-5.1.1.tgz#eb915f7b631c937d282e33aed44cb7a025f62a3e"
   integrity sha1-65Ffe2Mck30oLjOu1Ey3oCX2Kj4=
@@ -9490,6 +9657,13 @@ nopt@^4.0.1:
   dependencies:
     abbrev "1"
     osenv "^0.1.4"
+
+nopt@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npm.taobao.org/nopt/download/nopt-5.0.0.tgz#530942bb58a512fccafe53fe210f13a25355dc88"
+  integrity sha1-UwlCu1ilEvzK/lP+IQ8TolNV3Ig=
+  dependencies:
+    abbrev "1"
 
 normalize-package-data@^2.0.0, normalize-package-data@^2.3.0, normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, normalize-package-data@^2.3.5, normalize-package-data@^2.4.0, normalize-package-data@^2.5.0:
   version "2.5.0"
@@ -10805,6 +10979,25 @@ proto-list@~1.2.1:
   resolved "https://registry.nlark.com/proto-list/download/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
   integrity sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=
 
+protobufjs@^6.11.2:
+  version "6.11.2"
+  resolved "https://registry.nlark.com/protobufjs/download/protobufjs-6.11.2.tgz?cache=0&sync_timestamp=1619804253258&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprotobufjs%2Fdownload%2Fprotobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
+  integrity sha1-3jn6vU7TK+qgjpux4w0IVEwe34s=
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" ">=13.7.0"
+    long "^4.0.0"
+
 protocols@^1.1.0, protocols@^1.4.0:
   version "1.4.8"
   resolved "https://registry.npm.taobao.org/protocols/download/protocols-1.4.8.tgz#48eea2d8f58d9644a4a32caae5d5db290a075ce8"
@@ -11157,6 +11350,14 @@ rc-tabs@11.7.3:
     rc-menu "^8.6.1"
     rc-resize-observer "^1.0.0"
     rc-util "^5.5.0"
+
+rc-tooltip@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.nlark.com/rc-tooltip/download/rc-tooltip-5.1.0.tgz?cache=0&sync_timestamp=1620377593371&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frc-tooltip%2Fdownload%2Frc-tooltip-5.1.0.tgz#abb453c463c31a705aa01d268279f4ae6ae3b15f"
+  integrity sha1-q7RTxGPDGnBaoB0mgnn0rmrjsV8=
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    rc-trigger "^5.0.0"
 
 rc-tooltip@5.1.1, rc-tooltip@^5.0.1:
   version "5.1.1"
@@ -11701,7 +11902,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.88.0:
+request@^2.88.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.nlark.com/request/download/request-2.88.2.tgz?cache=0&sync_timestamp=1618847094748&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frequest%2Fdownload%2Frequest-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha1-1zyRhzHLWofaBH4gcjQUb2ZNErM=
@@ -11851,7 +12052,7 @@ rimraf@^2.5.2, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@^2.6.3, rimra
   dependencies:
     glob "^7.1.3"
 
-rimraf@^3.0.0:
+rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.nlark.com/rimraf/download/rimraf-3.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frimraf%2Fdownload%2Frimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
   integrity sha1-8aVAK6YiCtUswSgrrBrjqkn9Bho=
@@ -12984,7 +13185,7 @@ tar@^4.4.10, tar@^4.4.12, tar@^4.4.8:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-tar@^6.1.0:
+tar@^6.0.2, tar@^6.1.0:
   version "6.1.0"
   resolved "https://registry.nlark.com/tar/download/tar-6.1.0.tgz#d1724e9bcc04b977b18d5c573b333a2207229a83"
   integrity sha1-0XJOm8wEuXexjVxXOzM6IgcimoM=
@@ -14200,7 +14401,7 @@ which@^1.2.14, which@^1.2.9, which@^1.3.1:
   dependencies:
     isexe "^2.0.0"
 
-which@^2.0.1:
+which@^2.0.1, which@^2.0.2:
   version "2.0.2"
   resolved "https://registry.nlark.com/which/download/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha1-fGqN0KY2oDJ+ELWckobu6T8/UbE=
@@ -14222,6 +14423,32 @@ white-web-sdk@2.12.14:
     mobx "^4.15.7"
     mobx-react "^5.4.4"
     numeric "^1.2.6"
+    query-string "5"
+    react "^16.8.0"
+    react-dom "^16.8.0"
+    resize-observer-polyfill "^1.5.1"
+    spark-md5 "^3.0.0"
+    textarea-caret-ts "^4.1.0"
+    url-parse "^1.4.0"
+    uuid "^7.0.3"
+    xml-js "^1.6.11"
+
+white-web-sdk@2.13.3:
+  version "2.13.3"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.3.tgz#9153e5a9c6e89811f3580e057b2f6b9d134d05b9"
+  integrity sha1-kVPlqcbomBHzWA4Fey9rnRNNBbk=
+  dependencies:
+    "@netless/canvas-polyfill" "^0.0.4"
+    atob "^2.1.0"
+    bezier-js "^2.4.4"
+    color "^3.1.0"
+    detect-it "^3.0.5"
+    es6-symbol "^3.1.1"
+    mathjs "^6.2.2"
+    mobx "^4.15.7"
+    mobx-react "^5.4.4"
+    numeric "^1.2.6"
+    protobufjs "^6.11.2"
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"
