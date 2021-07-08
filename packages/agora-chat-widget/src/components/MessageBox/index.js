@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { TextMsg } from './TextMsg'
 import { CmdMsg } from './CmdMsg'
-import { InputBox } from '../InputBox'
 import scrollElementToBottom from '../../utils/scrollElementToBottom'
 import noMessage_icon from '../../themes/img/noMessage.png'
 import './index.css'
@@ -19,8 +18,8 @@ export const MessageBox = () => {
         scrollElementToBottom(scrollElement)
     }, [msgs])
 
-    return <div >
-        {isHaveMsg ? <div className="message-box" id="messages">
+    return <div className="message-box" id="messages" >
+        {isHaveMsg ? <div style={{ marginBottom: 150 }}>
             {
                 msgs && msgs.map((item, key) => {
                     const isText = item?.contentsType === "TEXT" || item?.type === "txt"
@@ -38,6 +37,5 @@ export const MessageBox = () => {
             <span>还没有消息</span>
         </div>
         }
-        <InputBox />
     </div>
 }

@@ -31,10 +31,10 @@ export const InputMsg = ({ isTeacher }) => {
     const state = useSelector(state => state)
     const loginUser = state?.loginUser;
     const roomId = state?.room.info.id;
-    const roleType = state?.userInfo.ext;
+    const roleType = state?.loginUserInfo.ext;
     const roomUuid = state?.propsData.roomUuid;
-    const userAvatarUrl = state?.userInfo.avatarurl;
-    const userNickName = state?.userInfo.nickname;
+    const userAvatarUrl = state?.loginUserInfo.avatarurl;
+    const userNickName = state?.loginUserInfo.nickname;
     const isAllMute = state?.room.allMute;
     // 管理输入框内容
     const [content, setContent] = useState('')
@@ -109,16 +109,16 @@ export const InputMsg = ({ isTeacher }) => {
                 msg.body.id = serverId;
                 msg.body.time = (new Date().getTime()).toString()
                 store.dispatch(messageAction(msg.body, { isHistory: false }));
-                setContent('');
             },                               // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
             fail: function (err) {
                 console.log('fail>>>', err);
                 if (err.type === 501) {
-                    console.log('发送失败', err);
+                    console.log('send fail>>>', err);
                 }
             }
         };
         msg.set(option);
+        setContent('');
         WebIM.conn.send(msg.body);
     }
 

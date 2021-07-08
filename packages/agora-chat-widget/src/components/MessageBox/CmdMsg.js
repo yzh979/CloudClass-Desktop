@@ -20,7 +20,7 @@ export const CmdMsg = ({ item }) => {
                 <span>{REMOVE_ALL_MUTE_MSG}</span>
             </div>}
             {idDeleteMsg && <div>
-                {roomUsersInfo[item.from].nickname}删除了一条消息
+                {Object.keys(roomUsersInfo).length > 0 && roomUsersInfo[item.from].nickname} 删除了一条消息
             </div>}
         </div>
     )

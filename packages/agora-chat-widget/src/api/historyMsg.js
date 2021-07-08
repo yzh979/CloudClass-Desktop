@@ -10,7 +10,6 @@ export const getHistoryMessages = (roomId) => {
         isGroup: true,
         count: HISTORY_COUNT,
         success: function (res) {
-            console.log('res>>>', res);
             const historyMsg = _.reverse(res)
             let deleteMsgId = [];
             historyMsg.map((val, key) => {

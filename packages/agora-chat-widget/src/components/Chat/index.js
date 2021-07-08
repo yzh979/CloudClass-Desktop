@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Tabs } from 'antd';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { MessageBox } from '../MessageBox'
-// import { InputBox } from '../InputBox'
+import { InputBox } from '../InputBox'
 import { UserList } from '../UserList'
 import { Announcement } from '../Announcement'
 import { ROLE, CHAT_TABS_KEYS } from '../../contants'
@@ -25,7 +25,6 @@ const renderTabBar = (props, DefaultTabBar) => (
 );
 
 const onTabChange = (key) => {
-    console.log('key>>>', key);
     store.dispatch(selectTabAction(key))
     switch (key) {
         case "CHAT":
@@ -39,12 +38,50 @@ const onTabChange = (key) => {
 
 // 主页面，定义 tabs
 export const Chat = () => {
+    const [roomUserList, setRoomUserList] = useState([])
     const state = useSelector(state => state)
+    const isLogin = state?.isLogin;
     const announcement = state?.room.announcement;
     const showRed = state?.showRed;
-    const roleType = state?.userInfo.ext;
+    const roleType = state?.loginUserInfo.ext;
+    const roomUsers = state?.room.roomUsers;
+    const roomUsersInfo = state?.room.roomUsersInfo;
     // 直接在 propsData 中取值
     const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+
+    useEffect(() => {
+        // 加载成员信息
+        let _speakerTeacher = []
+        let _student = []
+        if (isLogin) {
+            let val
+            roomUsers.map((item) => {
+                if (Object.keys(roomUsersInfo).length > 0) {
+                    val = roomUsersInfo[item]
+                    console.log('val>>>>>', val);
+                }
+                let newVal
+                switch (val && JSON.parse(val?.ext).role) {
+                    case 1:
+                        newVal = _.assign(val, { id: item })
+                        _speakerTeacher.push(newVal)
+                        break;
+                    case 2:
+                        newVal = _.assign(val, { id: item })
+                        _student.push(newVal)
+                        break;
+                    default:
+                        newVal = _.assign(val, { id: item })
+                        _student.push(newVal)
+                        break;
+                }
+            })
+            setRoomUserList(_.concat(_speakerTeacher, _student))
+        }
+        console.log('roomUserList>>', roomUserList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomUsers, roomUsersInfo])
+
     return <div>
         {showRed && <div className="red-notice"></div>}
         <StickyContainer>
@@ -57,9 +94,10 @@ export const Chat = () => {
                         </div>
                     }
                     <MessageBox />
+                    <InputBox />
                 </TabPane>
-                {isTeacher && <TabPane tab="成员" key={CHAT_TABS_KEYS.user}>
-                    <UserList />
+                {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
+                    <UserList roomUserList={roomUserList} />
                 </TabPane>}
                 <TabPane tab="公告" key={CHAT_TABS_KEYS.announcement}>
                     <Announcement />

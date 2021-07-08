@@ -25,7 +25,7 @@ export const MSG_TYPE = {
     answer: 2
 }
 // 拉取消息条数
-export const HISTORY_COUNT = 10
+export const HISTORY_COUNT = 50
 // 公告输入限制
 export const ANNOUNCEMENT_SIZE = 500
 // 超过限制

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
 import { propsAction } from './redux/actions/propsAction'
-import { clearStore } from './redux/actions/userAction'
+import { statusAction, clearStore } from './redux/actions/userAction'
 import { messageAction, showRedNotification } from './redux/actions/messageAction'
 import { roomAllMute, roomUsers, isUserMute } from './redux/actions/roomAction'
 import { loginIM } from './api/login'
@@ -37,14 +37,14 @@ const App = function (props) {
   const createListen = (new_IM_Data, appkey) => {
     WebIM.conn.listen({
       onOpened: () => {
+        store.dispatch(statusAction(true))
         message.success(LOGIN_SUCCESS);
         setUserInfo()
-        setTimeout(() => {
-          joinRoom()
-        }, 300);
+        joinRoom()
       },
       onClosed: (err) => {
         console.log('退出', err);
+        store.dispatch(statusAction(false))
         store.dispatch(clearStore({}))
       },
       onError: (message) => {

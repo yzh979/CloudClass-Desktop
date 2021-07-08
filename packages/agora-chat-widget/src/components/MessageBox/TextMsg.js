@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag, Popover } from 'antd'
 import { ROLE, DELETE, MSG_TYPE } from '../../contants'
@@ -11,6 +11,7 @@ import './index.css'
 
 // 聊天页面
 export const TextMsg = ({ item }) => {
+    const [visible, setVisible] = useState(false)
     const state = useSelector(state => state);
     const roomId = state?.room.info.id;
     const roomUuid = state?.propsData.roomUuid;
@@ -22,6 +23,7 @@ export const TextMsg = ({ item }) => {
     const avatarUrl = item?.ext.avatarUrl;
     const nickName = item?.ext.nickName
 
+    // 删除消息
     const deleteMsg = (recallId) => {
         var id = WebIM.conn.getUniqueId();            //生成本地消息id
         var msg = new WebIM.message('cmd', id); //创建命令消息
@@ -42,6 +44,7 @@ export const TextMsg = ({ item }) => {
                 msg.body.id = serverId;
                 msg.body.time = (new Date().getTime()).toString()
                 store.dispatch(messageAction(msg.body, { isHistory: false }));
+                hide();
             }, //消息发送成功回调 
             fail: function (e) {
                 console.log("Fail"); //如禁言、拉黑后发送消息会失败
@@ -49,7 +52,14 @@ export const TextMsg = ({ item }) => {
         });
         WebIM.conn.send(msg.body);
     }
-
+    // 控制删除框隐藏
+    const hide = () => {
+        setVisible(false)
+    }
+    // 删除框的显/隐状态
+    const handleVisibleChange = (visible) => {
+        setVisible(visible);
+    }
 
     return (
         <div className="msg">
@@ -61,7 +71,7 @@ export const TextMsg = ({ item }) => {
                 </div>
                 <div className="msg-border">
                     <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={delete_icon} />{DELETE}</div>}
-                        trigger="click">
+                        trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                         <div className="msg-text msg-text-me">
                             {msgData}
                         </div>
@@ -74,7 +84,8 @@ export const TextMsg = ({ item }) => {
                     <span>{nickName}</span>
                     {tagNmae ? <Tag className="msg-tag">{ROLE.teacher.tag}</Tag> : <Tag className="msg-tag">{ROLE.student.tag}</Tag>}
                 </div>
-                <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>} trigger="click">
+                <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
+                    trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                     <div className="msg-text msg-text-other">
                         {msgData}
                     </div>

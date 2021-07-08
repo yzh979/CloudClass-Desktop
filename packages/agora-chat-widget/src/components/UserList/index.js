@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import { ROLE } from '../../contants'
 import { setUserMute, removeUserMute } from '../../api/mute'
 import _ from 'lodash'
+import avatarUrl from '../../themes/img/avatar-big@2x.png'
 import muteNo from '../../themes/img/muteNo.png'
 import muteOff from '../../themes/img/muteOff.png'
 import './index.css'
 
-
+// 禁言
 const mute = (roomId, val, userId) => {
     if (val) {
         removeUserMute(roomId, userId)
@@ -17,29 +18,23 @@ const mute = (roomId, val, userId) => {
     }
 }
 
-
-
 // 成员页面
-export const UserList = () => {
+export const UserList = ({ roomUserList }) => {
     const state = useSelector(state => state);
     // 改成枚举
     const roomId = state?.room.info.id;
-    const roomUsers = state?.room.roomUsers;
-    const roomUsersInfo = state?.room.roomUsersInfo;
     const muteList = state?.room.muteList;
 
     return <div>
         {
-            roomUsers && roomUsers.map((item, key) => {
-                console.log('roomUsers>>>', roomUsers);
-                console.log('roomUsersInfo>>>', roomUsersInfo);
-                let isTeacher = Object.keys(roomUsersInfo).length > 0 && (JSON.parse(roomUsersInfo[item]?.ext).role === ROLE.teacher.id);
-                let showMuteIcon = muteList && muteList.includes(item)
+            roomUserList.length > 0 && roomUserList.map((item, key) => {
+                const showMuteIcon = muteList && muteList.includes(item.id);
+                const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id
                 return (
                     <div className="user-list" key={key}>
                         <div className="user-info">
-                            <img src={roomUsersInfo[item]?.avatarurl} alt="头像" className="user-avatar" />
-                            <span className="user-text" >{roomUsersInfo[item]?.nickname}</span>
+                            <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
+                            <span className="user-text" >{item?.nickname || item?.id}</span>
                             {isTeacher ?
                                 <Tag className="user-tag teacher-tag" >
                                     <span >
@@ -51,11 +46,12 @@ export const UserList = () => {
                                     </span>
                                 </Tag>}
                         </div>
-                        {!isTeacher && <div className="mute-icon">
-                            <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(roomId, showMuteIcon, item) }} />
-                        </div>}
+                        {!isTeacher && <Tooltip placement="top" overlay={muteList.includes(item.id) ? '解除禁言' : '禁言'}>
+                            <div className="mute-icon">
+                                <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(roomId, showMuteIcon, item.id) }} />
+                            </div>
+                        </Tooltip>}
                     </div>
-
                 )
             })
         }

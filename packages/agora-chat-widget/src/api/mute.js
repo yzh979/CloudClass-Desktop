@@ -16,7 +16,7 @@ export const setUserMute = (roomId, val) => {
         users: [val]   // 成员id列表
     };
     WebIM.conn.addUsersToChatRoomWhitelist(options).then((res) => {
-        console.log('禁言成功>>>', res);
+        console.log('mute fail>>>', res);
         getRoomWhileList(roomId)
     })
 }
@@ -40,7 +40,7 @@ export const getRoomWhileList = (roomId) => {
         chatRoomId: roomId  // 聊天室id
     }
     WebIM.conn.getChatRoomWhitelist(options).then((res) => {
-        console.log('禁言列表>>>', res);
+        console.log('mute success>>>', res);
         let newMuteList = [];
         (res.data).map((item) => {
             if (item === owner) return

@@ -2,8 +2,9 @@ import _ from 'lodash'
 import { CHAT_TABS_KEYS } from '../contants'
 let defaultState = {
     propsData: {},          // props 值
+    isLogin: false,         // 登陆状态
     loginUser: '',          // 当前登陆ID
-    userInfo: {},           // 当前登陆账号的用户属性
+    loginUserInfo: {},           // 当前登陆账号的用户属性
     room: {
         info: {},           // 聊天室详情
         roomUsers: [],      // 成员列表
@@ -25,6 +26,11 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 propsData: data
             };
+        case 'STATUS_ACTION':
+            return {
+                ...state,
+                isLogin: data
+            };
         case 'USER_ACTION':
             return {
                 ...state,
@@ -33,7 +39,7 @@ const reducer = (state = defaultState, action) => {
         case 'USER_INFO_ACTION':
             return {
                 ...state,
-                userInfo: data
+                loginUserInfo: data
             };
         case 'ROOM_INFO':
             return {
@@ -63,8 +69,9 @@ const reducer = (state = defaultState, action) => {
                 room: {
                     ...state.room,
                     roomUsers: newAry,
+                    roomUsersInfo: userInfo
                 },
-                userListInfo: userInfo
+
             };
         case 'ROOM_USERS_COUNT':
             let num

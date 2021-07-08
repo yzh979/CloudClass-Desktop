@@ -22,7 +22,7 @@ const UserMute = () => {
 
 export const InputBox = () => {
     const state = useSelector(state => state)
-    const roleType = state?.userInfo.ext;
+    const roleType = state?.loginUserInfo.ext;
     const isAllMute = state?.room.allMute;
     const isUserMute = state?.room.isUserMute;
     let isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;

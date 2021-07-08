@@ -1,4 +1,7 @@
 
+export const statusAction = (data) => {
+    return { type: 'STATUS_ACTION', data }
+}
 
 export const userAction = (data) => {
     return { type: 'USER_ACTION', data }

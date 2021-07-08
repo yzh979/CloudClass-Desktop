@@ -6,7 +6,7 @@
     background: #F9F9FC;
     border-radius: 6px 6px 4px 4px;
     border: 1px solid #ECECF1;
-    position: absolute;
+    position: fixed;
     bottom: 3px;
 }
 
