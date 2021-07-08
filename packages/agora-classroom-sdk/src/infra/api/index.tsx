@@ -1,5 +1,5 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, globalConfigs } from 'agora-edu-core';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, globalConfigs, MediaOptions } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement } from 'react';
@@ -90,7 +90,8 @@ export type LaunchOption = {
   personalCourseWareList?: CourseWareList, // 个人课件列表
   recordUrl?: string, // 回放页地址
   extApps?: IAgoraExtApp[] // app插件
-  region?: AgoraRegion
+  region?: AgoraRegion,
+  mediaOptions?: MediaOptions
 }
 
 export type ReplayOption = {
@@ -244,7 +245,8 @@ export class AgoraEduSDK {
           rtmUid: option.userUuid,
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
-          extApps: option.extApps
+          extApps: option.extApps,
+          mediaOptions: option.mediaOptions
         },
         language: option.language,
         startTime: option.startTime,

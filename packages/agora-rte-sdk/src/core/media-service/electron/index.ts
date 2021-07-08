@@ -1,8 +1,9 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode } from '../interfaces/index';
+import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode, MediaEncryptionConfig } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
+import {ENCRYPTION_MODE} from 'agora-electron-sdk/types/Api/native_type';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 
@@ -947,6 +948,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
   
+  prepare() {
+    return this.client
+  }
+
   async join(option: any): Promise<any> {
     try {
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
@@ -1443,5 +1448,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       return
     }
     await this.changeMicrophone(deviceId)
+  }
+
+  enableMediaEncryptionConfig(enabled: boolean, config:MediaEncryptionConfig): number {
+    return this.client.enableEncryption(enabled, {
+      encryptionMode: config.mode as unknown as ENCRYPTION_MODE,
+      encryptionKey: config.key
+    })
   }
 }
