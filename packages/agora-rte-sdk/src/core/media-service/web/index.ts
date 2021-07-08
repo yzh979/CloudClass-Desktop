@@ -88,9 +88,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   audioDeviceConfig: Map<'microphoneTestTrack' | 'microphoneTrack', any> = new Map()
   audioTrackPublished: Map<string, boolean> = new Map()
   videoTrackPublished: Map<string, boolean> = new Map()
-  videoEncoderWidth: number = 1280;
-  videoEncoderHeight: number = 720;
-  videoEncoderFrameRate: number = 30;
+  videoEncoderWidth: number = 640;
+  videoEncoderHeight: number = 480;
+  videoEncoderFrameRate: number = 15;
 
   get microphoneTrack(): IMicrophoneAudioTrack {
     return this.audioTrackMap.get('microphoneTrack')!

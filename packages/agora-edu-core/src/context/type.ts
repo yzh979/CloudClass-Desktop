@@ -895,6 +895,10 @@ export type BoardContext = {
      * @deprecated 废弃
      */
     courseWareList: any[],
+    /**
+     * 白板连接状态
+     */
+    boardConnectionState: string
 }
 
 export type StreamContext = {

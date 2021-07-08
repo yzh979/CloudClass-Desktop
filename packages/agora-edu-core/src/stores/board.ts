@@ -187,6 +187,9 @@ export class BoardStore extends ZoomController {
   showFolder: boolean = false;
   boardRegion: string = '';
 
+  @observable
+  boardConnectionState: string = RoomPhase.Disconnected
+
   @action.bound
   closeFolder() {
     this.showFolder = false
@@ -940,6 +943,8 @@ export class BoardStore extends ZoomController {
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: any) => {
+      this.boardConnectionState = state
+      // if (sta)
       if (state === 'disconnected') {
         this.online = false
       }

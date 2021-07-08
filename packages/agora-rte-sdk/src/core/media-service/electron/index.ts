@@ -253,9 +253,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   _remoteVideoStats: Record<number, any>;
   _remoteAudioStats: Record<number, any>;
   _cefClient: any;
-  videoEncoderWidth: number = 1280;
-  videoEncoderHeight: number = 720;
-  videoEncoderFrameRate: number = 30;
+  videoEncoderWidth: number = 640;
+  videoEncoderHeight: number = 480;
+  videoEncoderFrameRate: number = 15;
 
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)

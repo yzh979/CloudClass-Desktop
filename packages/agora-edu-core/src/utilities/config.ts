@@ -7,9 +7,9 @@ class GlobalConfigs {
 
   _region: string = '';
 
-  videoEncoderWidth = 1280
-  videoEncoderHeight = 720
-  videoEncoderFrameRate = 30
+  videoEncoderWidth: number = 640
+  videoEncoderHeight: number = 480
+  videoEncoderFrameRate: number = 15
 
   public setRegion(region: string): void {
     const regionDomain = getSDKDomain(this.sdkDomain, region)

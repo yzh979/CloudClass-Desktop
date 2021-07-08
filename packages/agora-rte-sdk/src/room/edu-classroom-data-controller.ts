@@ -1356,20 +1356,55 @@ export class EduClassroomDataController {
         }
 
 
+
+
         const paths = originalPaths.filter((path: string) => path)
         let cursor = properties
         // initialize structs
-        for(let path of paths) {
+        // for(let path of paths) {
+        //   cursor[path] = cursor[path] || {}
+        //   cursor = cursor[path]
+        // }
+        let lastPath = ''
+        for (let path of paths) {
           cursor[path] = cursor[path] || {}
           cursor = cursor[path]
+          lastPath = path
         }
+        // try {
+        //   for (let i = 0; i < paths.length; i++) {
+        //     const curPath = paths[i]
+        //     // pathResult += curPath
+        //     console.log('[SDK] curPath ', curPath)
+        //     const newPathValue = get(changedProperties, pathResult, {})
+        //     cursor[curPath] = cursor[curPath] || cloneDeep(newPathValue)
+        //     cursor = cursor[curPath]
+        //   }
+        // } catch (e) {
+        //   console.log(e);
+        // }
 
         let anchor = get(properties, paths.join('.'))
         let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
-        
+
         const isObject = (val:any) => (typeof val === 'object' && val !== null)
         const changedValue = changedProperties[key]
 
+        if (changedValue && Array.isArray(changedValue)) {
+          let arrayPropCurosr: any = properties
+          for (let path of paths) {
+            if (path === lastPath) {
+              arrayPropCurosr[path] = changedValue
+            } else {
+              arrayPropCurosr = arrayPropCurosr[path]
+            }
+          }
+          console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
+          console.log('### properties ', properties)
+          console.log(" #### newProperties", JSON.stringify(newProperties))
+          console.log(" #### changeProperties", JSON.stringify(changedProperties))
+          return properties
+        }
 
         if(!isObject(anchor)) {
           // if anchor is not an object, overwrite anyway
@@ -1380,8 +1415,7 @@ export class EduClassroomDataController {
             // if changed value is not an object, overwrite as well
             parent[[...paths].pop()!] = changedValue
           } else {
-            // changed value is an object, merge it
-            merge(anchor, changedValue)
+              merge(anchor, changedValue)
           }
         }
       }
