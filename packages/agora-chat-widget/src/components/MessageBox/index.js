@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { TextMsg } from './TextMsg'
 import { CmdMsg } from './CmdMsg'
 import scrollElementToBottom from '../../utils/scrollElementToBottom'
+import { CHAT_TABS_KEYS } from '../../contants'
 import noMessage_icon from '../../themes/img/noMessage.png'
 import './index.css'
 
@@ -10,15 +11,21 @@ import './index.css'
 export const MessageBox = () => {
     const state = useSelector(state => state);
     const msgs = state?.messages;
-    const loginUser = state?.loginUser;
+    const isTabKey = state?.isTabKey
     let isHaveMsg = msgs && msgs.length > 0;
 
+    const activeTab = isTabKey === CHAT_TABS_KEYS.chat
     useEffect(() => {
-        let scrollElement = document.getElementById('messages')
-        scrollElementToBottom(scrollElement)
-    }, [msgs])
+        autoLastMsg()
+    }, [msgs, activeTab])
 
-    return <div className="message-box" id="messages" >
+    // 消息自动加载最后一条消息
+    const autoLastMsg = () => {
+        let scrollElement = document.getElementById('chat-messages')
+        scrollElementToBottom(scrollElement)
+    }
+
+    return <div className="message-box" id="chat-messages" >
         {isHaveMsg ? <div style={{ marginBottom: 150 }}>
             {
                 msgs && msgs.map((item, key) => {

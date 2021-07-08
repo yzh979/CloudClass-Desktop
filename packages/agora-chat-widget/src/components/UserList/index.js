@@ -25,7 +25,7 @@ export const UserList = ({ roomUserList }) => {
     const roomId = state?.room.info.id;
     const muteList = state?.room.muteList;
 
-    return <div>
+    return <div className="aaa">
         {
             roomUserList.length > 0 && roomUserList.map((item, key) => {
                 const showMuteIcon = muteList && muteList.includes(item.id);
@@ -37,7 +37,7 @@ export const UserList = ({ roomUserList }) => {
                             <span className="user-text" >{item?.nickname || item?.id}</span>
                             {isTeacher ?
                                 <Tag className="user-tag teacher-tag" >
-                                    <span >
+                                    <span className="teacher-text" >
                                         {ROLE.teacher.tag}
                                     </span>
                                 </Tag> : <Tag className="user-tag student-tag">

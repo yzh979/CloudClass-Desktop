@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag, Popover } from 'antd'
-import { ROLE, DELETE, MSG_TYPE } from '../../contants'
+import { ROLE, RECALL, DELETE, MSG_TYPE } from '../../contants'
 import store from '../../redux/store'
 import { messageAction } from '../../redux/actions/messageAction'
-
+import recall_icon from '../../themes/img/recall.png'
 import delete_icon from '../../themes/img/delete.png'
 import './index.css'
 
@@ -22,6 +22,7 @@ export const TextMsg = ({ item }) => {
     const msgData = item?.msg || item?.data;
     const avatarUrl = item?.ext.avatarUrl;
     const nickName = item?.ext.nickName
+    const isTeacher = state.propsData.roleType === ROLE.teacher.id
 
     // 删除消息
     const deleteMsg = (recallId) => {
@@ -65,12 +66,12 @@ export const TextMsg = ({ item }) => {
         <div className="msg">
             {sender && <div>
                 <div className="msg-user-me">
-                    {tagNmae ? <Tag className="msg-tag" >{ROLE.teacher.tag}</Tag> : <Tag className="msg-tag" >{ROLE.student.tag}</Tag>}
+                    {tagNmae && <Tag className="msg-tag" >{ROLE.teacher.tag}</Tag>}
                     <span>{nickName}</span>
                     <img src={avatarUrl} className="msg-avatar" />
                 </div>
                 <div className="msg-border">
-                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={delete_icon} />{DELETE}</div>}
+                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={recall_icon} />{RECALL}</div>}
                         trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                         <div className="msg-text msg-text-me">
                             {msgData}
@@ -82,14 +83,17 @@ export const TextMsg = ({ item }) => {
                 <div className="msg-user-other">
                     <img src={avatarUrl} className="msg-avatar" />
                     <span>{nickName}</span>
-                    {tagNmae ? <Tag className="msg-tag">{ROLE.teacher.tag}</Tag> : <Tag className="msg-tag">{ROLE.student.tag}</Tag>}
+                    {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
                 </div>
-                <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
+                {isTeacher && <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
                     trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                     <div className="msg-text msg-text-other">
                         {msgData}
                     </div>
-                </Popover>
+                </Popover>}
+                {!isTeacher && <div className="msg-text msg-text-other">
+                    {msgData}
+                </div>}
             </div>}
         </div>
 

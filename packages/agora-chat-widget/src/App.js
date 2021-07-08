@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
-import { propsAction } from './redux/actions/propsAction'
+import { propsAction, isShowChat, isShowChatRed } from './redux/actions/propsAction'
 import { statusAction, clearStore } from './redux/actions/userAction'
 import { messageAction, showRedNotification } from './redux/actions/messageAction'
 import { roomAllMute, roomUsers, isUserMute } from './redux/actions/roomAction'
@@ -13,10 +14,14 @@ import _ from 'lodash'
 import { Chat } from './components/Chat'
 import { message } from 'antd'
 import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants'
+import showChat_icon from './themes/img/chat.png'
 import './App.css'
 import 'antd/dist/antd.css'
 
 const App = function (props) {
+  const state = useSelector(state => state)
+  const showChatModal = state?.showChat
+  const showChatRed = state?.showChatRed
   useEffect(() => {
     let im_Data = props.pluginStore.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', {})
@@ -32,6 +37,11 @@ const App = function (props) {
     loginIM(appkey);
   }, [])
 
+  const onChangeModal = () => {
+    store.dispatch(isShowChat(true))
+    // store.dispatch(isShowChatRed(false))
+  }
+
   let arr = []
   let intervalId;
   const createListen = (new_IM_Data, appkey) => {
@@ -43,7 +53,7 @@ const App = function (props) {
         joinRoom()
       },
       onClosed: (err) => {
-        console.log('退出', err);
+        console.log('onClosed>>>', err);
         store.dispatch(statusAction(false))
         store.dispatch(clearStore({}))
       },
@@ -67,20 +77,29 @@ const App = function (props) {
       },
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
-        store.dispatch(messageAction(message, { isHistory: false }))
-        const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
-        store.dispatch(showRedNotification(isShowRed))
+        if (new_IM_Data.chatroomId === message.to) {
+          store.dispatch(messageAction(message, { isHistory: false }))
+          const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
+          store.dispatch(showRedNotification(isShowRed))
+          // store.dispatch(isShowChatRed(true))
+        }
+
       },
       onCmdMessage: (message) => {
         console.log('onCmdMessaeg>>>', message);
-        store.dispatch(messageAction(message, { showNotice: store.getState().isTabKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
+        if (new_IM_Data.chatroomId === message.to) {
+          store.dispatch(messageAction(message, { showNotice: store.getState().isTabKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
+        }
       },
       onPresence: (message) => {
         console.log('onPresence>>>', message);
-        const userCount = _.get(store.getState(), 'room.info.affiliations_count')
+        if (new_IM_Data.chatroomId !== message.gid) {
+          return
+        }
         const roomUserList = _.get(store.getState(), 'room.roomUsers')
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
+            if (message.from === "系统管理员") return
             arr.push(message.from)
             intervalId && clearInterval(intervalId);
             intervalId = setTimeout(() => {
@@ -132,8 +151,17 @@ const App = function (props) {
   }
 
   return (
-    <div className="app">
-      <Chat />
+    <div >
+      {showChatModal ?
+        <div className="app">
+          <Chat />
+        </div> :
+        <div className="chat">
+          <div className="show-chat-icon" onClick={() => { onChangeModal() }}>
+            <img src={showChat_icon} />
+          </div>
+          {/* {showChatRed && <div className="chat-notice"></div>} */}
+        </div>}
     </div >
   );
 }

@@ -17,6 +17,17 @@
 
 }
 
+.all-mute-text {
+    width: 53px;
+    height: 17px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #7D8798;
+    line-height: 18px;
+}
+
 .chat-icon {
     display: flex;
     align-items: center;
@@ -28,6 +39,7 @@
 .emoji-icon {
     width: 24px;
     height: 24px;
+    cursor: pointer;
 }
 
 .emoji-mask {

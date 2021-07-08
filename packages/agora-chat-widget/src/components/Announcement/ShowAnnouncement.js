@@ -1,19 +1,25 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { EditAnnouncement } from './EditAnnouncement'
+import store from '../../redux/store'
+import { announcementStatus } from '../../redux/actions/roomAction'
 import { updateAnnouncement } from '../../api/chatroom'
 import { ROLE } from '../../contants'
 import announcement from '../../themes/img/announcement.png'
 
 import './index.css'
-const Edit = ({ onEdit }) => {
+
+const onChangeStatus = () => {
+    store.dispatch(announcementStatus(false))
+}
+
+const Edit = () => {
     return (
-        <span className="edit" onClick={() => { onEdit(false) }} >去发布</span>
+        <span className="edit" onClick={() => { onChangeStatus() }} >去发布</span>
     )
 };
 
 
-export const ShowAnnouncement = ({ onEdit }) => {
+export const ShowAnnouncement = () => {
     const state = useSelector(state => state);
     const roomId = state.room.info.id;
     const Announcement = state.room.announcement;
@@ -26,8 +32,8 @@ export const ShowAnnouncement = ({ onEdit }) => {
                 <div>
                     {
                         isTeacher && <div className="menu">
-                            <span className="update-content" onClick={() => { onEdit(false) }}>修改</span>
-                            <span className="update-content" onClick={() => { updateAnnouncement(roomId, ""), onEdit(true) }}>删除</span>
+                            <span className="update-content" onClick={() => { onChangeStatus() }}>修改</span>
+                            <span className="update-content" onClick={() => { updateAnnouncement(roomId, "") }}>删除</span>
                         </div>
                     }
                     <div className="announcement-content">
@@ -35,7 +41,7 @@ export const ShowAnnouncement = ({ onEdit }) => {
                     </div>
                 </div> : <div className="no-announcement">
                     <img src={announcement} alt="公告" className="announcement-icon" />
-                    <div className="no-notice"><span>暂无公告，</span>{isTeacher && <Edit onEdit={onEdit} />}</div>
+                    <div className="no-notice"><span>暂无公告，</span>{isTeacher && <Edit />}</div>
                 </div>
         }
     </div>

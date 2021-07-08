@@ -21,18 +21,19 @@ export const roomUsersInfo = (data) => {
 export const roomAnnouncement = (data) => {
     return { type: 'ROOM_ANNOUNCEMENT', data }
 }
-
 // 聊天室全局禁言
 export const roomAllMute = (data) => {
     return { type: 'ROOM_ALL_MUTE', data }
 }
-
 // 聊天室单人禁言
 export const roomUserMute = (data) => {
     return { type: 'ROOM_USER_MUTE', data }
 }
-
 // 判断当前是否被禁言
 export const isUserMute = (data) => {
     return { type: 'IS_USER_MUTE', data }
+}
+// 聊天室公告状态
+export const announcementStatus = (data) => {
+    return { type: 'ANNOUNCEMENT_STATUS', data }
 }

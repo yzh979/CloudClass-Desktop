@@ -41,7 +41,9 @@ export const REMOVE_ALL_MUTE_MSG = "已关闭全体学生禁言"
 export const LOGIN_SUCCESS = "登陆IM成功！"
 // 加入聊天室成功提示
 export const JOIN_ROOM_SUCCESS = "加入聊天室成功！"
-
+// 删除消息
 export const DELETE = "删除"
+// 撤回消息
+export const RECALL = "撤回"
 
 

@@ -1,7 +1,7 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
 import store from '../redux/store'
-import { roomInfo, roomUsers, roomAnnouncement, roomAllMute } from '../redux/actions/roomAction'
+import { roomInfo, roomUsers, roomAnnouncement, roomAllMute, announcementStatus } from '../redux/actions/roomAction'
 import { JOIN_ROOM_SUCCESS, ROLE } from '../contants'
 import { getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMsg'
@@ -72,12 +72,16 @@ export const getAnnouncement = (roomId) => {
 
 // 上传/修改 群组公告
 export const updateAnnouncement = (roomId, noticeCentent) => {
+    if (noticeCentent.length > 500) {
+        return message.error('公告内容不能超过500！')
+    }
     let options = {
         roomId: roomId,                 // 聊天室id   
         announcement: noticeCentent // 公告内容                        
     };
     WebIM.conn.updateChatRoomAnnouncement(options).then((res) => {
         getAnnouncement(res.data.id);
+        store.dispatch(announcementStatus(true))
     })
 }
 

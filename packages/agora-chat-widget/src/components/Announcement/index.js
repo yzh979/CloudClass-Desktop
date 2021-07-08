@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
+
 import { ShowAnnouncement } from './ShowAnnouncement'
 import { EditAnnouncement } from './EditAnnouncement'
 
@@ -10,15 +11,12 @@ import './index.css'
 
 // 公告
 export const Announcement = () => {
-    const [showEdit, setShowEdit] = useState(true)
-    // store 取值
-    const onEdit = (val) => {
-        setShowEdit(val)
-    }
+    const state = useSelector(state => state)
+    const editStatus = state?.announcementStatus
     return (
         <div>
-            {showEdit && <ShowAnnouncement onEdit={onEdit} />}
-            {!showEdit && <EditAnnouncement onEdit={onEdit} />}
+            {editStatus && <ShowAnnouncement />}
+            {!editStatus && <EditAnnouncement />}
         </div>
     )
 }

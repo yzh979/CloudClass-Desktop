@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Switch, Tooltip, Input, Button, message } from 'antd';
 import { MSG_TYPE } from '../../contants'
@@ -40,6 +40,8 @@ export const InputMsg = ({ isTeacher }) => {
     const [content, setContent] = useState('')
     // 控制表情
     const [isEmoji, setIsEmoji] = useState(false);
+    // 输入框焦点
+    const inputRef = React.useRef(null);
 
 
     // 控制显示/隐藏 表情框
@@ -58,12 +60,15 @@ export const InputMsg = ({ isTeacher }) => {
 
     // 获取到点击的表情，加入到输入框
     const getEmoji = (e) => {
+        // 监听表情输入后，自动获取输入框焦点
+        inputRef.current.focus({
+            cursor: 'end',
+        });
         // 本次输入的内容
         let tempContent = e.target.innerText;
         // 更新内容和长度
         let totalContent = content + tempContent
         setContent(totalContent);
-
     }
 
     // 全局禁言开关
@@ -74,7 +79,6 @@ export const InputMsg = ({ isTeacher }) => {
             removeAllmute(roomId, sendCmdMsg);
         }
     }
-
 
     // 监听输入框变化
     const changeMsg = (e) => {
@@ -105,6 +109,7 @@ export const InputMsg = ({ isTeacher }) => {
                 nickName: userNickName,
             },                         // 扩展消息
             success: function (id, serverId) {
+                hideEmoji()
                 msg.id = serverId;
                 msg.body.id = serverId;
                 msg.body.time = (new Date().getTime()).toString()
@@ -113,7 +118,8 @@ export const InputMsg = ({ isTeacher }) => {
             fail: function (err) {
                 console.log('fail>>>', err);
                 if (err.type === 501) {
-                    console.log('send fail>>>', err);
+                    message.error("消息内容包含敏感词，请重新发送！")
+
                 }
             }
         };
@@ -154,26 +160,29 @@ export const InputMsg = ({ isTeacher }) => {
         <div className="chat-icon">
             {isEmoji && <ShowEomji getEmoji={getEmoji} hideEmoji={hideEmoji} />}
             <Tooltip title="表情">
-                <img src={emojiIcon} alt="表情" className="emoji-icon" onClick={showEmoji} />
+                <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
             </Tooltip>
-            {isTeacher && <Tooltip title="全局禁言">
+            {isTeacher && <div>
+                <span className="all-mute-text">全体禁言</span>
                 <Switch
                     size="small"
                     checked={isAllMute}
                     onClick={() => { onChangeMute(isAllMute) }}
                 />
-            </Tooltip>}
+            </div>}
 
         </div>
         <Input.TextArea
             placeholder="请输入消息"
             className="input-chat"
+            autoFocus
             onChange={(e) => changeMsg(e)}
             value={content}
             onPressEnter={sendMessage()}
+            ref={inputRef}
         />
         <div className="input-btn">
-            <Button type="primary" className="send-btn" onClick={() => { sendMessage() }}>发送</Button>
+            <Button type="primary" className="send-btn" onClick={sendMessage()}>发送</Button>
         </div>
     </div>
 }

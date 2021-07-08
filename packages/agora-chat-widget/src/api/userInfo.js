@@ -23,7 +23,12 @@ export const setUserInfo = () => {
 
 // 获取用户属性
 export const getUserInfo = async (member) => {
-    await WebIM.conn.fetchUserInfoById(member).then((res) => {
-        store.dispatch(roomUsersInfo(res.data))
-    })
+    let count = 0;
+    while (member.length > count) {
+        let curmembers = member.slice(count, count + 100);
+        await WebIM.conn.fetchUserInfoById(curmembers).then((res) => {
+            store.dispatch(roomUsersInfo(res.data))
+        })
+        count += 100;
+    }
 }

@@ -2,9 +2,10 @@ import _ from 'lodash'
 import { CHAT_TABS_KEYS } from '../contants'
 let defaultState = {
     propsData: {},          // props 值
+    showChat: true,          // 控制Chat
     isLogin: false,         // 登陆状态
     loginUser: '',          // 当前登陆ID
-    loginUserInfo: {},           // 当前登陆账号的用户属性
+    loginUserInfo: {},      // 当前登陆账号的用户属性
     room: {
         info: {},           // 聊天室详情
         roomUsers: [],      // 成员列表
@@ -15,8 +16,10 @@ let defaultState = {
         isUserMute: false   // 单人是否禁言
     },
     messages: [],           // 消息列表
-    isTabKey: CHAT_TABS_KEYS.chat,
-    showRed: false
+    isTabKey: CHAT_TABS_KEYS.chat,  // 当前选中的Tab
+    showRed: false,         // 不在聊天Tab消息提示
+    showChatRed: false,     // 窗口最小化提示
+    announcementStatus: true   // 公告编辑状态
 }
 const reducer = (state = defaultState, action) => {
     const { type, data } = action;
@@ -25,6 +28,16 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 propsData: data
+            };
+        case 'IS_SHOW_CHAT':
+            return {
+                ...state,
+                showChat: data
+            };
+        case 'IS_SHOW_CHAT_RED':
+            return {
+                ...state,
+                showChatRed: data
             };
         case 'STATUS_ACTION':
             return {
@@ -157,6 +170,11 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 showRed: data
+            }
+        case 'ANNOUNCEMENT_STATUS':
+            return {
+                ...state,
+                announcementStatus: data
             }
         default:
             break;

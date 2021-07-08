@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Input, Button, message } from 'antd';
+import { Input, Button } from 'antd';
 import { ANNOUNCEMENT_SIZE, MORE_SIZE } from '../../contants'
 import { updateAnnouncement } from '../../api/chatroom'
+import store from '../../redux/store'
+import { announcementStatus } from '../../redux/actions/roomAction'
 
 const { TextArea } = Input;
 import './index.css'
@@ -17,20 +19,21 @@ export const EditAnnouncement = ({ onEdit }) => {
     // 公告内容修改
     const changeContent = (e) => {
         let newContent = e.target.value;
-        if (newContent.length > ANNOUNCEMENT_SIZE) {
-            message.info(`公告内容不能超过${ANNOUNCEMENT_SIZE}！`)
-        }
         setCount(newContent.length);
         setContent(newContent);
     }
 
+
+    const editStatus = () => {
+        store.dispatch(announcementStatus(true))
+    }
     return (
         <div className="edit-content">
             <TextArea
                 placeholder="请在此输入内容"
                 className="input-content"
                 onChange={changeContent}
-                maxLength={ANNOUNCEMENT_SIZE}
+                // maxLength={ANNOUNCEMENT_SIZE}
                 defaultValue={announcement}
                 value={content}
             />
@@ -39,9 +42,9 @@ export const EditAnnouncement = ({ onEdit }) => {
                 <div className="count-content">{count}/{ANNOUNCEMENT_SIZE}</div>
             </div>
             <div className="btn-content">
-                <Button type="default" className="save-btn" onClick={() => { onEdit(true) }}>取消</Button>
+                <Button type="default" className="save-btn" onClick={() => { editStatus() }}>取消</Button>
                 <Button type="primary" className="cancel-btn" onClick={
-                    () => { updateAnnouncement(roomId, content), onEdit(true) }}>发布</Button>
+                    () => { updateAnnouncement(roomId, content) }}>发布</Button>
             </div>
         </div>
     )
