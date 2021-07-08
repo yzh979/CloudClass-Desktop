@@ -16,7 +16,7 @@ export interface HomeAboutProps extends BaseProps {
 }
 
 export const HomeAbout: FC<HomeAboutProps> = ({
-    version = '1.1.0',
+    version = '1.1.0.1',
     publishDate = '2021.02.22',
     SDKVersion = '3.3.0',
     classroomVersion = '1.0',
