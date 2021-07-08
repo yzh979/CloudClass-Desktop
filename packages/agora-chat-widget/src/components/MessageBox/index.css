@@ -1,6 +1,6 @@
 .message-box {
     margin-top: 3px;
-    height: 560px;
+    max-height: 610px;
     min-height: 350px;
     overflow-y: scroll;
 }

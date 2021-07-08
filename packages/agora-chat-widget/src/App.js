@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
 import { propsAction } from './redux/actions/propsAction'
+import { clearStore } from './redux/actions/userAction'
 import { messageAction, showRedNotification } from './redux/actions/messageAction'
 import { roomAllMute, roomUsers, isUserMute } from './redux/actions/roomAction'
 import { loginIM } from './api/login'

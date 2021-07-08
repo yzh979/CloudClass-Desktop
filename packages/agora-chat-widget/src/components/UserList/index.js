@@ -31,7 +31,9 @@ export const UserList = () => {
     return <div>
         {
             roomUsers && roomUsers.map((item, key) => {
-                let isTeacher = roomUsersInfo && (JSON.parse(roomUsersInfo[item]?.ext).role === ROLE.teacher.id);
+                console.log('roomUsers>>>', roomUsers);
+                console.log('roomUsersInfo>>>', roomUsersInfo);
+                let isTeacher = Object.keys(roomUsersInfo).length > 0 && (JSON.parse(roomUsersInfo[item]?.ext).role === ROLE.teacher.id);
                 let showMuteIcon = muteList && muteList.includes(item)
                 return (
                     <div className="user-list" key={key}>

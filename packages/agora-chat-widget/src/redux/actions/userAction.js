@@ -8,6 +8,6 @@ export const userInfoAction = (data) => {
     return { type: 'USER_INFO_ACTION', data }
 }
 
-export const clearStore = () => {
+export const clearStore = (data) => {
     return { type: 'CLEAR_STORE', data }
 }
