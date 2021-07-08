@@ -1,6 +1,6 @@
 {
   "name": "agora-edu-core",
-  "version": "1.1.0-ga",
+  "version": "1.1.0-ga-rc1",
   "main": "lib/index.js",
   "keywords": [
     "Agora",
@@ -66,7 +66,7 @@
     "@netless/white-audio-plugin2": "2.0.4",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.4",
-    "agora-rte-sdk": "1.1.0-ga",
+    "agora-rte-sdk": "1.1.0-ga-rc1",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",
     "mobx": "5.15.4",
