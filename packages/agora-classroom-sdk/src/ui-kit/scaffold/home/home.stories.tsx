@@ -44,7 +44,7 @@ export const HomePage = () => {
 
   return (
     <Home
-      version="1.1.0"
+      version="1.1.0.1"
       roomId={roomId}
       userName={userName}
       role={role}

@@ -37,3 +37,4 @@ entitlements.mac.plist
 .env.example
 *.map
 *.*~
+agoraAddonlog.txt

@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "1.1.0-ga",
+  "version": "1.1.0-ga-rc1",
   "homepage": ".",
   "keywords": [
     "agora",
@@ -285,9 +285,9 @@
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
-    "agora-edu-core": "1.1.0-ga",
+    "agora-edu-core": "1.1.0-ga-rc1",
     "agora-electron-sdk": "3.4.2-rc.1-build.615",
-    "agora-rte-sdk": "1.1.0-ga",
+    "agora-rte-sdk": "1.1.0-ga-rc1",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
     "classnames": "2.2.6",

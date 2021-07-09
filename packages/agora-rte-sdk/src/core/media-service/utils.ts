@@ -4,7 +4,7 @@ export const convertUid = (uid: any) => {
   return +uid
 }
 
-export const paramsConfig = {"rtc.report_app_scenario":{"appScenario":0, "serviceType":0,"appVersion":"1.1.0"}}
+export const paramsConfig = {"rtc.report_app_scenario":{"appScenario":0, "serviceType":0,"appVersion":"1.1.0.1"}}
 
 export const setAppScenario = (scenarioType?: number) => {
   paramsConfig["rtc.report_app_scenario"].appScenario = scenarioType || 0;
