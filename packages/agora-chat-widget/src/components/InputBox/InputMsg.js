@@ -182,7 +182,7 @@ export const InputMsg = ({ isTeacher }) => {
             ref={inputRef}
         />
         <div className="input-btn">
-            <Button type="primary" className="send-btn" onClick={sendMessage()}>发送</Button>
+            <Button type="primary" shape="round" onClick={sendMessage()}>发送</Button>
         </div>
     </div>
 }

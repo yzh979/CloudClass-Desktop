@@ -74,7 +74,7 @@ export const TextMsg = ({ item }) => {
                     <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={recall_icon} />{RECALL}</div>}
                         trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                         <div className="msg-text msg-text-me">
-                            {msgData}
+                            <span> {msgData}</span>
                         </div>
                     </Popover>
                 </div>
@@ -88,7 +88,7 @@ export const TextMsg = ({ item }) => {
                 {isTeacher && <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
                     trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                     <div className="msg-text msg-text-other">
-                        {msgData}
+                        <span> {msgData}</span>
                     </div>
                 </Popover>}
                 {!isTeacher && <div className="msg-text msg-text-other">

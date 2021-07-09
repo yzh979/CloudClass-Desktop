@@ -20,13 +20,13 @@ import 'antd/dist/antd.css'
 
 const App = function (props) {
   const state = useSelector(state => state)
-  const showChatModal = state?.showChat
+  const showChat = state?.showChat
   const showChatRed = state?.showChatRed
   useEffect(() => {
     let im_Data = props.pluginStore.pluginStore;
-    let im_Data_Props = _.get(im_Data, 'props', {})
-    let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', {})
-    let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', {})
+    let im_Data_Props = _.get(im_Data, 'props', '')
+    let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
+    let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
     let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
     let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
     store.dispatch(propsAction(new_IM_Data));
@@ -39,7 +39,7 @@ const App = function (props) {
 
   const onChangeModal = () => {
     store.dispatch(isShowChat(true))
-    // store.dispatch(isShowChatRed(false))
+    store.dispatch(isShowChatRed(false))
   }
 
   let arr = []
@@ -77,11 +77,15 @@ const App = function (props) {
       },
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
+        const isShowChat = _.get(store.getState(), 'showChat')
         if (new_IM_Data.chatroomId === message.to) {
           store.dispatch(messageAction(message, { isHistory: false }))
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed))
-          // store.dispatch(isShowChatRed(true))
+          if (!isShowChat) {
+            console.log('执行了>>>');
+            store.dispatch(isShowChatRed(true))
+          }
         }
 
       },
@@ -152,15 +156,15 @@ const App = function (props) {
 
   return (
     <div >
-      {showChatModal ?
+      {showChat ?
         <div className="app">
           <Chat />
         </div> :
         <div className="chat">
           <div className="show-chat-icon" onClick={() => { onChangeModal() }}>
             <img src={showChat_icon} />
+            {showChatRed && <div className="chat-notice"></div>}
           </div>
-          {/* {showChatRed && <div className="chat-notice"></div>} */}
         </div>}
     </div >
   );

@@ -7,7 +7,7 @@ import _ from 'lodash'
 import avatarUrl from '../../themes/img/avatar-big@2x.png'
 import muteNo from '../../themes/img/muteNo.png'
 import muteOff from '../../themes/img/muteOff.png'
-import './index.css'
+import '../MessageBox/index.css'
 
 // 禁言
 const mute = (roomId, val, userId) => {
@@ -25,7 +25,7 @@ export const UserList = ({ roomUserList }) => {
     const roomId = state?.room.info.id;
     const muteList = state?.room.muteList;
 
-    return <div className="aaa">
+    return <div className="user">
         {
             roomUserList.length > 0 && roomUserList.map((item, key) => {
                 const showMuteIcon = muteList && muteList.includes(item.id);

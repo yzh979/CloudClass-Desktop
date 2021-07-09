@@ -42,8 +42,8 @@ export const EditAnnouncement = ({ onEdit }) => {
                 <div className="count-content">{count}/{ANNOUNCEMENT_SIZE}</div>
             </div>
             <div className="btn-content">
-                <Button type="default" className="save-btn" onClick={() => { editStatus() }}>取消</Button>
-                <Button type="primary" className="cancel-btn" onClick={
+                <Button type="default" shape="round" onClick={() => { editStatus() }}>取消</Button>
+                <Button type="primary" shape="round" onClick={
                     () => { updateAnnouncement(roomId, content) }}>发布</Button>
             </div>
         </div>

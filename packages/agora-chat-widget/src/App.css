@@ -18,9 +18,9 @@
 } */
 
 .show-chat-icon {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
+    position: fixed;
+    right: 8px;
+    bottom: 8px;
     width: 40px;
     height: 40px;
     background: #FFFFFF;
@@ -36,10 +36,8 @@
     position: absolute;
     border-radius: 50%;
     background: #FF462D;
-    height: 8px;
-    width: 8px;
-    left: 45px;
-    top: 13px;
-    /* border: 1px solid #1D2026; */
-    box-sizing: content-box;
+    height: 10px;
+    width: 10px;
+    top: 5px;
+    right: 5px;
 }

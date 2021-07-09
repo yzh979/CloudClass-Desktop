@@ -26,7 +26,7 @@ export const MessageBox = () => {
     }
 
     return <div className="message-box" id="chat-messages" >
-        {isHaveMsg ? <div style={{ marginBottom: 150 }}>
+        {isHaveMsg ? <div>
             {
                 msgs && msgs.map((item, key) => {
                     const isText = item?.contentsType === "TEXT" || item?.type === "txt"
