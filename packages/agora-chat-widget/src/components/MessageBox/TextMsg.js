@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag, Popover } from 'antd'
-import { ROLE, RECALL, DELETE, MSG_TYPE } from '../../contants'
+import { ROLE, DELETE, MSG_TYPE } from '../../contants'
 import store from '../../redux/store'
 import { messageAction } from '../../redux/actions/messageAction'
-import recall_icon from '../../themes/img/recall.png'
 import delete_icon from '../../themes/img/delete.png'
 import './index.css'
 
@@ -71,7 +70,7 @@ export const TextMsg = ({ item }) => {
                     <img src={avatarUrl} className="msg-avatar" />
                 </div>
                 <div className="msg-border">
-                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={recall_icon} />{RECALL}</div>}
+                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={delete_icon} />{DELETE}</div>}
                         trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                         <div className="msg-text msg-text-me">
                             <span> {msgData}</span>
