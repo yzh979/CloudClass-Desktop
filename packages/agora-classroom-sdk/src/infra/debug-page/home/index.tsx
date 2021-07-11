@@ -97,29 +97,29 @@ export const TestHomePage = observer(() => {
   let resourceUuid = "ec1a72e4-706a-4c19-bd9d-3558738f1a2b"
   let resourceName = "不等式"
   let sceneInfos = []
-  let sceneInfo = {
-      name: "1",
-      ppt: {
-          src: "pptx://....",
-          width: 480,
-          height: 360
-      }
-  }
+  // let sceneInfo = {
+  //     name: "1",
+  //     ppt: {
+  //         src: "pptx://....",
+  //         width: 480,
+  //         height: 360
+  //     }
+  // }
 
-  sceneInfos.push(sceneInfo)
+  // sceneInfos.push(sceneInfo)
 
-  let courseWareList = [{
-      resourceUuid,
-      resourceName,
-      size:  394.922,
-      updateTime: new Date().getTime(),
-      ext: "pdf",
-      url: "https://lkl-whiteboard.oss-cn-shanghai.aliyuncs.com/whiteboard/不等式学生.pdf",
-      scenes: sceneInfos,
-      conversion: {
-        type: "static",
-      },
-  }]
+  // let courseWareList = [{
+  //     resourceUuid,
+  //     resourceName,
+  //     size:  394.922,
+  //     updateTime: new Date().getTime(),
+  //     ext: "pdf",
+  //     url: "https://lkl-whiteboard.oss-cn-shanghai.aliyuncs.com/whiteboard/不等式学生.pdf",
+  //     scenes: sceneInfos,
+  //     conversion: {
+  //       type: "static",
+  //     },
+  // }]
 
   // @ts-ignore
   const SDKVersion = window.isElectron ? window.rtcEngine.getVersion().version : AgoraRTC.VERSION

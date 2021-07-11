@@ -74,7 +74,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   },
   [BizPageRouter.TestHomePage]: {
     path: '/',
-    component: () => PageSFC(ProdHomePage)
+    component: () => PageSFC(isProd ? ProdHomePage:TestHomePage)
   },
   // [BizPageRouter.ProdHomePage]: {
   //   path: '/:roomUuid/:userUuid/:role/:rtmToken',
