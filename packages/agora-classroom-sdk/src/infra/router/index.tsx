@@ -13,7 +13,7 @@ import { MidClassScenario } from '@/ui-kit/capabilities/scenarios/mid-class';
 import {BigClassScenario} from '@/ui-kit/capabilities/scenarios/big-class';
 import { RecordPage } from '../debug-page/record';
 
-const isProd = process.env.NODE_ENV !== 'production'
+const isProd = process.env.NODE_ENV === 'production'
 
 export type AppRouteComponent = {
   path: string
