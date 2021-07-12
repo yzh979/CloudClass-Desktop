@@ -121,7 +121,7 @@ export const allTools: ToolItem[] = [
     icon: 'cloud',
     component: ({isActive, onClick}) => {
       return (
-        <Tooltip title='移动' placement="bottom" >
+        <Tooltip title='媒体库' placement="bottom" >
           <div className={`tool ${isActive ? 'active' : ''}`}>
             <img src={IconCloud} onClick={onClick}/>
           </div>

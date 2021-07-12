@@ -195,6 +195,7 @@
   flex: 1;
   min-height: 0;
   margin-top: 20px;
+  width: 100%;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
@@ -284,9 +285,17 @@
   display: flex;
 }
 
-.roster-table .star-nums {
+.roster-table {
   color: #7b88a0;
   transform: translateY(-4px);
+  position: relative;
+  display: inline-block;
+}
+
+
+.star-nums {
+  color: #7b88a0;
+  transform: translateY(3px);
   position: relative;
   display: inline-block;
 }

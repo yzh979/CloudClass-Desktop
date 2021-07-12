@@ -11,6 +11,14 @@ import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
 
 
+import closeImage from './assets/icon-close.png'
+
+import levelClass from './assets/icon-level-class.png'
+
+import outClass from './assets/icon-out-class.png'
+
+
+
 export type BaseDialogProps = {
   id: string
 }
@@ -357,6 +365,55 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
     </Modal>
   )
 })
+
+export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
+
+  const {destroyRoom} = useRoomContext()
+
+  const {removeDialog , addToast} = useGlobalContext()
+
+  const {
+    startRecording,
+    stopRecording
+  } = useRecordingContext()
+
+  return (<div className={"exit-body"} >
+    <div className={'exit-header'}>
+      <span>退出直播</span>
+      <img src={closeImage}  onClick={()=>removeDialog(id)} />
+    </div>
+
+    <div className={'exit-select'}>
+      <div className={'level-class'}
+           onClick={async()=> {
+             console.log('tag', ' &&&&$$$$$-----levelClassClick')
+             await stopRecording()
+
+             removeDialog(id)
+           }}>
+        <img src={levelClass} /> <span>暂时离开</span>
+      </div>
+
+
+      <div className={'out-class'}
+           onClick={async () => {
+             try {
+               await destroyRoom()
+             } catch (err) {
+               const wrapperError = GenericErrorWrapper(err)
+               addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
+               removeDialog(id)
+             }
+           }
+           }
+      >
+        <img src={outClass}/> <span>下课啦</span>
+      </div>
+    </div>
+
+  </div>)
+};
+
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
 

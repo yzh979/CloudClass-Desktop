@@ -36,11 +36,11 @@ export const defaultColumns: Column[] = [
         [`${operateStatus}`]: 1,
       })
       return (
-        <img src={profile.stars > 0 ? StarActive:Star}/>
-        // <span>
-        //   <Icon type={'star-outline'} className={cls} iconhover={canOperate}/>
-        //   <span className="star-nums">&nbsp;x{text}</span>
-        // </span>
+        // <img src={profile.stars > 0 ? StarActive:Star}/>
+          <span style={{position:"relative"}}>
+            <img src={profile.stars > 0 ? StarActive:Star}  style={{display:"inline"}} />
+            <span className="star-nums" style={{bottom:2}}>&nbsp;&nbsp; x{text}</span>
+          </span>
       )
     },
   },
