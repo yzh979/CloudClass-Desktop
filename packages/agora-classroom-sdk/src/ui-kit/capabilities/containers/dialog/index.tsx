@@ -3,7 +3,7 @@ import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext,
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
@@ -368,14 +368,25 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 
 export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
 
-  const {destroyRoom} = useRoomContext()
+  const {stopClass,destroyRoom} = useRoomContext()
 
   const {removeDialog , addToast} = useGlobalContext()
 
   const {
-    startRecording,
+    isRecording,
     stopRecording
   } = useRecordingContext()
+
+  const handleExit = useCallback(async (permanent:boolean)=>{
+    if(isRecording){
+      await stopRecording()
+    }
+    if(permanent){
+      await stopClass()
+    }
+    await destroyRoom()
+    removeDialog(id)
+  }, [])
 
   return (<div className={"exit-body"} >
     <div className={'exit-header'}>
@@ -385,27 +396,13 @@ export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
 
     <div className={'exit-select'}>
       <div className={'level-class'}
-           onClick={async()=> {
-             console.log('tag', ' &&&&$$$$$-----levelClassClick')
-             await stopRecording()
-
-             removeDialog(id)
-           }}>
+           onClick={_ => handleExit(false)}>
         <img src={levelClass} /> <span>暂时离开</span>
       </div>
 
 
       <div className={'out-class'}
-           onClick={async () => {
-             try {
-               await destroyRoom()
-             } catch (err) {
-               const wrapperError = GenericErrorWrapper(err)
-               addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
-               removeDialog(id)
-             }
-           }
-           }
+           onClick={_ => handleExit(true)}
       >
         <img src={outClass}/> <span>下课啦</span>
       </div>

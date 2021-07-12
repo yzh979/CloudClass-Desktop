@@ -37,7 +37,7 @@ export const defaultColumns: Column[] = [
       })
       return (
         // <img src={profile.stars > 0 ? StarActive:Star}/>
-          <span style={{position:"relative"}}>
+          <span style={{position:"relative", cursor: "pointer"}}>
             <img src={profile.stars > 0 ? StarActive:Star}  style={{display:"inline"}} />
             <span className="star-nums" style={{bottom:2}}>&nbsp;&nbsp; x{text}</span>
           </span>
