@@ -299,6 +299,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       //@ts-ignore
       ret = this.client.initialize(this.appId, convertNativeAreaCode(`${options.area}`))
     }
+    window.addEventListener('beforeunload', () => {
+      //@ts-ignore
+      const release = window.rtcEngine.release()
+      console.log('release rtcEngine ', release)
+    })
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,

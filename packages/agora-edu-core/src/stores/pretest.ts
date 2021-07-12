@@ -3,7 +3,7 @@ import { get, isEmpty } from "lodash"
 import { observable, action, computed, reaction, runInAction } from "mobx"
 import { EduScenarioAppStore } from "."
 import { AgoraMediaDeviceEnum } from "../types"
-import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit"
+import { getDeviceLabelFromStorage, getStorage, GlobalStorage } from "../utilities/kit"
 import {v4 as uuidv4} from 'uuid'
 import { Subject } from 'rxjs'
 import { DeviceErrorCallback } from "../context/type"
@@ -70,14 +70,20 @@ export class PretestStore {
     this.ruddy = value
   }
 
+  @observable
+  beautyOptions: any = getStorage('beautyOptions');
+
   @action.bound
   setBeautyEffectOptions ({lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty: boolean}) {
-    this.mediaService.setBeautyEffectOptions({
+    const options = {
       isBeauty,
       lighteningLevel: lighteningLevel / 100,
       rednessLevel: rednessLevel / 100,
       smoothnessLevel: smoothnessLevel / 100,
-    })
+    }
+    this.mediaService.setBeautyEffectOptions(options)
+    this.beautyOptions = options
+    GlobalStorage.save('beautyOptions', options)
   }
 
   @observable

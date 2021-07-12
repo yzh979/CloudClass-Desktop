@@ -149,8 +149,8 @@
     "bundle:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "pack:npm": "run-s bundle:npm build:types",
     "doc": "typedoc --o",
-    "protojs": "pbjs -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
-    "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
+    "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
+    "protots": "pbjs -r apaas -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
     "proto": "run-s protojs protots"
   },
   "eslintConfig": {
@@ -277,6 +277,7 @@
     "ua-parser-js": "0.7.22",
     "url-loader": "4.1.1",
     "uuid": "3.3.3",
+    "video.js": "7.10.0",
     "wait-on": "3.3.0",
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-cli": "4.3.1",

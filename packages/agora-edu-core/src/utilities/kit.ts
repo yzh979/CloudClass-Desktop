@@ -353,6 +353,7 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
       height: file.height,
       attributes: {
           src: file.url
+          // src https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
       }
     }
   )
@@ -371,6 +372,16 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       }
     }
   )
+}
+
+export const getStorage = (label: string) => {
+  const beautyOption = GlobalStorage.read(label) || {
+    isBeauty: 0,
+    lighteningLevel: 0.5,
+    rednessLevel: 0.5,
+    smoothnessLevel: 0.5,
+  }
+  return beautyOption
 }
 
 // media device helper

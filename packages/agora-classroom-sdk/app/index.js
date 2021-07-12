@@ -87,7 +87,7 @@ async function createWindow() {
       event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath])
     })
 
-    mainWindow.webContents.once("did-finish-load", () => {
+    mainWindow.webContents.on("did-finish-load", () => {
       mainWindow.webContents.send('initialize', [logPath, dstPath, videoSourceLogPath, videoSourceAddonLogPath])
     })
 
