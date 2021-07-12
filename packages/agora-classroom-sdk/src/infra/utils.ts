@@ -295,48 +295,6 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
-  room.insertPlugin(
-    'video2',
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-          src: file.url
-          // isNavigationDisable: false
-      }
-    }
-  )
-}
-
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
-  room.insertPlugin(
-    'audio2',
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-          src: file.url
-          // isNavigationDisable: false
-      }
-    }
-  )
-}
-
-// media device helper
-export const getDeviceLabelFromStorage = (type: string) => {
-  const mediaDeviceStorage = GlobalStorage.read("mediaDevice") || {}
-
-  if (!['cameraLabel', 'microphoneLabel'].includes(type)) {
-    return AgoraMediaDeviceEnum.Default
-  }
-  return mediaDeviceStorage[type]
-}
-
 export const startDownload = async (isNative: boolean, taskUuid: string, callback: (progress: number) => any) => {
   // if (isNative) {
   //   const controller = new AbortController();

@@ -2582,6 +2582,11 @@
   resolved "https://registry.nlark.com/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
+"@netless/video-js-plugin@0.3.0-beta.10":
+  version "0.3.0-beta.10"
+  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.0-beta.10.tgz#acba8e9878a7a88a1da069b98373c94df5425620"
+  integrity sha1-rLqOmHinqIodoGm5g3PJTfVCViA=
+
 "@netless/white-audio-plugin2@2.0.5":
   version "2.0.5"
   resolved "https://registry.nlark.com/@netless/white-audio-plugin2/download/@netless/white-audio-plugin2-2.0.5.tgz#9a162d3fe9bb7463b0a697ed0e94f6ec9cf9fa57"
@@ -19064,7 +19069,7 @@ proto-list@~1.2.1:
   resolved "https://registry.npm.taobao.org/proto-list/download/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
   integrity sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=
 
-protobufjs@6.11.2:
+protobufjs@6.11.2, protobufjs@^6.11.2:
   version "6.11.2"
   resolved "https://registry.nlark.com/protobufjs/download/protobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
   integrity sha1-3jn6vU7TK+qgjpux4w0IVEwe34s=
@@ -20018,7 +20023,7 @@ react@17.0.0:
 
 react@^16.13.1, react@^16.8.0:
   version "16.14.0"
-  resolved "https://registry.nlark.com/react/download/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  resolved "https://registry.nlark.com/react/download/react-16.14.0.tgz?cache=0&sync_timestamp=1625847477855&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact%2Fdownload%2Freact-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
   dependencies:
     loose-envify "^1.1.0"
@@ -21060,7 +21065,7 @@ saxes@^5.0.1:
 
 scheduler@^0.19.1:
   version "0.19.1"
-  resolved "https://registry.nlark.com/scheduler/download/scheduler-0.19.1.tgz?cache=0&sync_timestamp=1625265236515&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fscheduler%2Fdownload%2Fscheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
+  resolved "https://registry.nlark.com/scheduler/download/scheduler-0.19.1.tgz?cache=0&sync_timestamp=1625847469916&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fscheduler%2Fdownload%2Fscheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
   integrity sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=
   dependencies:
     loose-envify "^1.1.0"
@@ -24860,10 +24865,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.23:
-  version "2.12.23"
-  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.12.23.tgz#0df606386aac35dfe5d3a734e5e5526d59534053"
-  integrity sha1-DfYGOGqsNd/l06c05eVSbVlTQFM=
+white-web-sdk@2.13.10:
+  version "2.13.10"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.10.tgz#233ce4cb0c161fc25cd6d99d0d895a616e19a439"
+  integrity sha1-IzzkywwWH8Jc1tmdDYlaYW4ZpDk=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
@@ -24875,6 +24880,7 @@ white-web-sdk@2.12.23:
     mobx "^4.15.7"
     mobx-react "^5.4.4"
     numeric "^1.2.6"
+    protobufjs "^6.11.2"
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"

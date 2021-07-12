@@ -1,3 +1,4 @@
+import { PluginId } from '@netless/video-js-plugin';
 import { EventEmitter } from 'events';
 import { AgoraMediaDeviceEnum } from "../types"
 import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
@@ -343,12 +344,8 @@ export type NetlessMediaFile = {
 }
 
 export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
-
-
-  console.log("video file", file.url)
-
   room.insertPlugin(
-    'video2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
@@ -356,16 +353,12 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
       height: file.height,
       attributes: {
           src: file.url
-          // isNavigationDisable: false
       }
     }
   )
 }
 
 export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
-
-  console.log("audio file", file.url)
-
   room.insertPlugin(
     'audio2',
     {
@@ -375,7 +368,6 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       height: file.height,
       attributes: {
         src: file.url
-          // isNavigationDisable: false
       }
     }
   )
