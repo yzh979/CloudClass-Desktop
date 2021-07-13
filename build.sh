@@ -28,7 +28,9 @@ rm -rf packages/agora-classroom-sdk/build
 
 # NODE 准备
 nvm ls
-nvm use 12.16.2
+nvm install v12.16.2
+nvm use v12.16.2
+nvm ls
 #nvm use 12.2
 
 # 安装 JUST
