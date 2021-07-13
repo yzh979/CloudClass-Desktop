@@ -4,6 +4,7 @@ import { BizPageRouter } from '@/infra/types'
 import { observer } from 'mobx-react'
 import {AgoraCSSBasement} from '~ui-kit'
 import './index.css'
+import 'video.js/dist/video-js.css'
 
 const routes: BizPageRouter[] = [
   BizPageRouter.PretestPage,

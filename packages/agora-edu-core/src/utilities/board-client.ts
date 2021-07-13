@@ -38,13 +38,13 @@ export class BoardClient extends EventEmitter {
 
   initPlugins (identity: string, enable: boolean) {
     const plugins = createPlugins({
-      "video2": videoPlugin2,
-      "audio2": audioPlugin2,
+      // "video2": videoPlugin2,
+      // "audio2": audioPlugin2,
       [PluginId]: videoJsPlugin()
     });
 
-    plugins.setPluginContext("video2", {identity});
-    plugins.setPluginContext("audio2", {identity});
+    // plugins.setPluginContext("video2", {identity});
+    // plugins.setPluginContext("audio2", {identity});
     plugins.setPluginContext(PluginId, { enable, verbose: true });
     this.plugins = plugins;
   }

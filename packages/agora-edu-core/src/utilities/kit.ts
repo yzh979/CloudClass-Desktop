@@ -343,7 +343,7 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
+export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
   room.insertPlugin(
     PluginId,
     {
@@ -352,23 +352,25 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          src: file.url
-          // src https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
+          src: file.url,
+          type: mimeType
+          // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
       }
     }
   )
 }
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
+export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
   room.insertPlugin(
-    'audio2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-        src: file.url
+        src: file.url,
+        type: mimeType
       }
     }
   )
