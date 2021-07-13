@@ -37,6 +37,7 @@ nvm ls
 npm --registry https://registry.npm.taobao.org i just-scripts -g
 npm install lerna -g
 
+
 # 第三分包
 yarn install 
 yarn bootstrap
