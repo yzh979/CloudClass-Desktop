@@ -136,6 +136,8 @@ export const Chat: FC<ChatProps> = ({
       chatHistoryRef.current.scrollTo(0, position)
     }
   }, [canChatting,messages.length, chatHistoryRef.current, scrollDirection.current]);
+
+  console.log('>>>>>>>>>>unreadCount', unreadCount)
   return (
     <div className={`chat-wrap ${className}`}>
       <div className="chat-panel" style={{visibility: collapse ? 'hidden':'visible'}} ref={chatHistoryRef} onScroll={handleScroll}>
@@ -154,7 +156,7 @@ export const Chat: FC<ChatProps> = ({
       }
       </div>
       <div className="chat-input">
-        <input value={chatText} onKeyPress={handleKeypress} disabled={!canChatting}  onBlur={handleBlur} onFocus={handleFocus}  onChange={(e) => onText(e.currentTarget.value)} placeholder={canChatting ? '输入你想说的话':'老师已开启禁言'}/>
+        <input className={canChatting ? unreadCount > 0 ? 'chat-input-unread':'chat-input-read' :'chat-input-read'} value={chatText} onKeyPress={handleKeypress} disabled={!canChatting}  onBlur={handleBlur} onFocus={handleFocus}  onChange={(e) => onText(e.currentTarget.value)} placeholder={canChatting ? (unreadCount > 0 ? `有${unreadCount}条新的消息`:'输入你想说的话'):'老师已开启禁言'}/>
         { isHost &&
           <button onClick={() => onCanChattingChange(!canChatting)} style={{color: canChatting ? '#2D353A':'#FF854B'}}>{canChatting ? '全体禁言':'取消禁言'}</button>
         }

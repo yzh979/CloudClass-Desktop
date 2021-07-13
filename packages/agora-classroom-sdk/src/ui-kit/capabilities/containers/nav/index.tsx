@@ -5,7 +5,7 @@ import { observer } from 'mobx-react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
 import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
-import { Exit, Record } from '../dialog'
+import {Exit, Record, TeacherExitDialog} from '../dialog'
 import { SettingContainer } from '../setting'
 import { UserListDialog } from '~capabilities/containers/dialog'
 export const NavigationBar = observer(() => {
@@ -48,7 +48,14 @@ export const NavigationBar = observer(() => {
 
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
-    'exit': () => addDialog(Exit),
+    'exit': () => {
+      console.log('tag' , '  ** userType = '+userType)
+      if (userType === 'teacher'){
+        addDialog(TeacherExitDialog)
+      }else {
+        addDialog(Exit)
+      }
+    },
     'record': () => addRecordDialog(),
     'roster': () => addDialog(UserListDialog),
   }

@@ -3,12 +3,20 @@ import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext,
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
+
+
+import closeImage from './assets/icon-close.png'
+
+import levelClass from './assets/icon-level-class.png'
+
+import outClass from './assets/icon-out-class.png'
+
 
 
 export type BaseDialogProps = {
@@ -357,6 +365,52 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
     </Modal>
   )
 })
+
+export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
+
+  const {stopClass,destroyRoom} = useRoomContext()
+
+  const {removeDialog , addToast} = useGlobalContext()
+
+  const {
+    isRecording,
+    stopRecording
+  } = useRecordingContext()
+
+  const handleExit = useCallback(async (permanent:boolean)=>{
+    if(isRecording){
+      await stopRecording()
+    }
+    if(permanent){
+      await stopClass()
+    }
+    await destroyRoom()
+    removeDialog(id)
+  }, [])
+
+  return (<div className={"exit-body"} >
+    <div className={'exit-header'}>
+      <span>退出直播</span>
+      <img src={closeImage}  onClick={()=>removeDialog(id)} />
+    </div>
+
+    <div className={'exit-select'}>
+      <div className={'level-class'}
+           onClick={_ => handleExit(false)}>
+        <img src={levelClass} /> <span>暂时离开</span>
+      </div>
+
+
+      <div className={'out-class'}
+           onClick={_ => handleExit(true)}
+      >
+        <img src={outClass}/> <span>下课啦</span>
+      </div>
+    </div>
+
+  </div>)
+};
+
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
 

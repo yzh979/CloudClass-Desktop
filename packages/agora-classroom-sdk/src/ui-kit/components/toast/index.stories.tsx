@@ -3,6 +3,13 @@ import { Meta } from '@storybook/react';
 import { Toast } from '~components/toast';
 import { Button } from '~components/button'
 
+import "./index.css"
+import closeImage from './assets/icon-close.png'
+
+import levelClass from './assets/icon-level-class.png'
+
+import outClass from './assets/icon-out-class.png'
+
 const meta: Meta = {
   title: 'Components/Toast',
   component: Toast,
@@ -76,5 +83,34 @@ Docs.args = {
   warning: 'warning',
   toastText: 'test',
 }
+
+
+export const TeachExit = () => {
+
+  function closeDialog  (){
+    console.log('tag', ' -----closeDialog')
+  }
+  const outClassClick = async() => {
+    console.log('tag', ' *****outClassClick')
+  }
+  const levelClassClick = async () => {
+    console.log('tag', ' &&&&$$$$$-----levelClassClick')
+
+  }
+
+  return (<div className={"exit-body"} >
+    <div className={'exit-header'}>
+      <span>退出直播</span>
+      <img src={closeImage}  onClick={()=>console.log('tag', ' -----closeDialog')} />
+    </div>
+
+    <div className={'exit-select'}>
+      <div className={'level-class'}  onClick={()=> console.log('tag', ' *****outClassClick')}> <img src={levelClass} /> <span>暂时离开</span> </div>
+      <div className={'out-class'} onClick={()=>outClassClick}> <img src={outClass}/> <span>下课啦</span> </div>
+    </div>
+
+  </div>)
+};
+
 
 export default meta;

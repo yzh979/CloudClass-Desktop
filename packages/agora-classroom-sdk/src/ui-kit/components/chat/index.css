@@ -8,6 +8,32 @@
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
 
 }
+.chat-input-read::-webkit-input-placeholder {
+  color: #777777;
+}
+.chat-input-read:-moz-placeholder {/* Firefox 18- */
+  color: #777777;
+}
+.chat-input-read::-moz-placeholder{/* Firefox 19+ */
+  color: #777777;
+}
+.chat-input-read:-ms-input-placeholder {
+  color: #777777;
+}
+
+.chat-input-unread::-webkit-input-placeholder {
+  color: #38AE48;
+}
+.chat-input-unread:-moz-placeholder {/* Firefox 18- */
+  color: #38AE48;
+}
+.chat-input-unread::-moz-placeholder{/* Firefox 19+ */
+ color: #38AE48;
+}
+.chat-input-unread:-ms-input-placeholder {
+  color: #38AE48;
+}
+
 .chat-input > input {
 	flex: 1;
 	border: none;
