@@ -2582,10 +2582,10 @@
   resolved "https://registry.nlark.com/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/video-js-plugin@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.0.tgz#5c66c5d0228351a2a3b0e3ffcf0205c36e0f8b98"
-  integrity sha1-XGbF0CKDUaKjsOP/zwIFw24Pi5g=
+"@netless/video-js-plugin@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.2.tgz#e88e9bc87e3a45f14c12768239b2a369ade30ef8"
+  integrity sha1-6I6byH46RfFMEnaCObKjaa3jDvg=
 
 "@netless/white-audio-plugin2@2.0.5":
   version "2.0.5"
