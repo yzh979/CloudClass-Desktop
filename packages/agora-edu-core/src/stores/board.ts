@@ -2132,7 +2132,7 @@ export class BoardStore extends ZoomController {
         await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
-        await this.putAV(resource.url, resource.type, resource.name)
+        await this.putAV(resource.url, resource.type, resource.name.toLowerCase().split(".").pop())
       }  
       if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)

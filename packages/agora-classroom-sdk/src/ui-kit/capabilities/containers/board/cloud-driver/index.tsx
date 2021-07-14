@@ -133,7 +133,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     const md5 = await calcUploadFilesMd5(file)
     const resourceUuid = MD5(`${md5}`)
     const name = file.name
-    const ext = file.name.split(".").pop()
+    const ext = file.name.toLowerCase().split(".").pop()
     // hideToast()
     const supportedFileTypes = ['bmp', 'jpg', 'png', 'gif', 'pdf', 'pptx', 'mp3', 'mp4', 'doc', 'docx']
 
