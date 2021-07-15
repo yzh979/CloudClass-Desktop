@@ -212,7 +212,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   const [coVideoDisabled, setCoVideoDisabled] = useState(false)
 
   const handleCovClick = useCallback(async () => {
-    console.log('>>>>>>>>>>off', coVideoDisabled)
     if(coVideoDisabled){// 防止多次点击
       return
     }
