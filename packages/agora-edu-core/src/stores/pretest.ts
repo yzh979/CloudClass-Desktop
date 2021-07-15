@@ -622,6 +622,8 @@ export class PretestStore {
         if (this.isElectron) {
           if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
             this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+          } else {
+            await this.mediaService.setMicrophoneDevice(deviceId)
           }
         }
         this.updateTestMicrophoneLabel()
