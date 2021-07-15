@@ -85,7 +85,7 @@ export const allTools: ToolItem[] = [
   {
     value: 'clear',
     label: '清空',
-    icon: 'eraser',
+    icon: 'clear',
     component: ({isActive, onClick}) => {
       return (
         <Tooltip title='清空' placement="bottom" >
@@ -227,7 +227,8 @@ export const WhiteboardContainer = observer(() => {
     setZoomScale,
     changeFooterMenu,
     setTool,
-    installTools
+    installTools,
+    clearScene
   } = useBoardContext()
 
   const handleToolClick = (type: string) => {
@@ -241,6 +242,10 @@ export const WhiteboardContainer = observer(() => {
       case 'register': {
         setTool(type)
         addDialog(UserListDialog)
+        break
+      }
+      case 'clear': {
+        clearScene()
         break
       }
       default: {

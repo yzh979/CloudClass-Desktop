@@ -209,11 +209,21 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     }
   }, [hideControl, onCameraClick])
 
-  const handleCovClick = useCallback(() => {
-    if(!hideControl){
-      onOffPodiumClick(uid)
+  const [coVideoDisabled, setCoVideoDisabled] = useState(false)
+
+  const handleCovClick = useCallback(async () => {
+    console.log('>>>>>>>>>>off', coVideoDisabled)
+    if(coVideoDisabled){// 防止多次点击
+      return
     }
-  }, [hideControl, onOffPodiumClick])
+    if(!hideControl){
+      setCoVideoDisabled(true)
+      await onOffPodiumClick(uid)
+      setTimeout(() => {
+        setCoVideoDisabled(false)
+      }, 500)
+    }
+  }, [hideControl, onOffPodiumClick, coVideoDisabled, setCoVideoDisabled])
   return (
     <Popover
       align={{
