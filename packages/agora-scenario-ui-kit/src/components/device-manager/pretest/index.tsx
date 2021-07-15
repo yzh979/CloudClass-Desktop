@@ -12,6 +12,8 @@ import { CheckBox } from '~components/table';
 import { Toast } from '~components/toast';
 import { useMounted, useTimeout } from '~utilities/hooks';
 import { Volume } from '~components/volume';
+import 'antd/dist/antd.css';
+import { Button as AntdButton } from 'antd';
 import './index.css';
 
 interface DeviceProps {
@@ -378,6 +380,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
                     </div>
                 </div>
+                <AntdButton type="dashed">antd hello </AntdButton>
                 <div className="device-choose">
                     <div className="device-title">
                         <span className="device-title-text">{transI18n('media.speaker')}</span>
