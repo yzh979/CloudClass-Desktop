@@ -396,12 +396,7 @@ export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
 
     <div className={'exit-select'}>
       <div className={'level-class'}
-           onClick={async()=> {
-             console.log('tag', ' &&&&$$$$$-----levelClassClick')
-             await stopRecording()
-
-             removeDialog(id)
-           }}>
+           onClick={_ => handleExit(false)}>
         <img src={levelClass} /> <span>暂时离开</span>
       </div>
 

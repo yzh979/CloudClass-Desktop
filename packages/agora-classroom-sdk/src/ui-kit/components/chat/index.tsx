@@ -137,7 +137,6 @@ export const Chat: FC<ChatProps> = ({
     }
   }, [canChatting,messages.length, chatHistoryRef.current, scrollDirection.current]);
 
-  console.log('>>>>>>>>>>unreadCount', unreadCount)
   return (
     <div className={`chat-wrap ${className}`}>
       <div className="chat-panel" style={{visibility: collapse ? 'hidden':'visible'}} ref={chatHistoryRef} onScroll={handleScroll}>

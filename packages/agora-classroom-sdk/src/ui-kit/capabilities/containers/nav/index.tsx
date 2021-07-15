@@ -48,16 +48,21 @@ export const NavigationBar = observer(() => {
   }, [addDialog, Record, liveRecordStatus.isRecording])
 
 
-  // {
-  //   document.addEventListener('keydown',(e)=>{
-  //     console.log('tag' , 'key press evnet listener  , e keycoe = ' + e.keyCode)
-  //     if (e.keyCode === 27){
-  //       if(isFullScreen){
-  //         zoomBoard('fullscreenExit')
-  //       }
-  //     }
-  //   });
-  // }
+  const listener = useCallback((e)=>{
+    console.log('tag' , 'key press evnet listener  , e keycoe = ' + e.keyCode)
+    if (e.keyCode === 27){
+      if(isFullScreen){
+        zoomBoard('fullscreenExit')
+      }
+    }
+  }, [isFullScreen, zoomBoard])
+  
+  useEffect(() => {
+    document.addEventListener('keydown',listener);
+    return () => {
+      document.removeEventListener('keydown', listener)
+    }
+  }, [listener])
 
 
   const bizHeaderDialogs = {
@@ -78,15 +83,6 @@ export const NavigationBar = observer(() => {
 
   function handleClick (type: string) {
     if(type == 'fullscreen'){
-
-      document.addEventListener('keydown',(e)=>{
-        if (e.keyCode === 27){
-          if(isFullScreen){
-            zoomBoard('fullscreenExit')
-          }
-        }
-      });
-
       if(isFullScreen){
         zoomBoard('fullscreenExit')
       }else{
