@@ -106,15 +106,18 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   dataSource = [],
   columns = defaultStudentColumns,
   onClick,
+  onMuteAll,
+  onSendRewardAll,
+  onOffAllPodiumClick,
 }) => {
 
   return (
       <div className="agora-board-resources roster-user-list-wrap">
         <div className="roster-container">
           <div className="roster-button-group">
-            <button>全体奖励</button>
-            <button>全体静音</button>
-            <button>全体下台</button>
+            <button onClick={onSendRewardAll}>全体奖励</button>
+            <button onClick={onMuteAll}>全体静音</button>
+            <button onClick={onOffAllPodiumClick}>全体下台</button>
           </div>
           
           <Table className="roster-table">

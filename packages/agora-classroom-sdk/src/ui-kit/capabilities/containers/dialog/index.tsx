@@ -9,7 +9,7 @@ import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
-
+import './index.css'
 
 import closeImage from './assets/icon-close.png'
 

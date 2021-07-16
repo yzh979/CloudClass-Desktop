@@ -60,7 +60,7 @@ export const MidClassScenario = observer(() => {
       { userType == 'student' && liveClassStatus.classState == 'end-class' &&
         <EndClass className="end-class-position" onExit={handleExit}/>
       }
-      <Layout className="bg-white" style={{ height: '100%' }}>
+      <Layout className="bg-white" style={{ height: 'calc(100% - 80px)' }}>
         <Aside>
           <VideoPlayerTeacher />
           <VideoMarqueeStudentContainer />

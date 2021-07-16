@@ -313,6 +313,7 @@ export const useBoardContext = () => {
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
+    clearScene
   } = useBoardStore()
 
   const {
@@ -373,6 +374,7 @@ export const useBoardContext = () => {
     revokeBoardPermission,
     grantBoardPermission,
     doUpload: handleUpload,
+    clearScene
   }
 }
 
