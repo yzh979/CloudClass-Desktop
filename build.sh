@@ -31,13 +31,13 @@ rm -rf packages/agora-classroom-sdk/build
 #nvm use 12.2
 
 # 安装 JUST
-npm --registry https://registry.npm.taobao.org i just-scripts -g
-npm install lerna -g
+#npm --registry https://registry.npm.taobao.org i just-scripts -g
+#npm install lerna -g
 
 
 # 第三分包
-yarn install 
-yarn bootstrap
+#yarn install 
+#yarn bootstrap
 
 # 构建
 yarn ci:build:web
