@@ -172,6 +172,7 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
         onSendStar,
         onOffAllPodiumClick
     } = useVideoControlContext()
+
     const {
         revokeBoardPermission,
         grantBoardPermission,
@@ -201,11 +202,11 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
         return handsUpStudentList.filter((student) => !student.coVideo)
     }, [handsUpStudentList])
     const dataList = useMemo(() => {
-    const handsUpUids = studentList.map(student => student.userUuid);
-    return rosterUserList.map(user => {
-        user.isUphand = handsUpUids.indexOf(user.uid) !== -1
-        return user
-    })
+        const handsUpUids = studentList.map(student => student.userUuid);
+        return rosterUserList.map(user => {
+            user.isUphand = handsUpUids.indexOf(user.uid) !== -1
+            return user
+        })
     }, [studentList, rosterUserList])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {

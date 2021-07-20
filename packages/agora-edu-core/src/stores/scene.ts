@@ -1688,6 +1688,15 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
+  async muteAllAudio(val:boolean){
+    if(this.mediaService.isWeb){
+      this.web.muteAllAudio(val)
+    }else{
+      throw "cannot mute all in electron"
+    }
+  }
+
+  @action.bound
   async muteVideo(userUuid: string, isLocal: boolean) {
     const targetStream = this.getStreamBy(userUuid)
     if (!targetStream) {
