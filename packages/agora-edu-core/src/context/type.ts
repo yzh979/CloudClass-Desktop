@@ -641,10 +641,14 @@ export type GlobalContext = {
 }
 export type BoardContext = {
     /**
+     * 白板room加入成功
+     */
+    roomIsReady: boolean,
+    /**
      * 白板所在的房间
      * @version v1.1.0
      */
-    room: Room,
+    room: Room | null,
     /**
      * 白板缩放的值
      * @version v1.1.0

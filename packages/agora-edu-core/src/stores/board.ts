@@ -198,6 +198,9 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
+  roomIsReady: boolean = false;
+
+  @observable
   showUpload: boolean = false;
 
   @observable
@@ -859,6 +862,7 @@ export class BoardStore extends ZoomController {
         disableCameraTransform: true,
         disableAutoResize: false
       })
+      this.roomIsReady = true
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})

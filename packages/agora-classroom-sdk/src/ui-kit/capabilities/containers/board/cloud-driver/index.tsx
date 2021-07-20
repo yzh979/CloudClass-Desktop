@@ -167,7 +167,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
           showToastFn()
         }
       },
-      roomToken: room.roomToken
+      roomToken: room!.roomToken
       // pptConverter: boardClient.client.pptConverter(boardStore.room.roomToken)
     }
     if (ext === 'pptx') {
