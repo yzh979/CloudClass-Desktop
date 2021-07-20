@@ -1602,6 +1602,83 @@ export class SceneStore extends SimpleInterval {
   }
 
   @computed
+  get assistantStream() {
+
+    // 当本地是助教时
+    const localUser = this.localUser
+    if (localUser && localUser.userRole === EduRoleTypeEnum.assistant) {
+      const {holderState, text} = this.getLocalPlaceHolderProps()
+      return {
+        local: true,
+        userUuid: this.appStore.userUuid,
+        account: localUser.userName,
+        streamUuid: this.cameraEduStream?.streamUuid,
+        video: this.cameraEduStream?.hasVideo,
+        audio: this.cameraEduStream?.hasAudio,
+        renderer: this.cameraRenderer as LocalUserRenderer,
+        hideControl: this.hideControl(this.appStore.userUuid),
+        holderState: holderState,
+        placeHolderText: text,
+        whiteboardGranted: true,
+        micVolume: this.localVolume,
+        isLocal: true,
+        online: true,
+        onPodium: true,
+        hasStream: !!this.cameraEduStream,
+        micDevice: this.localMicrophoneDeviceState,
+        cameraDevice: this.localCameraDeviceState,
+      } as any
+    }
+
+    // 当远端是助教时
+    const assistantStream = this.streamList.find((it: EduStream) => it.userInfo.role as string === 'assistant' && it.videoSourceType !== EduVideoSourceType.screen) as EduStream
+    if (assistantStream) {
+      const user = this.getUserBy(assistantStream.userInfo.userUuid as string) as EduUser
+      const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
+      const volumeLevel = this.getFixAudioVolume(+assistantStream.streamUuid)
+      return {
+        local: false,
+        account: user.userName,
+        userUuid: user.userUuid,
+        streamUuid: assistantStream.streamUuid,
+        video: assistantStream.hasVideo,
+        audio: assistantStream.hasAudio,
+        renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +assistantStream.streamUuid) as RemoteUserRenderer,
+        hideControl: this.hideControl(user.userUuid),
+        holderState: props.holderState,
+        placeHolderText: props.text,
+        whiteboardGranted: true,
+        micVolume: volumeLevel,
+        online: !!assistantStream.streamUuid,
+        onPodium: true,
+        hasStream: !!assistantStream,
+        isLocal: false,
+        cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, assistantStream.streamUuid),
+        micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, assistantStream.streamUuid),
+      } as any
+    }
+    return {
+      account: 'assistant',
+      streamUuid: '',
+      userUuid: '',
+      local: false,
+      video: false,
+      audio: false,
+      renderer: undefined,
+      hideControl: true,
+      isLocal: false,
+      hasStream: false,
+      online: false,
+      onPodium: false,
+      micDevice: 1,
+      cameraDevice: 1,
+      placeHolderText: this.defaultTeacherPlaceholder.text,
+      holderState: this.defaultTeacherPlaceholder.holderState,
+      micVolume: 0,
+    } as any
+  }
+
+  @computed
   get sceneVideoConfig() {
     const roomType = this.roomInfo?.roomType ?? 1
     const userRole = this.roomInfo?.userRole ?? EduRoleTypeEnum.invisible

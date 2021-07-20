@@ -66,10 +66,13 @@ export const useStreamListContext = (): StreamListContext => {
     muteVideo,
     unmuteVideo,
     teacherStream,
+    assistantStream,
     studentStreams,
     streamList,
     cameraEduStream
   } = sceneStore
+
+  const {publishStream} = useRoomStore()
 
   const {
     revokeUserPermission,
@@ -84,6 +87,7 @@ export const useStreamListContext = (): StreamListContext => {
     localStream: cameraEduStream,
     streamList,
     teacherStream,
+    assistantStream,
     studentStreams,
     onPodiumStudentStreams,
     muteAudio,
@@ -92,6 +96,7 @@ export const useStreamListContext = (): StreamListContext => {
     unmuteVideo,
     revokeUserPermission,
     grantUserPermission,
+    publishStream
   }
 }
 

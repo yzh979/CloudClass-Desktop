@@ -1,7 +1,7 @@
 import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
@@ -69,7 +69,6 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       style={style}
     >
       {
-
         <>
           {
             userStream.renderer && userStream.video ?
@@ -283,4 +282,79 @@ export const VideoList = observer(() => {
       <VideoPlayerStudent className={isFullScreen ? 'full-student-1v1' : 'student-1v1'} controlPlacement="left" />
     </>
   )
+})
+
+export const VideoPlayerAssistant = observer(({style, className}: any) => {
+  const {
+    onCameraClick,
+    onMicClick,
+    onSendStar,
+    onWhiteboardClick,
+    onOffPodiumClick,
+    onOffAllPodiumClick,
+    canHoverHideOffAllPodium,
+  } = useVideoControlContext()
+  const {
+    assistantStream: userStream
+  } = useStreamListContext()
+  const {
+    controlTools,
+    isHost
+  } = useUserListContext()
+
+  const {
+    roomInfo
+  } = useRoomContext()
+
+  const {
+    eduRole2UIRole
+  } = useUIStore()
+
+  return (
+    <VideoPlayer
+      isHost={isHost}
+      hideOffPodium={true}
+      username={userStream.account}
+      stars={userStream.stars}
+      uid={userStream.userUuid}
+      micEnabled={userStream.audio}
+      cameraEnabled={userStream.video}
+      hideControl={userStream.hideControl}
+      micDevice={userStream.micDevice}
+      cameraDevice={userStream.cameraDevice}
+      isLocal={userStream.isLocal}
+      online={userStream.online}
+      isOnPodium={userStream.onPodium}
+      hasStream={userStream.hasStream}
+      whiteboardGranted={userStream.whiteboardGranted}
+      hideBoardGranted={true}
+      hideStars={true}
+      micVolume={userStream.micVolume}
+      hideOffAllPodium={!controlTools.includes(ControlTool.offPodiumAll)}
+      canHoverHideOffAllPodium={canHoverHideOffAllPodium}
+      onOffAllPodiumClick={onOffAllPodiumClick!}
+      onCameraClick={onCameraClick}
+      onMicClick={onMicClick}
+      onWhiteboardClick={onWhiteboardClick}
+      onSendStar={onSendStar}
+      controlPlacement={'left'}
+      placement={'left'}
+      onOffPodiumClick={onOffPodiumClick}
+      userType={eduRole2UIRole(roomInfo.userRole)}
+      className={className}
+      style={style}
+    >
+      {
+        <>
+          {
+            userStream.renderer && userStream.video ?
+            <RendererPlayer
+              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+            />
+            : null
+          }
+          <CameraPlaceHolder state={userStream.holderState} />
+        </>
+      }
+    </VideoPlayer>)
 })

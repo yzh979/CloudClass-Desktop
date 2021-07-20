@@ -1,13 +1,13 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useStreamListContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
 import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
-import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
+import { VideoMarqueeStudentContainer, VideoPlayerAssistant, VideoPlayerTeacher } from '~capabilities/containers/video-player'
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '~capabilities/containers/room-chat'
 import { useEffectOnce } from '@/infra/hooks/utils'
@@ -20,6 +20,8 @@ import { useUIStore } from '@/infra/hooks'
 export const BigClassScenario = observer(() => {
 
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+
+  const {publishStream} = useStreamListContext()
 
   const {
     onLaunchAppPlugin,
@@ -48,8 +50,13 @@ export const BigClassScenario = observer(() => {
 
   const { chatCollapse }  = useUIStore()
 
-  useEffectOnce(() => {
-    joinRoom()
+  useEffectOnce(async () => {
+    try {
+      await joinRoom()
+      await publishStream()
+    } catch(e) {
+      console.log('加入房间发流时出错', e)
+    }
   })
 
   const cls = classnames({
@@ -89,6 +96,7 @@ export const BigClassScenario = observer(() => {
         })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="big-class-teacher"/>
+            <VideoPlayerAssistant className="big-class-teacher"/>
           </div>
           <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>

@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useAppPluginContext, useGlobalContext, useRoomContext, useWidgetContext } from 'agora-edu-core'
+import { useAppPluginContext, useGlobalContext, useRoomContext, useStreamListContext, useWidgetContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -15,6 +15,8 @@ import { useLayoutEffect } from 'react'
 
 
 export const OneToOneScenario = observer(() => {
+
+  const { publishStream } = useStreamListContext()
   
   const {
     isFullScreen,
@@ -28,7 +30,7 @@ export const OneToOneScenario = observer(() => {
   const { 
     joinRoom,
     roomProperties,
-    isJoiningRoom
+    isJoiningRoom,
   } = useRoomContext()
 
   const {
@@ -47,8 +49,13 @@ export const OneToOneScenario = observer(() => {
     }
   }, [roomProperties])
 
-  useEffectOnce(() => {
-    joinRoom()
+  useEffectOnce(async () => {
+    try {
+      await joinRoom()
+      await publishStream()
+    } catch(e) {
+      console.log('加入房间发流时出错', e)
+    }
   })
 
   const cls = classnames({
