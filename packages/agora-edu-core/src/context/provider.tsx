@@ -4,7 +4,7 @@ import { StorageCourseWareItem } from "../types"
 import { get } from "lodash"
 
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
 import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
@@ -338,12 +338,13 @@ export const useBoardContext = (): BoardContext => {
     activeSceneName,
     boardPenIsActive,
     changeSceneItem,
-    room,
+    room: room_,
     installTools,
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
-    isBoardScreenShare
+    isBoardScreenShare,
+    roomIsReady
   } = useBoardStore()
 
   const {
@@ -373,6 +374,10 @@ export const useBoardContext = (): BoardContext => {
       unmount()
     }
   }, [mount, unmount])
+
+  const room = useMemo(() => {
+    return roomIsReady ? room_ : null
+  }, [room_, roomIsReady])
 
   return {
     room,
@@ -418,6 +423,7 @@ export const useBoardContext = (): BoardContext => {
     personalResources,
     doUpload: handleUpload,
     publicResources,
+    roomIsReady
   }
 }
 
