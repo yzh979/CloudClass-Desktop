@@ -39,21 +39,22 @@ export const LaunchPage = observer(() => {
       })
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
       // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-      // const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
-      // if(appCertificate) {
-      //   launchOption.rtmToken = RtmTokenBuilder.buildToken(
-      //     `${REACT_APP_AGORA_APP_ID}`,
-      //     appCertificate,
-      //     launchOption.userUuid,
-      //     RtmRole.Rtm_User,
-      //     0
-      //   )
-      // }
+      const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
+      if(appCertificate && process.env.NODE_ENV === 'development') {
+        launchOption.rtmToken = RtmTokenBuilder.buildToken(
+          `${REACT_APP_AGORA_APP_ID}`,
+          appCertificate,
+          launchOption.userUuid,
+          RtmRole.Rtm_User,
+          0
+        )
+      }
 
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  这里需要传递开发者自己发布的录制页面地址
         recordUrl: 'https://webdemo.agora.io/flexible-classroom/record_page',
+        // recordUrl: 'https://live.i2study.net/record',
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)

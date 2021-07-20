@@ -201,7 +201,7 @@ export const zh = {
     'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason}`,
     'time_interval_between_end': `课程还有{reason}结束`,
-    'class_is_end': `下课咯，教室还有{reason}关闭`,
+    'class_is_end': `下课咯，教室还有30分钟关闭`,
     'time_interval_between_close': `教室还有{reason}关闭`,
     'reward_limit': '奖杯已全部发完',
     'chat_enable': '禁言模式开启',

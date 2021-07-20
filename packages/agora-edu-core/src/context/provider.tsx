@@ -5,7 +5,7 @@ import { get } from "lodash"
 
 import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
-import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
+import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore, useMediaStore} from "./core"
 
 export type {
  CoreAppContext,
@@ -159,6 +159,7 @@ export const useRoomContext = () => {
     muteAudio,
     unmuteAudio,
     sceneType,
+    muteAllAudio
   } = useSceneStore()
 
   const {
@@ -183,6 +184,7 @@ export const useRoomContext = () => {
   const {
     pauseClass,
     startClass,
+    stopClass
   } = useSceneStore()
 
 
@@ -206,8 +208,10 @@ export const useRoomContext = () => {
     unmuteVideo,
     muteAudio,
     unmuteAudio,
+    muteAllAudio,
     pauseClass,
-    startClass
+    startClass,
+    stopClass
   }
 }
 
@@ -309,6 +313,7 @@ export const useBoardContext = () => {
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
+    clearScene
   } = useBoardStore()
 
   const {
@@ -369,6 +374,7 @@ export const useBoardContext = () => {
     revokeBoardPermission,
     grantBoardPermission,
     doUpload: handleUpload,
+    clearScene
   }
 }
 

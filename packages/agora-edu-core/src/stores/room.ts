@@ -858,7 +858,7 @@ export class RoomStore extends SimpleInterval {
       this.classroomSchedule = {
         startTime: checkInResult.startTime,
         duration: checkInResult.duration,
-        closeDelay: checkInResult.closeDelay
+        closeDelay: 30 * 60 // 单位秒
       }
       this.tickClassroom()
 

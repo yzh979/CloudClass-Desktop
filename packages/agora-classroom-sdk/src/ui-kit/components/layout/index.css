@@ -18,6 +18,7 @@
 .layout-header {
   @apply flex flex-row justify-between items-center w-full;
   height: 44px;
+  flex-shrink: 0;
 }
 
 .layout-aside {

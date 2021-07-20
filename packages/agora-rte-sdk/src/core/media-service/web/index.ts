@@ -677,6 +677,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   
   async muteLocalAudio(val: boolean): Promise<any> {
     if (this.microphoneTrack) {
+      console.log('>>>>>>11')
       await this.microphoneTrack.setEnabled(val)
     }
   }
@@ -792,6 +793,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   // }
 
   async muteRemoteAudio(uid: any, val: boolean): Promise<any> {
+    console.log('>>>>>>>>>>.2', uid)
+    console.log('>>>>>>>>>>.2', val)
     const targetUser = this.client.remoteUsers.find(user => user.uid === +uid)
     if (!targetUser) return
     if (val) {
