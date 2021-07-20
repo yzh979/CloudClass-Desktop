@@ -178,6 +178,13 @@ export type ChatContext = {
 }
 export type StreamListContext = {
     /**
+     * 可配置发流的参数 是否打开音视频
+     * 优先级顺序：
+     * 用户配置是否开启 > 本地流是否开启 > 默认开启
+     */
+    publishStream: (options?: {videoState: boolean, audioState: boolean}) => void
+    assistantStream: any
+    /**
      * 全部媒体数据流列表
      * @version v1.1.0
      */

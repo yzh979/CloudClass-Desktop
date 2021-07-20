@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useStreamListContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -20,6 +20,8 @@ import { ToastContainer } from "~capabilities/containers/toast"
 
 export const MidClassScenario = observer(() => {
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+
+  const { publishStream } = useStreamListContext()
 
   const {
     onLaunchAppPlugin,
@@ -50,8 +52,13 @@ export const MidClassScenario = observer(() => {
     chatCollapse 
   }  = useUIStore()
 
-  useEffectOnce(() => {
-    joinRoom()
+  useEffectOnce(async () => {
+    try {
+      await joinRoom()
+      await publishStream()
+    } catch(e) {
+      console.log('加入房间发流时出错', e)
+    }
   })
 
   const cls = classnames({

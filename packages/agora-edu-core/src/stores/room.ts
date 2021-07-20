@@ -228,6 +228,9 @@ export class RoomStore extends SimpleInterval {
 
   history: any
 
+  mainStream: any
+  localStreamData: any
+
   @observable
   operator: any = {
     userUuid: '',
@@ -1024,6 +1027,62 @@ export class RoomStore extends SimpleInterval {
   joining: boolean = false;
 
   @action.bound
+  async publishStream(options?: {videoState: boolean, audioState: boolean}) {
+    const mainStream = this.mainStream
+    const localStreamData = this.localStreamData
+    const hasVideo_ = options?.hasOwnProperty('videoState')
+    const hasAudio_ = options?.hasOwnProperty('audioState')
+
+    await this.roomManager.userService.publishStream({
+      videoSourceType: EduVideoSourceType.camera,
+      audioSourceType: EduAudioSourceType.mic,
+      streamUuid: mainStream.streamUuid,
+      streamName: '',
+      hasVideo:  hasVideo_ ? options?.videoState : (localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true),
+      hasAudio: hasAudio_ ? options?.audioState : (localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true),
+      userInfo: {} as EduUser
+    })
+    EduLogger.info("toast.publish_business_flow_successfully")
+    // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
+    this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
+    try {
+      // await this.sceneStore.prepareCamera()
+      // await this.sceneStore.prepareMicrophone()
+      if (this.sceneStore._cameraEduStream) {
+        if (this.sceneStore._cameraEduStream.hasVideo) {
+          this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
+          try {
+            await this.sceneStore.unmuteLocalCamera()
+            this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
+          } catch (err) {
+            this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
+            throw err
+          }
+        } else {
+          await this.sceneStore.muteLocalCamera()
+        }
+        if (this.sceneStore._cameraEduStream.hasAudio) {
+          BizLogger.info('open microphone')
+          await this.sceneStore.muteLocalMicrophone()
+        } else {
+          BizLogger.info('close microphone')
+          await this.sceneStore.unmuteLocalMicrophone()
+        }
+      }
+    } catch (err) {
+      if (this.appStore.isNotInvisible) {
+        this.appStore.fireToast(
+          'toast.media_method_call_failed',
+          { reason: `${err.message}` }
+        )
+      }
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+      throw error
+    }
+  }
+
+  @action.bound
   async join() {
     try {
       this.joining = true
@@ -1258,9 +1317,9 @@ export class RoomStore extends SimpleInterval {
           const tag = uuidv4()
           BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `, JSON.stringify(evt))
           if (evt.type === 'main') {
-            if (this.isAssistant) {
-              return
-            }
+            // if (this.isAssistant) {
+            //   return
+            // }
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             const causeCmd = cause?.cmd ?? 0
@@ -1617,58 +1676,17 @@ export class RoomStore extends SimpleInterval {
         return false
       }
 
-      if (canPublishRTC(localStreamData, sceneType)) {
+      
+      
 
-        const localStreamData = roomManager.data.localStreamData
+      const localStreamData_ = roomManager.data.localStreamData
 
-        BizLogger.info("localStreamData", localStreamData)
-        await roomManager.userService.publishStream({
-          videoSourceType: EduVideoSourceType.camera,
-          audioSourceType: EduAudioSourceType.mic,
-          streamUuid: mainStream.streamUuid,
-          streamName: '',
-          hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
-          hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
-          userInfo: {} as EduUser
-        })
-        EduLogger.info("toast.publish_business_flow_successfully")
-        // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
-        this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
-        try {
-          // await this.sceneStore.prepareCamera()
-          // await this.sceneStore.prepareMicrophone()
-          if (this.sceneStore._cameraEduStream) {
-            if (this.sceneStore._cameraEduStream.hasVideo) {
-              this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
-              try {
-                await this.sceneStore.unmuteLocalCamera()
-                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
-              } catch (err) {
-                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
-                throw err
-              }
-            } else {
-              await this.sceneStore.muteLocalCamera()
-            }
-            if (this.sceneStore._cameraEduStream.hasAudio) {
-              BizLogger.info('open microphone')
-              await this.sceneStore.muteLocalMicrophone()
-            } else {
-              BizLogger.info('close microphone')
-              await this.sceneStore.unmuteLocalMicrophone()
-            }
-          }
-        } catch (err) {
-          if (this.appStore.isNotInvisible) {
-            this.appStore.fireToast(
-              'toast.media_method_call_failed',
-              { reason: `${err.message}` }
-            )
-          }
-          const error = GenericErrorWrapper(err)
-          BizLogger.warn(`${error}`)
-        }
-      }
+      BizLogger.info("localStreamData", localStreamData_)
+      this.mainStream = mainStream
+      this.localStreamData = localStreamData_
+      
+        
+      
 
       const roomProperties = roomManager.getClassroomInfo().roomProperties as any
 
