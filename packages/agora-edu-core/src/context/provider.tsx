@@ -348,6 +348,7 @@ export const useBoardContext = (): BoardContext => {
     showBoardTool,
     isBoardScreenShare,
     boardConnectionState,
+    joinBoard
   } = useBoardStore()
 
   const {
@@ -423,6 +424,7 @@ export const useBoardContext = (): BoardContext => {
     doUpload: handleUpload,
     publicResources,
     boardConnectionState,
+    joinBoard
   }
 }
 
