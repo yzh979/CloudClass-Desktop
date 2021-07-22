@@ -643,6 +643,10 @@ export type GlobalContext = {
 }
 export type BoardContext = {
     /**
+     * 加入白板
+     */
+    joinBoard: any,
+    /**
      * 白板所在的房间
      * @version v1.1.0
      */
