@@ -77,6 +77,7 @@ export const Chat: FC<ChatProps> = ({
 }) => {
 
   const handleFocus = () => {
+    console.log('>>>>>>handleFocus')
     if(collapse && onCollapse){// 已关闭情况下打开
       onCollapse(false)
     }
@@ -139,7 +140,7 @@ export const Chat: FC<ChatProps> = ({
 
   return (
     <div className={`chat-wrap ${className}`}>
-      <div className="chat-panel" style={{visibility: collapse ? 'hidden':'visible'}} ref={chatHistoryRef} onScroll={handleScroll}>
+      <div className="chat-panel" style={{display: collapse ? 'none':'inherit'}} ref={chatHistoryRef} onScroll={handleScroll}>
       {
         messages.map((msg, idx) => {
           return (
