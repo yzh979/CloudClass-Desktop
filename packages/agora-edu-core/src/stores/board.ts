@@ -261,6 +261,8 @@ export class BoardStore extends ZoomController {
 
   @observable
   downloading: boolean = false
+
+  whiteBoardContainer?: HTMLDivElement
   
   appStore!: EduScenarioAppStore
 
@@ -1804,6 +1806,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   mount(dom: any) {
+    this.whiteBoardContainer = dom
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
@@ -1824,6 +1827,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   unmount() {
+    this.whiteBoardContainer = undefined
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null)
     }
@@ -2091,9 +2095,9 @@ export class BoardStore extends ZoomController {
       width: imageInfo.width,
       height: imageInfo.height,
       //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
+      coordinateX: this.whiteBoardContainer?.clientWidth / 2,
       //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateY: this.whiteBoardContainer?.clientHeight / 2,
     })
   }
 
