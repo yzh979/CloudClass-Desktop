@@ -119,8 +119,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({ controlPlace
   )
 })
 
-export const VideoMarqueeStudentContainer = observer(() => {
-
+export const VideoMarqueeStudentContainer = observer(({ style }: any) => {
   const {
     onCameraClick,
     onMicClick,
@@ -210,6 +209,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
               {
                 videoStreamList.length ?
                   <VideoMarqueeList
+                    style={style}
                     hideStars={sceneType === 2}
                     videoStreamList={videoStreamList}
                     onCameraClick={onCameraClick}
@@ -248,6 +248,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
     return (
         videoStreamList.length ?
           <VideoMarqueeList
+            style={style}
             hideStars={sceneType === 2}
             videoStreamList={videoStreamList}
             onCameraClick={onCameraClick}

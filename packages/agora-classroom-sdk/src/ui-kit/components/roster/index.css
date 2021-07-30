@@ -102,7 +102,7 @@
 }
 
 .roster-user-list-wrap {
-  width: 360px;
+  width: 100%;
   height: 100%;
   background: #fff;
   border-radius: 6px;
@@ -369,7 +369,8 @@
 .roster-button-group > button {
   outline: none;
   border: none;
-  width: 80px;
+  width: 4.16vw;
+  min-width: 70px;
   height: 32px;
   background: #EFEFEF;
   border-radius: 5px;

@@ -15,7 +15,18 @@ import { useEffectOnce } from '@/infra/hooks/utils'
 import { Tabs, TabPane } from '~components/tabs';
 import { EndClass } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
+import { debounce } from 'lodash'
+import { useState } from 'react'
+
+const calcSeatSize = () => {
+  const seatWidth = window.innerWidth * (360/1920)
+  const seatHeight = seatWidth * (9/16)
+  return {
+    width: seatWidth,
+    height: seatHeight
+  }
+}
 
 export const MidClassScenario = observer(() => {
 
@@ -48,6 +59,20 @@ export const MidClassScenario = observer(() => {
   const handleExit = () => {
     addDialog(Exit)
   }
+
+  const [seatSize, setSeatSize] = useState(calcSeatSize())
+
+  useEffect(() => {
+    const onWindowSizeChange = debounce(() => {
+      const size = calcSeatSize()
+      setSeatSize(size)
+    }, 200)
+    window.addEventListener('resize', onWindowSizeChange)
+
+    return () => {
+      window.removeEventListener('resize', onWindowSizeChange)
+    }
+  }, [])
   return (
     <Layout
       className={cls}
@@ -61,9 +86,9 @@ export const MidClassScenario = observer(() => {
         <EndClass className="end-class-position" onExit={handleExit}/>
       }
       <Layout className="bg-white" style={{ height: 'calc(100% - 80px)' }}>
-        <Aside>
-          <VideoPlayerTeacher />
-          <VideoMarqueeStudentContainer />
+        <Aside style={{width: seatSize.width}}>
+          <VideoPlayerTeacher style={{...seatSize}}/>
+          <VideoMarqueeStudentContainer style={{...seatSize}}/>
         </Aside>
         <Content className="column">
           <div className="board-box">
