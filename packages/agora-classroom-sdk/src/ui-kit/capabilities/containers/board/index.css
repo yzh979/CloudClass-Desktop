@@ -1,6 +1,6 @@
 .whiteboard-tab {
 	position: absolute;
-	top: 84px;
+	top: 20px;
 	left: 20px;
 	right: 20px;
 	overflow-x: scroll;
@@ -20,7 +20,7 @@
 .whiteboard-placeholder {
 	position: absolute;
 	left: 20px;
-	top: 84px;
+	top: 20px;
 	right: 20px;
 	bottom: 83px;
 	background: white;
