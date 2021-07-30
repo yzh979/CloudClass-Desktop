@@ -834,8 +834,6 @@ export class BoardStore extends ZoomController {
       if (state.zoomScale) {
         runInAction(() => {
           this.scale = state.zoomScale
-          console.log('>>>>>>>>>>>>>>>runInAction1', this.scale)
-          console.log('>>>>>>>>>>>>>>>runInAction2', state)
         })
       }
       if (state.sceneState) {
@@ -1717,13 +1715,9 @@ export class BoardStore extends ZoomController {
         }
       })
 
-      console.log('>>>>>>>>>>>>.1', this.scale)
       this.room.putScenes(`/${resource.id}`, resource.scenes)
-      console.log('>>>>>>>>>>>>.2', this.scale)
       this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
-      console.log('>>>>>>>>>>>>.3', this.scale)
-      this.updateScale(1)
-      console.log('>>>>>>>>>>>>.4', this.scale)
+      // this.updateScale(1)
     }
   }
 

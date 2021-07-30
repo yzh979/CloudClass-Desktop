@@ -67,14 +67,7 @@ export const NavigationBar = observer(() => {
 
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
-    'exit': () => {
-
-      if (userType === 'teacher'){
-        addDialog(TeacherExitDialog)
-      }else {
-        addDialog(Exit)
-      }
-    },
+    'exit': () => addDialog(Exit),
     'record': () => addRecordDialog(),
     'roster': () => addDialog(UserListDialog),
   }

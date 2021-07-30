@@ -13,9 +13,9 @@
 
 .whiteboard > #netless {
   position: absolute;
-  left: 40px;
+  left: 20px;
   top: 84px;
-  right: 40px;
+  right: 20px;
   bottom: 83px;
   background: white;
   border-radius: 5px;
