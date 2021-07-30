@@ -42,9 +42,13 @@ export const EditAnnouncement = ({ onEdit }) => {
                 <div className="count-content">{count}/{ANNOUNCEMENT_SIZE}</div>
             </div>
             <div className="btn-content">
-                <Button type="default" shape="round" onClick={() => { editStatus() }}>取消</Button>
-                <Button type="primary" shape="round" onClick={
-                    () => { updateAnnouncement(roomId, content) }}>发布</Button>
+                <Button type="default" className="cancel-btn" onClick={() => { editStatus() }}>
+                    <span className="btn-text cancel-btn-text">取消</span>
+                </Button>
+                <Button type="primary" className="ok-btn" onClick={
+                    () => { updateAnnouncement(roomId, content) }}>
+                    <span className="btn-text ok-btn-text">发布</span>
+                </Button>
             </div>
         </div>
     )

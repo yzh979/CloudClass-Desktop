@@ -34,16 +34,11 @@ export const UserList = ({ roomUserList }) => {
                         <div className="user-info">
                             <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
                             <span className="user-text" >{item?.nickname || item?.id}</span>
-                            {isTeacher ?
-                                <Tag className="user-tag teacher-tag" >
-                                    <span className="teacher-text" >
-                                        {ROLE.teacher.tag}
-                                    </span>
-                                </Tag> : <Tag className="user-tag student-tag">
-                                    <span className="tag-text">
-                                        {ROLE.student.tag}
-                                    </span>
-                                </Tag>}
+                            {isTeacher && <Tag className="user-tag teacher-tag" >
+                                <span className="teacher-text" >
+                                    {ROLE.teacher.tag}
+                                </span>
+                            </Tag>}
                         </div>
                         {!isTeacher && <Tooltip placement="leftBottom" overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
                             <div className="mute-icon">

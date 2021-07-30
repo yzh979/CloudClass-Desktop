@@ -9,21 +9,21 @@ import { setUserMute, removeUserMute } from './api/mute'
 
 import './index.css'
 
-export const HXChatRoom = ({pluginStore, sendMsg, onReceivedMsg}) => {
+export const HXChatRoom = ({ pluginStore, sendMsg, onReceivedMsg }) => {
     return (
-        <React.StrictMode>
-            <Provider store={store}>
-                <MemoryRouter>
-                    <App pluginStore={pluginStore} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg}/>
-                </MemoryRouter>
-            </Provider>
-        </React.StrictMode>
+        // <React.StrictMode>
+        <Provider store={store}>
+            <MemoryRouter>
+                <App pluginStore={pluginStore} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg} />
+            </MemoryRouter>
+        </Provider>
+        // </React.StrictMode>
     )
 }
 
 export const renderHXChatRoom = (dom, pluginStore, sendMsg, onReceivedMsg) => {
     ReactDOM.render(
-        <HXChatRoom pluginStore={pluginStore} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg}/>,
+        <HXChatRoom pluginStore={pluginStore} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg} />,
         dom
     );
 }
