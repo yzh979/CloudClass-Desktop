@@ -1,8 +1,8 @@
 .whiteboard-tab {
 	position: absolute;
-	top: 84px;
-	left: 40px;
-	right: 40px;
+	top: 20px;
+	left: 20px;
+	right: 20px;
 	overflow-x: scroll;
 }
 
@@ -19,9 +19,9 @@
 }
 .whiteboard-placeholder {
 	position: absolute;
-	left: 40px;
-	top: 84px;
-	right: 40px;
+	left: 20px;
+	top: 20px;
+	right: 20px;
 	bottom: 83px;
 	background: white;
 	border-radius: 5px;

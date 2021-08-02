@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: www-cloud-room
-          image: registry-vpc.cn-shanghai.aliyuncs.com/lkl-review/www-cloud-room:0.1
+          image: ${IMAGE_TAG}
           imagePullPolicy: Always
           env:
             - name: TZ

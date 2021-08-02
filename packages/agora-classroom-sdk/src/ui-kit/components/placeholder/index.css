@@ -52,7 +52,7 @@
 }
 
 .camera-placeholder.camera-broken-placeholder::before {
-  background-image: url('./assets/camera-broken.png');
+  /* background-image: url('./assets/camera-broken.png'); */
 }
 
 /* .camera-placeholder.camera-muted-placeholder::before {

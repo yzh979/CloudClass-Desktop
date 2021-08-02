@@ -1714,8 +1714,10 @@ export class BoardStore extends ZoomController {
           }
         }
       })
+
       this.room.putScenes(`/${resource.id}`, resource.scenes)
       this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      // this.updateScale(1)
     }
   }
 
@@ -1762,7 +1764,7 @@ export class BoardStore extends ZoomController {
   async putSceneByResourceUuid(uuid: string) {
     try {
       const resource: any = this.allResources.find((resource: any) => resource.id === uuid)
-      console.log(">>>>>>>>>", JSON.stringify(resource))
+      
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid)
       }

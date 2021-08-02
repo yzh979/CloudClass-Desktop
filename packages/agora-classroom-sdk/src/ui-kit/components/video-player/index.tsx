@@ -299,6 +299,7 @@ export type VideoItemProps = Omit<VideoPlayerProps,
 >
 
 export interface VideoMarqueeListProps {
+  style: { width: number, height: number };
   /**
    * 显示发送奖励的icon
    */
@@ -334,6 +335,7 @@ export interface VideoMarqueeListProps {
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
+  style,
   hideStars,
   videoStreamList,
   onCameraClick,
@@ -402,6 +404,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
+              style={style}
               hideStars={hideStars}
               onCameraClick={onCameraClick}
               onMicClick={onMicClick}

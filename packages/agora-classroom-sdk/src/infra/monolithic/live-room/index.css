@@ -131,13 +131,17 @@ html, body, #root {
   border: none;
 }
 .tabs-tab .video-marquee-tab-btn {
-  width: 165px !important;
+  width: 8.59vw !important;
   height: 44px  !important;
+  min-width: 110px;
   border-radius: 5px  !important;
   background: #D8D8D8  !important;
   font-size: 17px;
   font-weight: 400;
   color: #2D353A;
+}
+#app > div.layout.layout-col.edu-room > div > aside > div.tabs.tabs-top.video-marquee-tab > div.tabs-nav > div.tabs-nav-operations {
+  display: none;
 }
 
 .video-marquee-tab-btn > img {
