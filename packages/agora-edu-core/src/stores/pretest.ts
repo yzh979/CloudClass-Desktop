@@ -7,6 +7,7 @@ import { getDeviceLabelFromStorage, getStorage, GlobalStorage } from "../utiliti
 import {v4 as uuidv4} from 'uuid'
 import { Subject } from 'rxjs'
 import { DeviceErrorCallback } from "../context/type"
+import { BizLogger } from "../utilities/biz-logger"
 
 export enum CustomizeDeviceLabel {
   Disabled = 'disabled'
@@ -497,6 +498,70 @@ export class PretestStore {
     }
   }
 
+
+  @action.bound
+  async enableLocalAudio() {
+    // if (this._microphoneTrack) {
+    //   return BizLogger.warn('[demo] enableLocalAudio locking 1 already exists')
+    // }
+    try {
+      const deviceId = this.microphoneId
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        if (this._microphoneTrack) {
+          this._microphoneTrack.stop()
+          this._microphoneTrack = undefined
+        }
+        this.appStore.mediaStore.totalVolume = 0
+        this.muteMicrophone()
+      } else {
+        await this.mediaService.muteLocalAudio(false, deviceId)
+        if (this.mediaService.isWeb) {
+          this._microphoneTrack = this.mediaService.web.microphoneTrack
+        }
+      }
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn('[demo] action in enableLocalAudio >>> enableLocalAudio', error)
+      throw error
+    }
+  }
+  
+
+  @action.bound
+  async disableLocalAudio() {
+    await this.closeMicrophone()
+  }
+
+
+  @action.bound
+  async enableLocalVideo() {
+    if (this._cameraRenderer) {
+      return BizLogger.warn('[demo] enableLocalVideo locking 1 already exists')
+    }
+    try {
+      const deviceId = this.cameraId
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        this.muteCamera()
+      } else {
+        await this.mediaService.muteLocalVideo(false, deviceId)
+        this._cameraRenderer = this.mediaService.cameraRenderer
+      }
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn('[demo] action in enableLocalVideo >>> enableLocalVideo', error)
+      throw error
+    }
+  }
+
+  @action.bound
+  async disableLocalVideo() {
+    if (this._cameraRenderer) {
+      await this.closeCamera()
+      this._cameraRenderer = undefined
+    }
+  }
+
+
   @action.bound
   async openTestCamera() {
     try {
@@ -551,6 +616,13 @@ export class PretestStore {
   }
 
   @action.bound
+  closeRecordingTest() {
+    if (this.isElectron) {
+      this.mediaService.electron.client.stopAudioRecordingDeviceTest()
+    }
+  }
+
+  @action.bound
   async openTestMicrophone(payload: {enableRecording: boolean}) {
     try {
       await this.mediaService.enableLocalAudio(true)
@@ -558,7 +630,9 @@ export class PretestStore {
         this._microphoneTrack = this.web.microphoneTrack
       }
       if (this.isElectron) {
-        payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+        if (payload.enableRecording) {
+          this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+        }
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
       this._microphoneId = this.microphoneId
@@ -680,7 +754,7 @@ export class PretestStore {
           }
         }
       }
-      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
+      this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this.appStore.deviceInfo.cameraName = this.cameraLabel
       this._cameraId = this.cameraId

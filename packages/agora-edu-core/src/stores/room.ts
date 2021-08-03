@@ -1083,15 +1083,15 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
       this.appStore.boardStore.setCheckInResult(checkInResult)
-      this.appStore.boardStore.init({
-        boardId: checkInResult.board.boardId,
-        boardToken: checkInResult.board.boardToken,
-        boardRegion: checkInResult.board.boardRegion,
-      }).catch((err) => {
-        const error = GenericErrorWrapper(err)
-        BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.fireToast('toast.failed_to_join_board')
-      })
+      // this.appStore.boardStore.init({
+      //   boardId: checkInResult.board.boardId,
+      //   boardToken: checkInResult.board.boardToken,
+      //   boardRegion: checkInResult.board.boardRegion,
+      // }).catch((err) => {
+      //   const error = GenericErrorWrapper(err)
+      //   BizLogger.warn(`${error}`)
+      //   this.appStore.isNotInvisible && this.appStore.fireToast('toast.failed_to_join_board')
+      // })
       this.stopJoining()
 
       // logout will clean up eduManager events, so we need to put the listener here
@@ -1591,7 +1591,10 @@ export class RoomStore extends SimpleInterval {
       const roomInfo = roomManager.getClassroomInfo()
       this.sceneStore.startTime = +get(roomInfo, 'roomStatus.startTime', 0)
 
-      const mainStream = roomManager.data.streamMap['main']
+      const mainStream = {
+        streamUuid: +userAndRoomdata.user.streamUuid,
+        rtcToken: userAndRoomdata.user.rtcToken,
+      }
 
       // this.sceneStore.classState = roomInfo.roomStatus.courseState
 
@@ -1602,12 +1605,19 @@ export class RoomStore extends SimpleInterval {
       }
       // this.sceneStore.canChatting = !roomInfo.roomStatus.isStudentChatAllowed
 
-      await this.sceneStore.joinRTC({
+      this.sceneStore.rtcRoomInfo = {
         uid: +mainStream.streamUuid,
         channel: roomInfo.roomInfo.roomUuid,
         token: mainStream.rtcToken,
         data: userAndRoomdata
-      })
+      }
+      // REFACT: separate joinRTC
+      // await this.sceneStore.joinRTC({
+      //   uid: +mainStream.streamUuid,
+      //   channel: roomInfo.roomInfo.roomUuid,
+      //   token: mainStream.rtcToken,
+      //   data: userAndRoomdata
+      // })
 
       const localStreamData = roomManager.data.localStreamData
 
@@ -1627,58 +1637,59 @@ export class RoomStore extends SimpleInterval {
         return false
       }
 
-      if (canPublishRTC(localStreamData, sceneType)) {
+      // REFACT: separate publish stream
+      // if (canPublishRTC(localStreamData, sceneType)) {
 
-        const localStreamData = roomManager.data.localStreamData
+      //   const localStreamData = roomManager.data.localStreamData
 
-        BizLogger.info("localStreamData", localStreamData)
-        await roomManager.userService.publishStream({
-          videoSourceType: EduVideoSourceType.camera,
-          audioSourceType: EduAudioSourceType.mic,
-          streamUuid: mainStream.streamUuid,
-          streamName: '',
-          hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
-          hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
-          userInfo: {} as EduUser
-        })
-        EduLogger.info("toast.publish_business_flow_successfully")
-        // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
-        this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
-        try {
-          // await this.sceneStore.prepareCamera()
-          // await this.sceneStore.prepareMicrophone()
-          if (this.sceneStore._cameraEduStream) {
-            if (this.sceneStore._cameraEduStream.hasVideo) {
-              this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
-              try {
-                await this.sceneStore.unmuteLocalCamera()
-                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
-              } catch (err) {
-                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
-                throw err
-              }
-            } else {
-              await this.sceneStore.muteLocalCamera()
-            }
-            if (this.sceneStore._cameraEduStream.hasAudio) {
-              BizLogger.info('open microphone')
-              await this.sceneStore.muteLocalMicrophone()
-            } else {
-              BizLogger.info('close microphone')
-              await this.sceneStore.unmuteLocalMicrophone()
-            }
-          }
-        } catch (err) {
-          if (this.appStore.isNotInvisible) {
-            this.appStore.fireToast(
-              'toast.media_method_call_failed',
-              { reason: `${err.message}` }
-            )
-          }
-          const error = GenericErrorWrapper(err)
-          BizLogger.warn(`${error}`)
-        }
-      }
+      //   BizLogger.info("localStreamData", localStreamData)
+      //   await roomManager.userService.publishStream({
+      //     videoSourceType: EduVideoSourceType.camera,
+      //     audioSourceType: EduAudioSourceType.mic,
+      //     streamUuid: mainStream.streamUuid,
+      //     streamName: '',
+      //     hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
+      //     hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
+      //     userInfo: {} as EduUser
+      //   })
+      //   EduLogger.info("toast.publish_business_flow_successfully")
+      //   // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
+      //   this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
+      //   try {
+      //     // await this.sceneStore.prepareCamera()
+      //     // await this.sceneStore.prepareMicrophone()
+      //     if (this.sceneStore._cameraEduStream) {
+      //       if (this.sceneStore._cameraEduStream.hasVideo) {
+      //         this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
+      //         try {
+      //           await this.sceneStore.unmuteLocalCamera()
+      //           this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
+      //         } catch (err) {
+      //           this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
+      //           throw err
+      //         }
+      //       } else {
+      //         await this.sceneStore.muteLocalCamera()
+      //       }
+      //       if (this.sceneStore._cameraEduStream.hasAudio) {
+      //         BizLogger.info('open microphone')
+      //         await this.sceneStore.muteLocalMicrophone()
+      //       } else {
+      //         BizLogger.info('close microphone')
+      //         await this.sceneStore.unmuteLocalMicrophone()
+      //       }
+      //     }
+      //   } catch (err) {
+      //     if (this.appStore.isNotInvisible) {
+      //       this.appStore.fireToast(
+      //         'toast.media_method_call_failed',
+      //         { reason: `${err.message}` }
+      //       )
+      //     }
+      //     const error = GenericErrorWrapper(err)
+      //     BizLogger.warn(`${error}`)
+      //   }
+      // }
 
       const roomProperties = roomManager.getClassroomInfo().roomProperties as any
 
@@ -1697,39 +1708,39 @@ export class RoomStore extends SimpleInterval {
       }
       this.joined = true
       this.roomJoined = true
-      let reportUserParams = {
-        vid: this.eduManager.vid,
-        ver: packageJson.version,
-        scenario: 'education',
-        uid: this.userUuid,
-        userName: this.appStore.roomInfo.userName,
-        /**
-         * rtc流id
-         */
-        streamUid: +(this.appStore.sceneStore.streamList[0].streamUuid),
-        /**
-         * rtc流id
-         */
-        streamSuid: this.appStore.sceneStore.streamList[0].streamUuid,
-        /**
-         * apaas角色
-         */
-        role: ""+this.appStore.userRole,
-        /**
-         * rtc sid
-         */
-        streamSid: this.eduManager.rtcSid,
-        /**
-         * rtm sid
-         */
-        rtmSid: this.eduManager.rtmSid,
-        /**
-         * apaas房间id，与rtc/rtm channelName相同
-         */
-        roomId: this.roomInfo.roomUuid
-      };
-      reportServiceV2.initReportUserParams(reportUserParams);
-      reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
+      // let reportUserParams = {
+      //   vid: this.eduManager.vid,
+      //   ver: packageJson.version,
+      //   scenario: 'education',
+      //   uid: this.userUuid,
+      //   userName: this.appStore.roomInfo.userName,
+      //   /**
+      //    * rtc流id
+      //    */
+      //   streamUid: +`${mainStream.streamUuid}`,
+      //   /**
+      //    * rtc流id
+      //    */
+      //   streamSuid: `${mainStream.streamUuid}`,
+      //   /**
+      //    * apaas角色
+      //    */
+      //   role: ""+this.appStore.userRole,
+      //   /**
+      //    * rtc sid
+      //    */
+      //   streamSid: this.eduManager.rtcSid,
+      //   /**
+      //    * rtm sid
+      //    */
+      //   rtmSid: this.eduManager.rtmSid,
+      //   /**
+      //    * apaas房间id，与rtc/rtm channelName相同
+      //    */
+      //   roomId: this.roomInfo.roomUuid
+      // };
+      // reportServiceV2.initReportUserParams(reportUserParams);
+      // reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.stopJoining()
@@ -1740,7 +1751,7 @@ export class RoomStore extends SimpleInterval {
       }
       const error = GenericErrorWrapper(err)
       reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${error.message}` })
-      reportServiceV2.reportApaasUserJoin(new Date().getTime(), err.message);
+      // reportServiceV2.reportApaasUserJoin(new Date().getTime(), err.message);
       this.appStore.fireDialog('generic-error-dialog', {
         error
       })
@@ -1800,6 +1811,10 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         BizLogger.error(`${err}`)
       }
+      await Promise.all([
+        this.sceneStore.releaseLocalAudio(),
+        this.sceneStore.releaseLocalVideo(),
+      ])
       try {
         await this.sceneStore.leaveRtc()
       } catch (err) {

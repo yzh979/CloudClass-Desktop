@@ -111,14 +111,16 @@ export const usePretestContext = (): PretestContext => {
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
 
-  const installPretest = (onError: DeviceErrorCallback) => {
+  const installPretest = (onError: DeviceErrorCallback, remove: boolean = true) => {
     const removeEffect = pretestStore.onDeviceTestError(onError)
     pretestStore.init({ video: true, audio: true })
     pretestStore.openTestCamera()
     pretestStore.openTestMicrophone({ enableRecording: true })
     return () => {
-      pretestStore.closeTestCamera()
-      pretestStore.closeTestMicrophone()
+      if (remove) {
+        pretestStore.closeTestCamera()
+        pretestStore.closeTestMicrophone()
+      }
       removeEffect()
     }
   }
@@ -154,6 +156,7 @@ export const usePretestContext = (): PretestContext => {
     setWhitening: pretestStore.setWhitening,
     setBuffing: pretestStore.setBuffing,
     setRuddy: pretestStore.setRuddy,
+    closeRecordingTest: pretestStore.closeRecordingTest,
     setBeautyEffectOptions: pretestStore.setBeautyEffectOptions
   }
 }
@@ -192,7 +195,21 @@ export const useRoomContext = (): RoomContext => {
     destroyRoom,
   } = useCoreContext()
 
+  const pretestStore = usePretestStore()
+
   const sceneStore = useSceneStore()
+
+  const installMediaDevice = async (onError: DeviceErrorCallback) => {
+    pretestStore.onDeviceTestError(onError)
+    await pretestStore.init({ video: true, audio: true })
+    pretestStore.openTestCamera()
+    pretestStore.openTestMicrophone({ enableRecording: true })
+    // return () => {
+    //   pretestStore.closeTestCamera()
+    //   pretestStore.closeTestMicrophone()
+    //   removeEffect()
+    // }
+  }
 
   const {
     roomInfo,
@@ -205,7 +222,11 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    joinRoomRTC,
+    leaveRoomRTC,
+    prepareStream,
+    rtcJoined,
   } = useSceneStore()
 
   const {
@@ -258,7 +279,12 @@ export const useRoomContext = (): RoomContext => {
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
-    flexRoomProperties: flexProperties
+    flexRoomProperties: flexProperties,
+    joinRoomRTC,
+    leaveRoomRTC,
+    rtcJoined,
+    prepareStream,
+    installMediaDevice,
   }
 }
 

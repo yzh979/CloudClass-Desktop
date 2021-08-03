@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -11,10 +11,13 @@ import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '~capabilities/containers/room-chat'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
+import { useEffect } from 'react'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { get } from 'lodash'
 
 export enum TeacherRenderMode {
   smallMode = 0,
@@ -23,12 +26,33 @@ export enum TeacherRenderMode {
 
 export const BigClassScenario = observer(() => {
 
-  const { joinRoom, roomProperties, isJoiningRoom, updateFlexRoomProperties, flexRoomProperties } = useRoomContext()
+  const {
+    joinRoom,
+    updateFlexRoomProperties,
+    roomProperties,
+    isJoiningRoom,
+    flexRoomProperties,
+    rtcJoined,
+    joinRoomRTC,
+    leaveRoomRTC,
+    roomInfo,
+    prepareStream,
+  } = useRoomContext()
+
+  const {
+    unmuteVideo,
+    unmuteAudio
+  } = useStreamListContext()
 
   const {
     onLaunchAppPlugin,
     onShutdownAppPlugin
   } = useAppPluginContext()
+
+  const {
+    startPretestCamera,
+    startPretestMicrophone
+  } = usePretestContext()
 
 
   useLayoutEffect(() => {
@@ -45,6 +69,20 @@ export const BigClassScenario = observer(() => {
     isFullScreen,
   } = useGlobalContext()
 
+  // useEffect(() => {
+  //   if (roomInfo.userRole !== EduRoleTypeEnum.teacher) return
+  //   Promise.all([
+  //     startPretestCamera(),
+  //     startPretestMicrophone({enableRecording: false})
+  //   ])
+  //   .then(() => {
+  //       console.log('打开媒体设备成功')
+  //   })
+  //   .catch((err: any) => {
+  //       console.log('打开媒体设备失败', err)
+  //   })
+  // }, [roomInfo.userRole])
+
   const {
     widgets
   } = useWidgetContext()
@@ -55,6 +93,63 @@ export const BigClassScenario = observer(() => {
   useEffectOnce(() => {
     joinRoom()
   })
+
+  const prepareStartClassroom = useCallback(async () => {
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      try {
+        await prepareStream()
+      } catch (err) {
+        console.log(err)
+      }    
+    }
+    try {
+      await joinRoomRTC()
+    } catch (err) {
+      console.log(err)
+    }
+  }, [roomInfo.userRole])
+
+  const preparePauseClassroom = useCallback(async () => {
+    try {
+      await leaveRoomRTC()
+    } catch (err) {
+      console.log(err)
+    }
+  }, [roomInfo.userUuid])
+
+  const rtcIsJoining = useRef<boolean>(false)
+
+  const rtcIsPausing = useRef<boolean>(false)
+
+  const classState = get(flexRoomProperties, 'classState', '')
+
+  useEffect(() => {
+    if (!rtcJoined &&
+      !rtcIsJoining.current &&
+      classState === 'started') {
+      rtcIsJoining.current = true
+      prepareStartClassroom()
+        .then(() => {
+          rtcIsJoining.current = false
+        })
+        .catch((err: any) => {
+          rtcIsJoining.current = false
+        })
+    }
+
+    if (rtcJoined &&
+      !rtcIsPausing.current &&
+      classState === 'paused') {
+      rtcIsPausing.current = true
+      preparePauseClassroom()
+        .then(() => {
+          rtcIsPausing.current = false
+        })
+        .catch((err: any) => {
+          rtcIsPausing.current = false
+        })
+    }
+  }, [rtcJoined, classState])
 
   const cls = classnames({
     'edu-room': 1,
@@ -73,7 +168,7 @@ export const BigClassScenario = observer(() => {
       <Layout className="horizontal">
         <Content className="column">
           {flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? (
-            <div 
+            <div
               className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}
               style={{
                 position: 'absolute',
@@ -118,7 +213,7 @@ export const BigClassScenario = observer(() => {
               hideMaxiumn={false}
               isMaxiumn={flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode}
               onMaxiumnClick={async () => {
-                await updateFlexRoomProperties({"teacherRenderMode": flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? TeacherRenderMode.smallMode : TeacherRenderMode.largeMode}, {"cause":0})
+                await updateFlexRoomProperties({ "teacherRenderMode": flexRoomProperties?.teacherRenderMode === TeacherRenderMode.largeMode ? TeacherRenderMode.smallMode : TeacherRenderMode.largeMode }, { "cause": 0 })
               }}
             />
           </div>
