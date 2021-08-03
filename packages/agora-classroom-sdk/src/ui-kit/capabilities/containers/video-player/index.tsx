@@ -5,6 +5,9 @@ import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
+import { get } from 'lodash';
+import { useCallback } from 'react';
+import classnames from 'classnames';
 
 export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = true, isMaxiumn = false, onMaxiumnClick = () => {}}: any) => {
   const {
@@ -21,13 +24,15 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
   const {
     teacherStream: userStream
   } = useStreamListContext()
+  
   const {
     controlTools,
     isHost
   } = useUserListContext()
 
   const {
-    roomInfo
+    roomInfo,
+    flexRoomProperties
   } = useRoomContext()
 
   const {
@@ -35,6 +40,18 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
   } = useUIStore()
 
   const {isMirror} = usePretestContext()
+
+  const classState = get(flexRoomProperties, 'classState', '')
+
+  const showRenderer = useMemo(() => {
+    return classState === 'started' ? (userStream.renderer && userStream.video) : userStream.renderer
+  }, [userStream.renderer, classState, userStream.video])
+
+
+  const renderCls = classnames({
+    "rtc-video": 1,
+    "z-index-2": classState === 'started'
+  })
 
   return (
     <VideoPlayer
@@ -82,9 +99,10 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
         (
           <>
             {
-              userStream.renderer && userStream.video ?
+              showRenderer ?
+              // showTeacherRenderer() ?
               <RendererPlayer
-                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className={renderCls}
               />
               : null
             }

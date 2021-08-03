@@ -1,4 +1,4 @@
-import { useGlobalContext, useMediaContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, usePretestContext, useRoomContext, useVolumeContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -6,6 +6,7 @@ import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { Volume } from '~components/volume'
 import {v4 as uuidv4} from 'uuid'
+import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-rte-sdk'
 
 
 const VolumeIndicationView = observer(() => {
@@ -55,6 +56,7 @@ export const PretestContainer = observer(() => {
         setBuffing,
         setRuddy,
         setBeautyEffectOptions,
+        closeRecordingTest,
     } = usePretestContext()
 
     const {isNative} = useMediaContext()
@@ -78,7 +80,7 @@ export const PretestContainer = observer(() => {
     }
 
     useEffect(() => {
-        installPretest(handleError)
+        installPretest(handleError, false)
         // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
         const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions')
         const {isBeauty, lighteningLevel, rednessLevel, smoothnessLevel} = beautyEffectOptionsStr ? JSON.parse(beautyEffectOptionsStr) : {
@@ -151,15 +153,22 @@ export const PretestContainer = observer(() => {
         }))
     }
 
+    const {roomInfo} = useRoomContext()
+
     const global = useGlobalContext()
 
     const history = useHistory()
 
-    const handleOk = () => {
-        stopPretestCamera()
-        stopPretestMicrophone()
+    const handleOk = useCallback(() => {
+        if (roomInfo.userRole !== EduRoleTypeEnum.teacher) {
+            stopPretestCamera()
+            stopPretestMicrophone()
+        }
+        closeRecordingTest()
+        // stopPretestCamera()
+        // stopPretestMicrophone()
         history.push(global?.params?.roomPath ?? '/classroom/1v1')
-    }
+    }, [roomInfo.userRole])
 
     const handleMirror = () => {
         setMirror(!isMirror)

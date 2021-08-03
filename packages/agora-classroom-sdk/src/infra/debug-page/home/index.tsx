@@ -159,9 +159,11 @@ export const HomePage = observer(() => {
           roomName: `${roomName}`,
           userName: userName,
           roleType: role,
-          startTime: +(new Date()),
+          startTime: 0,
+          // startTime: +(new Date()),
           region,
-          duration: duration * 60,
+          // duration: undefined,
+          // duration: duration * 60,
           userFlexProperties: {"avatar": "test"}
         })
         history.push('/launch')

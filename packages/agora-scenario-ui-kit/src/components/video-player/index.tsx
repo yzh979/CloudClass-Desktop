@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
 import {v4 as uuidv4} from 'uuid';
 import { usePrevious } from '~utilities/hooks';
+import { transI18n } from '../i18n';
 
 export interface BaseVideoPlayerProps {
   /**
@@ -267,7 +268,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       {isHost ? (
         <>
           {hideOffAllPodium ? null : (
-            <Tooltip title={t('Clear Podiums')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podiums')} placement={placement}>
               <Icon
                 hover={canHoverHideOffAllPodium}
                 type="invite-to-podium"
@@ -276,7 +277,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideOffPodium ? null : (
-            <Tooltip title={t('Clear Podium')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podium')} placement={placement}>
               <Icon
                 hover={true}
                 type="invite-to-podium"
@@ -286,12 +287,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
+          <Tooltip title={whiteboardGranted ? transI18n('Close Whiteboard'): transI18n('Open Whiteboard')} placement={placement}>
             <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
           </Tooltip>
           }
           {hideStars ? null : (
-            <Tooltip title={t('Star')} placement={placement}>
+            <Tooltip title={transI18n('Star')} placement={placement}>
               <Icon 
                 hover={true}
                 type="star-outline" 
@@ -302,14 +303,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
-            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
+            <Tooltip title={privateCallEnabled ? transI18n('Close Private Call') : transI18n('Open Private Call')} placement={placement}>
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
               }}></div>
           </Tooltip>
           )}
           {hideMaxiumn ? null : (
-            <Tooltip title={isMaxiumn ? t('Restore') : t('Maximize')} placement={placement}>
+            <Tooltip title={isMaxiumn ? transI18n('Restore') : transI18n('Maximize')} placement={placement}>
               <div className={isMaxiumn ? 'maxiumn-active' : 'maxiumn-default'} onClick={() => {
                 onMaxiumnClick(uid)
               }}></div>

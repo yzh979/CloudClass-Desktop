@@ -32,6 +32,8 @@ export const SettingContainer = observer(({ id }: any) => {
         setBuffing,
         setRuddy,
         setBeautyEffectOptions,
+        startPretestCamera,
+        startPretestMicrophone
     } = usePretestContext()
 
     useEffect(() => {

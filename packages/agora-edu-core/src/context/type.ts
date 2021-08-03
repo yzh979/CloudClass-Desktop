@@ -251,6 +251,7 @@ export type VolumeContext = {
     microphoneLevel: number,
 }
 export type PretestContext = {
+    closeRecordingTest: () => void,
     isBeauty: boolean,
     setBeauty: (isBeauty: boolean) => void,
     whitening: number,
@@ -321,7 +322,7 @@ export type PretestContext = {
      * 按照预置 初始化摄像头麦克风，打开检测摄像头麦克风
      * @version v1.1.0
      */
-    installPretest: (error: DeviceErrorCallback) => () => void,
+    installPretest: (error: DeviceErrorCallback, remove: boolean) => () => void,
     /**
      * 开启摄像头
      * @version v1.1.0
@@ -423,6 +424,32 @@ export type ScreenShareContext = {
     canSharingScreen: boolean;
 }
 export type RoomContext = {
+    /**
+     * 1.1.2 msb-sp
+     * 准备流
+     */
+    prepareStream: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * 推荐只有需要的角色使用，例如老师
+     * 安装媒体设备
+     */
+    installMediaDevice: (error: DeviceErrorCallback) => Promise<void>,
+    /**
+     * 1.1.2 msb-sp
+     * 加入当前房间的rtc
+     */
+    joinRoomRTC: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * 离开当前房间的rtc
+     */
+    leaveRoomRTC: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * rtc是否加入了频道
+     */
+    rtcJoined: boolean,
     /**
      * 场景类型
      * @version v1.1.0
