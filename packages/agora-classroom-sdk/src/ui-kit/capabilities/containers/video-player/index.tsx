@@ -50,7 +50,7 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
 
   const renderCls = classnames({
     "rtc-video": 1,
-    "z-index-2": classState === 'started'
+    "z-index-2": classState !== 'started'
   })
 
   return (

@@ -730,16 +730,16 @@ export class PretestStore {
       this.muteCamera()
     } else {
       if (this.isElectron) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
-          await this.mediaService.muteLocalVideo(false, deviceId)
+        if (this.appStore.sceneStore.cameraEduStream) {
+          await this.mediaService.muteLocalVideo(!!this.appStore.sceneStore.cameraEduStream.hasVideo, deviceId)
         } else {
-          await this.mediaService.setCameraDevice(deviceId)
+          await this.mediaService.muteLocalVideo(false, deviceId)
         }
       }
 
       if (this.isWeb) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
-          await this.mediaService.muteLocalVideo(false, deviceId)
+        if (this.appStore.sceneStore.cameraEduStream) {
+          await this.mediaService.muteLocalVideo(!!this.appStore.sceneStore.cameraEduStream.hasVideo, deviceId)
         } else {
           const camera = this.cameraList.find((it: any) => it.deviceId === deviceId)
           if (!camera) {
@@ -815,15 +815,15 @@ export class PretestStore {
       this.muteMicrophone()
     } else {
       if (this.isElectron) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
-          await this.mediaService.muteLocalAudio(false, deviceId)
+        if (this.appStore.sceneStore.cameraEduStream) {
+          await this.mediaService.muteLocalAudio(!!this.appStore.sceneStore.cameraEduStream.hasAudio, deviceId)
         } else {
-          await this.mediaService.setMicrophoneDevice(deviceId)
+          await this.mediaService.muteLocalAudio(false, deviceId)
         }
       }
       if (this.isWeb) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
-          await this.mediaService.muteLocalAudio(false, deviceId)
+        if (this.appStore.sceneStore.cameraEduStream) {
+          await this.mediaService.muteLocalAudio(!!this.appStore.sceneStore.cameraEduStream.hasAudio, deviceId)
         } else {
           const microphone = this.microphoneList.find((it: any) => it.deviceId === deviceId)
           if (!microphone) {
