@@ -5,6 +5,7 @@ import { IAgoraWidget, useAppPluginContext} from 'agora-edu-core';
 import './index.css';
 import { Dependencies } from '../ext-app/dependencies';
 import { useAdapter } from './adapter'
+import { observer } from 'mobx-react'
 
 
 export interface WidgetProps extends BaseProps {
@@ -12,7 +13,7 @@ export interface WidgetProps extends BaseProps {
     widgetProps?: any;
 }
 
-export const Widget: FC<WidgetProps> = ({
+export const Widget: FC<WidgetProps> = observer(({
     className,
     widgetComponent,
     widgetProps = {},
@@ -56,4 +57,4 @@ export const Widget: FC<WidgetProps> = ({
             
         </div>
     )
-}
+})
