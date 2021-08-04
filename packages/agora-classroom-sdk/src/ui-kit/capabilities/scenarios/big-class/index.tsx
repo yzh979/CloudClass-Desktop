@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext, useBoardContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -92,6 +92,10 @@ export const BigClassScenario = observer(() => {
 
   const { chatCollapse } = useUIStore()
 
+  const {
+    joinBoard
+  } = useBoardContext()
+
   useEffectOnce(() => {
     joinRoom()
   })
@@ -103,6 +107,11 @@ export const BigClassScenario = observer(() => {
       } catch (err) {
         console.log(err)
       }    
+    }
+    try {
+      await joinBoard()
+    } catch (err) {
+      console.log(err)
     }
     try {
       await joinRoomRTC()

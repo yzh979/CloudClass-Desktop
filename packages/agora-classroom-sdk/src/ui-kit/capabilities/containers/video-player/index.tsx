@@ -8,6 +8,7 @@ import { useUIStore } from "@/infra/hooks"
 import { get } from 'lodash';
 import { useCallback } from 'react';
 import classnames from 'classnames';
+import { EduClassroomStateEnum } from '../../../../../../agora-edu-core/src/stores/scene';
 
 export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = true, isMaxiumn = false, onMaxiumnClick = () => {}}: any) => {
   const {
@@ -32,7 +33,8 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
 
   const {
     roomInfo,
-    flexRoomProperties
+    flexRoomProperties,
+    classState
   } = useRoomContext()
 
   const {
@@ -41,16 +43,16 @@ export const VideoPlayerTeacher = observer(({style, className, hideMaxiumn = tru
 
   const {isMirror} = usePretestContext()
 
-  const classState = get(flexRoomProperties, 'classState', '')
+  // const classState = get(flexRoomProperties, 'classState', '')
 
   const showRenderer = useMemo(() => {
-    return classState === 'started' ? (userStream.renderer && userStream.video) : userStream.renderer
+    return classState === EduClassroomStateEnum.start ? (userStream.renderer && userStream.video) : userStream.renderer
   }, [userStream.renderer, classState, userStream.video])
 
 
   const renderCls = classnames({
     "rtc-video": 1,
-    "z-index-2": classState !== 'started'
+    "z-index-2": classState === EduClassroomStateEnum.start
   })
 
   return (
