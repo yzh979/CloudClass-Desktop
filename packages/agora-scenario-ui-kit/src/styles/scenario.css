@@ -237,20 +237,8 @@
   height: 514px;
 }
 
-.z-index-2 {
-  z-index: 2 !important; 
-}
-
-.z-index-2 .top-right-info {
-  z-index: 2 !important; 
-}
-
-.z-index-2 .bottom-left-info {
-  z-index: 2 !important; 
-}
-
-.z-index-2 .bottom-right-info {
-  z-index: 2 !important; 
+.z-index-2 ~ .camera-loading-placeholder {
+  z-index: 0 !important; 
 }
 
 .rtc-video {
