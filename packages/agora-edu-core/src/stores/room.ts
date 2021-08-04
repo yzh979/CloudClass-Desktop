@@ -889,7 +889,7 @@ export class RoomStore extends SimpleInterval {
           let duration = this.classTimeDuration
           let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
-            if (dDuration.minutes() === min && dDuration.seconds() === 0) {
+            if (dDuration.hours() === 0 && dDuration.minutes() === min && dDuration.seconds() === 0) {
               this.appStore.fireToast(
                 'toast.time_interval_between_start',
                 { reason: duration }
@@ -902,7 +902,7 @@ export class RoomStore extends SimpleInterval {
           let durationToEnd = this.classroomSchedule.duration * 1000 - this.classTimeDuration;
           let dDurationToEnd = dayjs.duration(durationToEnd);
           [5, 1].forEach(min => {
-            if (dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
+            if (dDuration.hours() === 0 && dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               this.appStore.fireToast(
                 'toast.time_interval_between_end',
                 { reason: durationToEnd }
@@ -919,7 +919,7 @@ export class RoomStore extends SimpleInterval {
             durationToClose
           })
           let dDurationToClose = dayjs.duration(durationToClose)
-          if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
+          if (dDuration.hours() === 0 && dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.fireToast(
               'toast.time_interval_between_close',
               { reason: durationToClose }
