@@ -6,6 +6,7 @@ import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { RosterUserInfo } from '../stores/small-class';
 import { ScreenShareType } from 'agora-rte-sdk';
+import { EduClassroomStateEnum } from '../stores/scene';
 
 export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
 
@@ -424,6 +425,10 @@ export type ScreenShareContext = {
     canSharingScreen: boolean;
 }
 export type RoomContext = {
+    /**
+     * 上课状态
+     */
+    classState: EduClassroomStateEnum,
     /**
      * 1.1.2 msb-sp
      * 开始上课

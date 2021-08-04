@@ -289,6 +289,7 @@ export const useRoomContext = (): RoomContext => {
     rtcJoined,
     prepareStream,
     installMediaDevice,
+    classState
   }
 }
 

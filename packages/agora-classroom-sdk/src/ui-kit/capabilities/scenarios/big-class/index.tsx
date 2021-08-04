@@ -18,6 +18,7 @@ import { useUIStore } from '@/infra/hooks'
 import { useEffect } from 'react'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get } from 'lodash'
+import { EduClassroomStateEnum } from '../../../../../../agora-edu-core/src/stores/scene'
 
 export enum TeacherRenderMode {
   smallMode = 0,
@@ -37,6 +38,7 @@ export const BigClassScenario = observer(() => {
     leaveRoomRTC,
     roomInfo,
     prepareStream,
+    classState
   } = useRoomContext()
 
   const {
@@ -121,12 +123,12 @@ export const BigClassScenario = observer(() => {
 
   const rtcIsPausing = useRef<boolean>(false)
 
-  const classState = get(flexRoomProperties, 'classState', '')
+  // const classState = get(flexRoomProperties, 'classState', '')
 
   useEffect(() => {
     if (!rtcJoined &&
       !rtcIsJoining.current &&
-      classState === 'started') {
+      classState === EduClassroomStateEnum.start) {
       rtcIsJoining.current = true
       prepareStartClassroom()
         .then(() => {
@@ -136,19 +138,18 @@ export const BigClassScenario = observer(() => {
           rtcIsJoining.current = false
         })
     }
-
-    if (rtcJoined &&
-      !rtcIsPausing.current &&
-      classState === 'ended') {
-      rtcIsPausing.current = true
-      preparePauseClassroom()
-        .then(() => {
-          rtcIsPausing.current = false
-        })
-        .catch((err: any) => {
-          rtcIsPausing.current = false
-        })
-    }
+    // if (rtcJoined &&
+    //   !rtcIsPausing.current &&
+    //   classState === EduClassroomStateEnum.start) {
+    //   rtcIsPausing.current = true
+    //   preparePauseClassroom()
+    //     .then(() => {
+    //       rtcIsPausing.current = false
+    //     })
+    //     .catch((err: any) => {
+    //       rtcIsPausing.current = false
+    //     })
+    // }
   }, [rtcJoined, classState])
 
   const cls = classnames({
