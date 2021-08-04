@@ -1,3 +1,4 @@
+import { isElectron } from '@/infra/utils';
 import { ReactElement } from 'react';
 import { EduAudioSourceType, EduLogger, ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
 import { get } from "lodash"
@@ -1085,6 +1086,15 @@ export class SceneStore extends SimpleInterval {
         }
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
+      }
+
+      try {
+        if (this.mediaService.isElectron) {
+          this.mediaService.electron.setRoleState(1)
+          // (this.mediaService.sdkWrapper as AgoraElectronRTCWrapper).
+        }
+      } catch (err) {
+
       }
   }
 
