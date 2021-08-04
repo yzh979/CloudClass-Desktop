@@ -426,6 +426,16 @@ export type ScreenShareContext = {
 export type RoomContext = {
     /**
      * 1.1.2 msb-sp
+     * 开始上课
+     */
+    startClass: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * 停止上课
+     */
+    stopClass: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
      * 准备流
      */
     prepareStream: () => Promise<any>,

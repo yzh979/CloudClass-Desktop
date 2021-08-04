@@ -139,7 +139,7 @@ export const BigClassScenario = observer(() => {
 
     if (rtcJoined &&
       !rtcIsPausing.current &&
-      classState === 'paused') {
+      classState === 'ended') {
       rtcIsPausing.current = true
       preparePauseClassroom()
         .then(() => {

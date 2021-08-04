@@ -441,7 +441,7 @@ export class RoomStore extends SimpleInterval {
   @computed
   get classTimeDuration(): number {
     let duration = -1
-    if (this.classroomSchedule) {
+    if (this.classroomSchedule && typeof this.classroomSchedule.startTime === 'number' && !isNaN(this.classroomSchedule.startTime)) {
       switch (this.sceneStore.classState) {
         case EduClassroomStateEnum.beforeStart:
           duration = Math.max(this.classroomSchedule.startTime - this.calibratedTime, 0)
@@ -2079,6 +2079,24 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  @action.bound
+  async startClass() {
+    await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, {classState: 'started'}, {cause: 'startClass'})
+    const {ts} = await eduSDKApi.startClass({roomUuid: this.roomInfo.roomUuid})
+    if (this.classroomSchedule) {
+      this.classroomSchedule.startTime = ts
+    }
+  }
+
+  @action.bound
+  async stopClass() {
+    await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, {classState: 'ended'}, {cause: 'endClass'})
+    await eduSDKApi.stopClass({roomUuid: this.roomInfo.roomUuid})
+    if (this.classroomSchedule) {
+      this.classroomSchedule.startTime = 0
+    }
   }
 
   @action.bound

@@ -731,7 +731,8 @@ export class PretestStore {
     } else {
       if (this.isElectron) {
         if (this.appStore.sceneStore.cameraEduStream) {
-          await this.mediaService.muteLocalVideo(!!this.appStore.sceneStore.cameraEduStream.hasVideo, deviceId)
+          const havVideo = !!this.appStore.sceneStore.cameraEduStream.hasVideo
+          await this.mediaService.muteLocalVideo(!havVideo, deviceId)
         } else {
           await this.mediaService.muteLocalVideo(false, deviceId)
         }
@@ -739,7 +740,8 @@ export class PretestStore {
 
       if (this.isWeb) {
         if (this.appStore.sceneStore.cameraEduStream) {
-          await this.mediaService.muteLocalVideo(!!this.appStore.sceneStore.cameraEduStream.hasVideo, deviceId)
+          const havVideo = !!this.appStore.sceneStore.cameraEduStream.hasVideo
+          await this.mediaService.muteLocalVideo(!havVideo, deviceId)
         } else {
           const camera = this.cameraList.find((it: any) => it.deviceId === deviceId)
           if (!camera) {
@@ -816,14 +818,16 @@ export class PretestStore {
     } else {
       if (this.isElectron) {
         if (this.appStore.sceneStore.cameraEduStream) {
-          await this.mediaService.muteLocalAudio(!!this.appStore.sceneStore.cameraEduStream.hasAudio, deviceId)
+          const hasAudio = !!this.appStore.sceneStore.cameraEduStream.hasAudio
+          await this.mediaService.muteLocalAudio(!hasAudio, deviceId)
         } else {
           await this.mediaService.muteLocalAudio(false, deviceId)
         }
       }
       if (this.isWeb) {
         if (this.appStore.sceneStore.cameraEduStream) {
-          await this.mediaService.muteLocalAudio(!!this.appStore.sceneStore.cameraEduStream.hasAudio, deviceId)
+          const hasAudio = !!this.appStore.sceneStore.cameraEduStream.hasAudio
+          await this.mediaService.muteLocalAudio(!hasAudio, deviceId)
         } else {
           const microphone = this.microphoneList.find((it: any) => it.deviceId === deviceId)
           if (!microphone) {

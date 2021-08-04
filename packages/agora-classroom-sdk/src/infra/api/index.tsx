@@ -98,7 +98,7 @@ export type LaunchOption = {
   // rtmUid: string
   rtmToken: string, // rtmToken
   language: LanguageEnum, // 国际化
-  startTime: number, // 房间开始时间
+  startTime?: number, // 房间开始时间
   duration?: number, // 课程时长
   courseWareList: CourseWareList, // 课件列表
   personalCourseWareList?: CourseWareList, // 个人课件列表

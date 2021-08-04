@@ -237,7 +237,9 @@ export const useRoomContext = (): RoomContext => {
     liveClassStatus,
     roomProperties,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
+    startClass,
+    stopClass,
   } = useRoomStore()
 
   const {
@@ -279,6 +281,8 @@ export const useRoomContext = (): RoomContext => {
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
+    startClass: startClass,
+    stopClass: stopClass,
     flexRoomProperties: flexProperties,
     joinRoomRTC,
     leaveRoomRTC,
