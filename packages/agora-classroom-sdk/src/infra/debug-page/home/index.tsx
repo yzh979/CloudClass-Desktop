@@ -162,8 +162,7 @@ export const HomePage = observer(() => {
           startTime: undefined,
           // startTime: +(new Date()),
           region,
-          duration: 0,
-          // duration: duration * 60,
+          duration: duration * 60,
           userFlexProperties: {"avatar": "test"}
         })
         history.push('/launch')

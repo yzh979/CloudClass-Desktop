@@ -509,6 +509,7 @@ export class RoomStore extends SimpleInterval {
     super()
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
+    // reaction(() => this.roomProperties)
   }
 
   @action.bound
@@ -883,11 +884,11 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async checkClassroomNotification() {
     if (this.classroomSchedule) {
+      let duration = this.classTimeDuration
+      let dDuration = dayjs.duration(duration);
       switch (this.sceneStore.classState) {
         case EduClassroomStateEnum.beforeStart:
           //距离上课的时间
-          let duration = this.classTimeDuration
-          let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
             if (dDuration.hours() === 0 && dDuration.minutes() === min && dDuration.seconds() === 0) {
               this.appStore.fireToast(
@@ -1482,6 +1483,16 @@ export class RoomStore extends SimpleInterval {
           this.roomProperties = newRoomProperties
           const newClassState = get(classroom, 'roomStatus.courseState')
 
+          const schedule = get(classroom, 'roomProperties.schedule')
+
+          if (schedule) {
+            this.classroomSchedule = {
+              startTime: schedule.startTime,
+              closeDelay: schedule.closeDelay,
+              duration: schedule.duration
+            }
+          }
+
           const record = get(classroom, 'roomProperties.record')
           if (record) {
             const state = record.state
@@ -1761,7 +1772,6 @@ export class RoomStore extends SimpleInterval {
 
   async onClassStateChanged(state: EduClassroomStateEnum) {
     // TODO: startTime default is 0 not trigger lifecycle
-    if (this.sceneStore.startTime <= 0) return
     if (state === EduClassroomStateEnum.close) {
       try {
         await this.appStore.releaseRoom()
