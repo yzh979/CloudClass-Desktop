@@ -47,7 +47,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
                 overlayClassName="expand-tools-popover"
                 trigger="hover"
                 content={content}
-                placement="bottom">
+                placement="top">
                 <div className="tool">
                     {/* <Icon type="tools" hover={hover} /> */}
                     <img src={IconTools}/>

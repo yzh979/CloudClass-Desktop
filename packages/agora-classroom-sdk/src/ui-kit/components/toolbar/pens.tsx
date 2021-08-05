@@ -69,7 +69,7 @@ export const Pens: FC<PensProps> = ({
                 overlayClassName="expand-tools-popover"
                 trigger="hover"
                 content={content}
-                placement="bottom">
+                placement="top">
                 {/* <Icon hover={hover} type={activePen as any} className={isActive ? 'active' : ''} /> */}
                 <img src={isActive ? IconPenActive:IconPen}/>
                 <Icon type="triangle-down" className="triangle-icon" />

@@ -97,6 +97,10 @@
   font-weight: 600;
   color: #FFFFFF;
   line-height: 24px;
+  overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+  max-width: 100px;
 }
 
 .whiteboard-state {

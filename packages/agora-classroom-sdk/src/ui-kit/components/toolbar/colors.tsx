@@ -85,7 +85,7 @@ export const Colors: FC<ColorsProps> = ({
         overlayClassName="expand-tools-popover"
         trigger="hover"
         content={content}
-        placement="bottom">
+        placement="top">
         <div className="tool">
           {/* <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor, 0.5)}`}}>
             <div className="circle" style={{backgroundColor: activeColor}}></div>
