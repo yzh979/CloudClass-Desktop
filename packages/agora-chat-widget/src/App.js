@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import i18n from "i18next";
 import { useSelector } from 'react-redux'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
@@ -15,14 +16,17 @@ import { Chat } from './components/Chat'
 import { message } from 'antd'
 import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants'
 import showChat_icon from './themes/img/chat.png'
+import im_CN from './locales/zh_CN'
+import im_US from './locales/en_US'
 import './App.css'
 import 'antd/dist/antd.css'
-
 const App = function (props) {
   const state = useSelector(state => state)
   const showChat = state?.showChat
   const showRed = state?.showRed
   const showAnnouncementNotice = state?.showAnnouncementNotice
+  i18n.addResourceBundle('zh','translation',im_CN)
+  i18n.addResourceBundle('en','translation',im_US)
   useEffect(() => {
     let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '')

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { Input, Button } from 'antd';
 import { ANNOUNCEMENT_SIZE, MORE_SIZE } from '../../contants'
 import { updateAnnouncement } from '../../api/chatroom'
+import { transI18n } from '~ui-kit'
 import store from '../../redux/store'
 import { announcementStatus } from '../../redux/actions/roomAction'
 
@@ -30,7 +31,7 @@ export const EditAnnouncement = ({ onEdit }) => {
     return (
         <div className="edit-content">
             <TextArea
-                placeholder="请在此输入内容"
+                placeholder={transI18n('chat.testConnext')}
                 className="input-content"
                 onChange={changeContent}
                 // maxLength={ANNOUNCEMENT_SIZE}
