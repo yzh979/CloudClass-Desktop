@@ -96,23 +96,23 @@ export const BigClassScenario = observer(() => {
     joinBoard
   } = useBoardContext()
 
-  useEffectOnce(() => {
-    joinRoom()
-  })
-
-  const prepareStartClassroom = useCallback(async () => {
+  useEffectOnce(async () => {
+    await joinRoom()
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
       try {
-        await prepareStream()
+        prepareStream()
       } catch (err) {
         console.log(err)
       }    
     }
     try {
-      await joinBoard()
+      joinBoard()
     } catch (err) {
       console.log(err)
     }
+  })
+
+  const prepareStartClassroom = useCallback(async () => {
     try {
       await joinRoomRTC()
     } catch (err) {
