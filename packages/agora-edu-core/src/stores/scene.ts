@@ -1115,6 +1115,9 @@ export class SceneStore extends SimpleInterval {
       token: this.rtcRoomInfo.token,
       data: this.rtcRoomInfo.data,
     })
+    //开始发送视频流与音频流
+    await this.appStore.pretestStore.changeCamera(this.appStore.pretestStore.cameraId);
+    await this.appStore.pretestStore.changeMicrophone(this.appStore.pretestStore.microphoneId);
     this.rtcJoined = true
   }
 
