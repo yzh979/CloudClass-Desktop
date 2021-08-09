@@ -100,13 +100,13 @@ export const BigClassScenario = observer(() => {
     await joinRoom()
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
       try {
-        await prepareStream()
+        prepareStream()
       } catch (err) {
         console.log(err)
       }    
     }
     try {
-      await joinBoard()
+      joinBoard()
     } catch (err) {
       console.log(err)
     }
