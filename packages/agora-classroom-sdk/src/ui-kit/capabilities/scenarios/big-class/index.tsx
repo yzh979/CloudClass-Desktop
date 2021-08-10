@@ -97,17 +97,9 @@ export const BigClassScenario = observer(() => {
   useEffectOnce(async () => {
     await joinRoom()
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
-      try {
-        prepareStream()
-      } catch (err) {
-        console.log(err)
-      }    
+      prepareStream()
     }
-    try {
-      joinBoard()
-    } catch (err) {
-      console.log(err)
-    }
+    joinBoard()
   })
 
   //发送流调用 joinRoomRTC();
