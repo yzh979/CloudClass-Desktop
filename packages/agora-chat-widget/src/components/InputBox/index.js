@@ -26,7 +26,10 @@ export const InputBox = () => {
   const roleType = state?.loginUserInfo.ext;
   const isAllMute = state?.room.allMute;
   const isUserMute = state?.room.isUserMute;
-  let isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  let isTeacher =
+    roleType &&
+    (JSON.parse(roleType).role === ROLE.teacher.id ||
+      JSON.parse(roleType).role === ROLE.assistant.id);
   return (
     <div className="input-box">
       {!isTeacher && isAllMute && <AllMute />}

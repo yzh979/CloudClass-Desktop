@@ -16,12 +16,15 @@ export const TextMsg = ({ item }) => {
   const loginUser = state?.loginUser;
   const roleType = state?.propsData.roleType;
   const sender = item?.from === loginUser;
-  const tagNmae = item?.ext.role === ROLE.teacher.id;
+  const teacherTag = item?.ext.role === ROLE.teacher.id;
+  const assistantTag = item?.ext.role === ROLE.assistant.id;
   const msgData = item?.msg || item?.data;
   const useAvatarUrl = item?.ext.avatarUrl;
   const userNickName = item?.ext.nickName;
   const loginNickName = state?.loginUserInfo.nickname;
-  const isTeacher = state.propsData.roleType === ROLE.teacher.id;
+  const isTeacher =
+    state.propsData.roleType === ROLE.teacher.id ||
+    state.propsData.roleType === ROLE.assistant.id;
 
   const menu = (
     <Menu>
@@ -68,8 +71,11 @@ export const TextMsg = ({ item }) => {
       {sender && (
         <div>
           <div className="msg-user-me">
-            {tagNmae && (
+            {teacherTag && (
               <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
+            {assistantTag && (
+              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
             )}
             <span>{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
@@ -88,8 +94,11 @@ export const TextMsg = ({ item }) => {
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
             <span>{userNickName}</span>
-            {tagNmae && (
+            {teacherTag && (
               <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
+            {assistantTag && (
+              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
             )}
           </div>
           {isTeacher && (

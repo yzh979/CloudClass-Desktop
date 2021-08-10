@@ -33,7 +33,10 @@ export const ShowAnnouncement = () => {
   const Announcement = state.room.announcement;
   const roleType = state?.loginUserInfo.ext;
   // 在propsData 取值
-  const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  const isTeacher =
+    roleType &&
+    (JSON.parse(roleType).role === ROLE.teacher.id ||
+      JSON.parse(roleType).role === ROLE.assistant.id);
 
   const callback = () => {
     hideModal();

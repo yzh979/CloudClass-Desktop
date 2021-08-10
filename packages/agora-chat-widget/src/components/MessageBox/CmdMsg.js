@@ -12,7 +12,9 @@ export const CmdMsg = ({ item }) => {
   const isMuteUser = item?.action === 'mute';
   const isUnmuteUser = item?.action === 'unmute';
   const isDeleteMsg = item?.action === 'DEL';
-  const isTeahcer = state?.propsData.roleType === ROLE.teacher.id;
+  const isTeahcer =
+    state?.propsData.roleType === ROLE.teacher.id ||
+    state?.propsData.roleType === ROLE.assistant.id;
   const isMuter = state?.propsData.userUuid === item?.ext.muteMember;
 
   String.prototype.format = function () {

@@ -45,7 +45,10 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
-  const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  const isTeacher =
+    roleType &&
+    (JSON.parse(roleType).role === ROLE.teacher.id ||
+      JSON.parse(roleType).role === ROLE.assistant.id);
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];
