@@ -13,6 +13,7 @@ import {
   selectTabAction,
   showRedNotification,
 } from '../../redux/actions/messageAction';
+import { transI18n } from '~ui-kit';
 import { announcementNotice } from '../../redux/actions/roomAction';
 import minimize from '../../themes/img/minimize.png';
 import notice from '../../themes/img/notice.png';
@@ -118,7 +119,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           tab={
             <div>
               {showRed && <div className="red-notice"></div>}
-              聊天
+              {transI18n('chat.chat')}
             </div>
           }
           key={CHAT_TABS_KEYS.chat}>
@@ -128,7 +129,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
               onClick={() => {
                 toTabKey();
               }}>
-              <img src={notice} alt="通知" className="notice-icon" />
+              <img src={notice} className="notice-icon" />
               <span className="notice-text">{announcement}</span>
             </div>
           )}
@@ -137,7 +138,11 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
         </TabPane>
         {isTeacher && (
           <TabPane
-            tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : '成员'}
+            tab={
+              roomUsers.length > 0
+                ? `${transI18n('chat.members')}(${roomUsers.length})`
+                : `${transI18n('chat.members')}`
+            }
             key={CHAT_TABS_KEYS.user}>
             <UserList roomUserList={roomUserList} />
           </TabPane>
@@ -146,7 +151,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           tab={
             <div>
               {showAnnouncementNotice && <div className="red-notice"></div>}
-              公告
+              {transI18n('chat.announcement')}
             </div>
           }
           key={CHAT_TABS_KEYS.notice}>

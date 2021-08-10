@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tag, Menu, Dropdown } from 'antd';
-import { ROLE, DELETE, MSG_TYPE } from '../../contants';
+import { ROLE, MSG_TYPE } from '../../contants';
+import { transI18n } from '~ui-kit';
 import store from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
 import delete_icon from '../../themes/img/delete.png';
@@ -27,7 +28,7 @@ export const TextMsg = ({ item }) => {
       <Menu.Item key="1">
         <div style={{ display: 'flex' }} onClick={() => deleteMsg(item.id)}>
           <img src={delete_icon} />
-          {DELETE}
+          {transI18n('chat.delete')}
         </div>
       </Menu.Item>
     </Menu>
@@ -67,7 +68,9 @@ export const TextMsg = ({ item }) => {
       {sender && (
         <div>
           <div className="msg-user-me">
-            {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
+            {tagNmae && (
+              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
             <span>{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
@@ -85,7 +88,9 @@ export const TextMsg = ({ item }) => {
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
             <span>{userNickName}</span>
-            {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
+            {tagNmae && (
+              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
           </div>
           {isTeacher && (
             <>

@@ -2,12 +2,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { InputMsg } from './InputMsg';
 import { ROLE } from '../../contants';
+import { transI18n } from '~ui-kit';
 import './index.css';
 
 const AllMute = () => {
   return (
     <div className="input-box all-mute">
-      <span>全员禁言中</span>
+      <span>{transI18n('chat.all_muted')}</span>
     </div>
   );
 };
@@ -15,7 +16,7 @@ const AllMute = () => {
 const UserMute = () => {
   return (
     <div className="input-box all-mute">
-      <span>您已被老师禁言，请谨慎发言</span>
+      <span>{transI18n('chat.single_muted')}</span>
     </div>
   );
 };
