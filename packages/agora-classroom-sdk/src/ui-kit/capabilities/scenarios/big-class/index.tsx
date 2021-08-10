@@ -33,12 +33,10 @@ export const BigClassScenario = observer(() => {
     roomProperties,
     isJoiningRoom,
     flexRoomProperties,
-    rtcJoined,
     joinRoomRTC,
     leaveRoomRTC,
     roomInfo,
     prepareStream,
-    classState
   } = useRoomContext()
 
   const {
@@ -112,54 +110,8 @@ export const BigClassScenario = observer(() => {
     }
   })
 
-  const prepareStartClassroom = useCallback(async () => {
-    try {
-      await joinRoomRTC()
-    } catch (err) {
-      console.log(err)
-    }
-  }, [roomInfo.userRole])
-
-  const preparePauseClassroom = useCallback(async () => {
-    try {
-      await leaveRoomRTC()
-    } catch (err) {
-      console.log(err)
-    }
-  }, [roomInfo.userUuid])
-
-  const rtcIsJoining = useRef<boolean>(false)
-
-  const rtcIsPausing = useRef<boolean>(false)
-
-  // const classState = get(flexRoomProperties, 'classState', '')
-
-  useEffect(() => {
-    if (!rtcJoined &&
-      !rtcIsJoining.current &&
-      classState === EduClassroomStateEnum.start) {
-      rtcIsJoining.current = true
-      prepareStartClassroom()
-        .then(() => {
-          rtcIsJoining.current = false
-        })
-        .catch((err: any) => {
-          rtcIsJoining.current = false
-        })
-    }
-    // if (rtcJoined &&
-    //   !rtcIsPausing.current &&
-    //   classState === EduClassroomStateEnum.start) {
-    //   rtcIsPausing.current = true
-    //   preparePauseClassroom()
-    //     .then(() => {
-    //       rtcIsPausing.current = false
-    //     })
-    //     .catch((err: any) => {
-    //       rtcIsPausing.current = false
-    //     })
-    // }
-  }, [rtcJoined, classState])
+  //发送流调用 joinRoomRTC();
+  //停止发送调用 leaveRoomRTC();
 
   const cls = classnames({
     'edu-room': 1,
