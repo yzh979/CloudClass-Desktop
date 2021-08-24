@@ -107,7 +107,7 @@
   background: #fff;
   border-radius: 6px;
   position: relative;
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 
 .roster-user-list-wrap .table-header {
