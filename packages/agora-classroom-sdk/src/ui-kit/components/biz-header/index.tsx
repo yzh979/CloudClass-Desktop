@@ -95,6 +95,8 @@ export interface BizHeaderProps {
   userType?: 'teacher' | 'student';
 
   isFullScreen: boolean
+
+  onRoomNameClick?: (e:any) => void
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
@@ -110,13 +112,14 @@ export const BizHeader: FC<BizHeaderProps> = ({
   onClick,
   studentInRoomCnt = 0,
   studentInClassCnt = 0,
-  isFullScreen=false
+  isFullScreen=false,
+  onRoomNameClick
 }) => {
 
   return (
     <>
       <Header className="biz-header">
-        <div className="biz-header_lf">
+        <div className="biz-header_lf" onClick={onRoomNameClick}>
         {title}
         </div>
         <div className="biz-header_md">

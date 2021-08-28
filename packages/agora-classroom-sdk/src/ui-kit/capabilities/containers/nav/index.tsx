@@ -1,5 +1,5 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext, useBoardContext, useUserListContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, useRoomContext, useBoardContext, useUserListContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -8,12 +8,13 @@ import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import {Exit, Record, TeacherExitDialog} from '../dialog'
 import { SettingContainer } from '../setting'
 import { UserListDialog } from '~capabilities/containers/dialog'
+import copy from 'copy-to-clipboard'
 export const NavigationBar = observer(() => {
   // const {
   //   isRecording,
   //   recordStartTime
   // } = useRecordingContext()
-
+  // const appStore = useCoreContext()
 
   const {
     roomInfo,
@@ -32,9 +33,11 @@ export const NavigationBar = observer(() => {
   } = useMediaContext()
 
   const {
+    params,
     addDialog,
     isFullScreen
   } = useGlobalContext()
+
 
   const {
     zoomBoard
@@ -56,6 +59,10 @@ export const NavigationBar = observer(() => {
       }
     }
   }, [isFullScreen, zoomBoard])
+
+  const copyParams = useCallback(() => {
+    copy(JSON.stringify(params))
+  }, [params])
   
   useEffect(() => {
     document.addEventListener('keydown',listener);
@@ -124,6 +131,7 @@ export const NavigationBar = observer(() => {
       onClick={handleClick}
       studentInClassCnt={roomInfo.studentNum}
       studentInRoomCnt={rosterUserList.length}
+      onRoomNameClick={copyParams}
     />
   )
 })
