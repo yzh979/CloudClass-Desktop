@@ -194,6 +194,7 @@ export const ProdHomePage =  observer(() => {
       }
       window.opener.postMessage("recieved", "*")
       const lauchOptions:LaunchOption = event.data
+      lauchOptions.duration = lauchOptions.duration + 3600
       // TODO 参数校验
       homeStore.setLaunchConfig(lauchOptions)
       history.push('/launch')
