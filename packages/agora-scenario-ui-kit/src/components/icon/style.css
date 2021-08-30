@@ -67,6 +67,12 @@
   background-image: url('./assets/svg/icon-more-info.svg');
 }
 
+.icon-preview {
+  width: 28px;
+  height: 28px;
+  background-image: url('./assets/svg/icon-preview.svg');
+}
+
 .active .icon-clicker {
   background-image: url('./assets/svg/select-actived.svg');
 }
@@ -102,7 +108,21 @@
 .icon-countdown.countdown{
   background-image: url('./assets/svg/icon-countdown.svg');
 }
-
+.icon-answer.answer{
+  background-image: url('./assets/svg/icon-answer.svg');
+}
+.icon-vote.vote{
+  background-image: url('./assets/svg/icon-vote.svg');
+}
+.icon-user-svg{
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+  width: 18px;
+  height: 18px;
+  background-image: url('./assets/svg/icon-user.svg');
+}
 /* .can-hover .icon-microphone-on-outline,
 .can-hover .icon-camera,
 .can-hover .icon-microphone-off-outline,

@@ -218,7 +218,7 @@ export const zh = {
     'share_url': '邀请链接',
     'copy': '复制',
     'copy_success': '已复制。',
-    'media_auto_play_tip':"点击屏幕开始直播"
+    'media_auto_play_tip': "点击屏幕开始直播"
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -233,7 +233,7 @@ export const zh = {
     'straight': '直线',
     'circle': '圆圈',
     'rectangle': '矩形',
-    'clicker':'鼠标',
+    'clicker': '鼠标',
     'selector': '选择',
     'eraser': '橡皮擦',
     'color': '颜色',
@@ -351,6 +351,7 @@ export const zh = {
     'fullScreen': '全屏',
     'reduction': '还原',
     'reset': '居中',
+    'preview': '预览',
   },
   'send': '发送',
   'home': {
@@ -407,6 +408,7 @@ export const zh = {
     'start': '开始',
     'restart': '重新开始'
   },
+  'hands_up_tag': '-举手中',
   'answer': {
     'appName': '答题器',
     'start': '开始答题',
@@ -424,5 +426,14 @@ export const zh = {
   },
   'vote': {
     'appName': '投票',
+    'start':'开始投票',
+    'restart':'重新开始',
+    'over':'结束投票',
+    'submit':'投票',
+    'change':'修改投票',
+    'input-tip':'请输入投票问题',
+    'item-tip':'请输入选项内容',
+    'single-sel':'单选',
+    'mul-sel':'多选',
   }
 }

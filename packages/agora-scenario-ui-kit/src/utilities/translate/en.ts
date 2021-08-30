@@ -311,6 +311,7 @@ export const en = {
     'fullScreen': 'full screen',
     'reduction': 'reduction',
     'reset': 'center',
+    'preview': 'page preview',
   },
   'pretest': {
     'title': 'Device Test',
@@ -407,5 +408,33 @@ export const en = {
     'seconds': 'seconds',
     'start': 'Start',
     'restart': 'Restart'
+  },
+  'hands_up_tag': '-hands',
+  'answer': {
+    'appName': 'Selector',
+    'start': 'Begin Answering',
+    'submit': 'Post',
+    'change': 'Change My Answer',
+    'number-answered': 'Submission List',
+    'acc': 'Accuracy',
+    'right-key': 'The Correct Answer',
+    'my-answer': 'My Answer',
+    'over': 'End Of Answer',
+    'student-name': 'Name',
+    'answer-time': 'Time',
+    'selected-answer': 'Answer',
+    'restart': 'Start Again'
+  },
+  'vote': {
+    'appName': 'Polling',
+    'start':'Create poll',
+    'restart':'Restart',
+    'over':'End poll',
+    'submit':'Submit',
+    'change':'Change',
+    'input-tip':'What is your poll question?',
+    'item-tip':'Option',
+    'single-sel':'Single',
+    'mul-sel':'Multi-select',
   }
 }

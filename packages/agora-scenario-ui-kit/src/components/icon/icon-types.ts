@@ -70,4 +70,7 @@ export type IconTypes =
   | 'recording'
   | 'clicker'
   | 'countdown'
+  | 'answer'
+  | 'vote'
+  | 'preview'
   | 'more-info';

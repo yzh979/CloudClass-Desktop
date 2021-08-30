@@ -17,8 +17,10 @@ export type AgoraExtAppContext = {
   properties: any
   dependencies: Map<string, any>
   localUserInfo: AgoraExtAppUserInfo,
+  userList?: any[],
   roomInfo: AgoraExtAppRoomInfo,
-  language: string
+  language: string,
+  events: any
 }
 
 export type AgoraExtAppHandle = {
@@ -30,8 +32,10 @@ export interface IAgoraExtApp {
   language: string
   appIdentifier: string
   appName: string
+  className?: string
   width: number
   height: number
+  title?: string
   extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle):void
   extAppRoomPropertiesDidUpdate(properties:any, cause: any):void
   extAppWillUnload():void
