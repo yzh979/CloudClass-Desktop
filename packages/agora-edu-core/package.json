@@ -63,7 +63,9 @@
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
     "white-web-sdk": "2.12.14"
+    
   },
+
   "browserslist": {
     "production": [
       ">0.2%",
