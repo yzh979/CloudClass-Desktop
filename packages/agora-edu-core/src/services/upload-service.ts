@@ -347,7 +347,7 @@ export class UploadService extends ApiBase {
           // userUuid: payload.userUuid,
           appId: this.appId
         })
-
+      // 产生问题在这, uploadResult 是空
       console.log('uploadResult', uploadResult)
 
       const resp = createPPTTask({
@@ -484,7 +484,7 @@ export class UploadService extends ApiBase {
     const prefix = this.uploadCallbackPrefix
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     console.log("callbackUrl >>>> ", callbackUrl)
-    console.log("ossParams >>>> ", callbackUrl)
+    console.log("ossParams >>>> ", ossParams)
 
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
