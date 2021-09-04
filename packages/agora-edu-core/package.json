@@ -62,8 +62,9 @@
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
-    "white-web-sdk": "2.12.23"
-    
+    "@netless/fetch-progress": "0.0.1",
+    "@netless/video-js-plugin": "0.3.2",
+    "white-web-sdk": "2.13.10"
   },
 
   "browserslist": {

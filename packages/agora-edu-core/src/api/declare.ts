@@ -1,5 +1,6 @@
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
+export * from 'white-web-sdk'
 
 export type AgoraExtAppUserInfo = {
   userUuid: string

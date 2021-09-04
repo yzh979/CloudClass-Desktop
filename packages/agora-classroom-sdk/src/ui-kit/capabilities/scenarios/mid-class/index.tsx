@@ -82,9 +82,9 @@ export const MidClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      { userType == 'student' && liveClassStatus.classState == 'end-class' &&
+      {/* { userType == 'student' && liveClassStatus.classState == 'end-class' &&
         <EndClass className="end-class-position" onExit={handleExit}/>
-      }
+      } */}
       <Layout className="bg-white" style={{ height: 'calc(100% - 80px)' }}>
         <Aside style={{width: seatSize.width}}>
           <VideoPlayerTeacher style={{...seatSize}}/>

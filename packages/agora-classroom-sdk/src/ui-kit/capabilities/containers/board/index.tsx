@@ -307,9 +307,9 @@ export const WhiteboardContainer = observer(() => {
         ready ? 
         <div id="netless" ref={mountToDOM} ></div> : <div className="whiteboard-placeholder"></div>
       }
-      { userType == 'student' && liveClassStatus.classState == 'pre-class' &&
+      {/* { userType == 'student' && liveClassStatus.classState == 'pre-class' &&
         <PreClass className="pre-class-position"/>
-      }
+      } */}
 
       {showTab ? 
       <TabsContainer /> : null}
