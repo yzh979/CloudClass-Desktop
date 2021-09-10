@@ -483,8 +483,6 @@ export class UploadService extends ApiBase {
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
     const prefix = this.uploadCallbackPrefix
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-    console.log("callbackUrl >>>> ", callbackUrl)
-    console.log("ossParams >>>> ", ossParams)
 
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
