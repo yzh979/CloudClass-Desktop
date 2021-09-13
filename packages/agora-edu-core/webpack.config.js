@@ -31,9 +31,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    alias: {
-      'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
-    },
+    //TODO: BUILD_CORE
+    // alias: {
+    //   'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
+    // },
   },
   module: {
     rules: [

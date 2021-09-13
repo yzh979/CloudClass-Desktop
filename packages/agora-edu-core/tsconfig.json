@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "ES2015",
     "outDir": "lib",
+    "baseUrl": ".",
     "lib": ["dom", "es2017", "DOM.Iterable", "WebWorker"],
     "moduleResolution": "node",
     "importHelpers": true,
@@ -20,10 +21,7 @@
     "experimentalDecorators": true,
     "isolatedModules": true,
     "allowJs": false,
-    "jsx": "react-jsx",
-    "paths": {
-      "agora-rte-sdk": ["../agora-rte-sdk/src"],
-    }
+    "jsx": "react-jsx"
   },
   "include": ["./src"],
   "exclude": ["node_modules", "dist", "es", "lib", "build", "examples"]
