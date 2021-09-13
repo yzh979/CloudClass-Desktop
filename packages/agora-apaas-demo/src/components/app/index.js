@@ -8,18 +8,17 @@ export default class App {
 
   setupClassroom() {
     AgoraEduSDK.config({
-      appId: 'f488493d1886435f963dfb3d95984fd4',
+      appId: 'appId',
     });
     AgoraEduSDK.launch(document.querySelector(`#${this.elem.id}`), {
-      rtmToken:
-        '006f488493d1886435f963dfb3d95984fd4IABITbbeWgBC109/7I9Bnb2neHeib9ORVthUUjblt2rj4gx+f9gAAAAAEAA67mKyJKxeYAEA6AMkrF5g',
-      userUuid: 'test',
-      userName: 'teacher',
-      roomUuid: '4321',
+      rtmToken: 'rtmToken',
+      userUuid: 'userUuid',
+      userName: 'userName',
+      roomUuid: 'roomUuid',
       roleType: 1,
-      roomType: 0,
-      roomName: 'demo-class',
-      pretest: false,
+      roomType: 4,
+      roomName: 'roomName',
+      pretest: true,
       language: 'en',
       startTime: new Date().getTime(),
       duration: 60 * 30,
