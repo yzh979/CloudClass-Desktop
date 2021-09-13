@@ -8,7 +8,7 @@ import { Popover } from '~components/popover';
 import { SvgaPlayer } from '~components/svga-player';
 import { Tooltip } from '~components/tooltip';
 import { usePrevious } from '~utilities/hooks';
-// import { useMediaStore } from '../../../../aa-agora-edu-core-lb/src/context/core';
+// import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
 import { BaseProps } from '../interface/base-props';
 import { SvgImg } from '../svg-img';
 import './index.css';

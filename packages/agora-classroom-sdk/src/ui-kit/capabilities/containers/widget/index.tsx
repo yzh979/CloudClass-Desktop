@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
-import { IAgoraWidget, useAppPluginContext } from 'aa-agora-edu-core-lb';
+import { IAgoraWidget, useAppPluginContext } from 'agora-edu-core';
 import './index.css';
 import { Dependencies } from '../ext-app/dependencies';
 import { Adapter } from './adapter';

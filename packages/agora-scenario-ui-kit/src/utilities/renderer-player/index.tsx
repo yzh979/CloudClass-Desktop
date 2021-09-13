@@ -1,4 +1,4 @@
-import type { IMediaRenderer } from 'aa-agora-edu-core-lb';
+import type { IMediaRenderer } from 'agora-edu-core';
 import classnames from 'classnames';
 import * as React from 'react';
 import { useRendererPlayer } from '~utilities/hooks';

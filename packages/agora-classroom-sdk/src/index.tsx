@@ -2,8 +2,8 @@ import 'promise-polyfill/src/polyfill';
 import ReactDOM from 'react-dom';
 import { App } from '@/infra/monolithic/app';
 import { isElectron } from '@/infra/utils';
-import { EduManager } from 'aa-agora-edu-core-lb';
-import { eduSDKApi } from 'aa-agora-edu-core-lb';
+import { EduManager } from 'agora-edu-core';
+import { eduSDKApi } from 'agora-edu-core';
 import { AgoraEduSDK } from './infra/api';
 import { GlobalStorage } from '@/infra/utils';
 

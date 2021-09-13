@@ -1,6 +1,6 @@
 import { useUIStore } from '@/infra/hooks';
-import { useRecordingContext, useRoomContext } from 'aa-agora-edu-core-lb';
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+import { useRecordingContext, useRoomContext } from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useState } from 'react';
 import { useMemo } from 'react';

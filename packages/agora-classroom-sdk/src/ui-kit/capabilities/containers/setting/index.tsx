@@ -1,7 +1,7 @@
 import { Button, Modal, Setting, t } from '~ui-kit';
 import { observer } from 'mobx-react';
 import { useUIStore } from '@/infra/hooks';
-import { useGlobalContext, useMediaContext, usePretestContext } from 'aa-agora-edu-core-lb';
+import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core';
 import { useCallback, useEffect, useState } from 'react';
 
 export const SettingContainer = observer(({ id }: any) => {

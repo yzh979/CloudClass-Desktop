@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type { IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext } from 'aa-agora-edu-core-lb';
+import type { IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext } from 'agora-edu-core';
 import { BoardClient } from './board';
 import { I18nProvider } from '~ui-kit';
 

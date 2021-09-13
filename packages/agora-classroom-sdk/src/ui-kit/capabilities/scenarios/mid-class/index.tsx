@@ -8,7 +8,7 @@ import {
   useChatContext,
   useWidgetContext,
   useAppPluginContext,
-} from 'aa-agora-edu-core-lb';
+} from 'agora-edu-core';
 import { NavigationBar } from '~capabilities/containers/nav';
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
 import { WhiteboardContainer } from '~capabilities/containers/board';
@@ -27,7 +27,7 @@ import { useLayoutEffect } from 'react';
 import { useUIStore } from '@/infra/hooks';
 
 import { ToastContainer } from '~capabilities/containers/toast';
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { get } from 'lodash';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 import { RootBox } from '~ui-kit';

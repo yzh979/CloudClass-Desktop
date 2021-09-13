@@ -1,5 +1,5 @@
 import { action, observable, computed, runInAction } from 'mobx';
-import type { AgoraExtAppContext, AgoraExtAppHandle } from 'aa-agora-edu-core-lb';
+import type { AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
 export class PluginStore {
   context: AgoraExtAppContext;
   handle: AgoraExtAppHandle;

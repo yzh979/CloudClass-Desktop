@@ -1,5 +1,5 @@
 import { action, observable, computed, runInAction, autorun } from 'mobx';
-import type { AgoraWidgetContext } from 'aa-agora-edu-core-lb';
+import type { AgoraWidgetContext } from 'agora-edu-core';
 import { ChatEvent, ChatListType, Conversation, Message } from '~ui-kit/components/chat/interface';
 import { ChatStorage } from './utilities';
 

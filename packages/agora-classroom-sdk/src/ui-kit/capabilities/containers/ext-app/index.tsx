@@ -5,12 +5,12 @@ import {
   useAppPluginContext,
   useRoomContext,
   useSmallClassVideoControlContext,
-} from 'aa-agora-edu-core-lb';
+} from 'agora-edu-core';
 import Draggable from 'react-draggable';
 import { Dependencies } from './dependencies';
-import { eduSDKApi } from 'aa-agora-edu-core-lb';
+import { eduSDKApi } from 'agora-edu-core';
 import { Modal, transI18n, Z_INDEX_CONST } from '~ui-kit';
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(

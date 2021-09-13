@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useEffect } from 'react';
-import type { AgoraWidgetHandle, AgoraWidgetContext, IAgoraWidget } from 'aa-agora-edu-core-lb';
+import type { AgoraWidgetHandle, AgoraWidgetContext, IAgoraWidget } from 'agora-edu-core';
 import { observer, Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { PluginStore } from './store';

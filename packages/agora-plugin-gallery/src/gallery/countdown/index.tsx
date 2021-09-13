@@ -4,10 +4,11 @@ import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'aa-agora-edu-core-lb';
+import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
 import { Button, Countdown, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+//@ts-ignore
+import { EduRoleTypeEnum } from 'agora-edu-core';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(() => {

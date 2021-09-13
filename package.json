@@ -44,7 +44,7 @@
     "release:edu-core": "run-s build:rte-sdk build:edu-core copy:edu-core-proto",
     "copy:edu-core-proto": "cpx 'packages/agora-edu-core/src/protobuf/**/*.*' packages/agora-edu-core/lib/agora-edu-core/src/protobuf",
     "release:demo": "run-s build:apaas",
-    "dev": "run-s build:proto release:edu-core run:demo",
+    "dev": "run-s run:demo",
     "dev:apaas": "run-s build:proto run:demo",
     "dev:edu-core": "run-s build:proto run:edu-core:demo",
     "build:apaas": "run-s build:proto build:demo",

@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>;
 

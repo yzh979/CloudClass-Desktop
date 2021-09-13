@@ -4,8 +4,8 @@ import {
   useBoardContext,
   useRoomContext,
   useScreenShareContext,
-} from 'aa-agora-edu-core-lb';
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
+} from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { SvgImg, t, ToolCabinet } from '~ui-kit';

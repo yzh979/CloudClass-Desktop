@@ -3,7 +3,7 @@ import {
   useMediaContext,
   usePretestContext,
   useVolumeContext,
-} from 'aa-agora-edu-core-lb';
+} from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';

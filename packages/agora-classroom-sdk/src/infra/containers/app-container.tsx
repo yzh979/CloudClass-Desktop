@@ -3,11 +3,7 @@ import { HomeStore } from '@/infra/stores/app/home';
 import { BizPageRouter } from '@/infra/types';
 import { ToastContainer } from '~capabilities/containers/toast';
 import { AppPluginContainer } from '~capabilities/containers/ext-app';
-import {
-  AppStoreConfigParams,
-  AppStoreInitParams,
-  useStorageSWContext,
-} from 'aa-agora-edu-core-lb';
+import { AppStoreConfigParams, AppStoreInitParams, useStorageSWContext } from 'agora-edu-core';
 import { I18nProvider } from '~ui-kit';
 import { RoomParameters } from '../api/declare';
 import { Provider } from 'mobx-react';

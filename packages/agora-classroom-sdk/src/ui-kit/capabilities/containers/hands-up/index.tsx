@@ -1,5 +1,5 @@
-import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
-import { useHandsUpContext, useRoomContext } from 'aa-agora-edu-core-lb';
+import { EduRoleTypeEnum } from 'agora-edu-core';
+import { useHandsUpContext, useRoomContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo, transI18n } from '~ui-kit';
 import { useUIStore } from '@/infra/hooks';

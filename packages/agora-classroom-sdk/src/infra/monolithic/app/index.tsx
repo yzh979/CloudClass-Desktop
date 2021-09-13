@@ -1,6 +1,6 @@
 import { GenAppContainer } from '@/infra/containers/app-container';
 import { BizPageRouter } from '@/infra/types';
-import { AppStoreConfigParams } from 'aa-agora-edu-core-lb';
+import { AppStoreConfigParams } from 'agora-edu-core';
 import { RoomParameters } from '../../api/declare';
 
 const routes: BizPageRouter[] = [
