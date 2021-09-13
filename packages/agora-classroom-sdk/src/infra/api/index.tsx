@@ -1,6 +1,6 @@
 import { UIContext } from '@/infra/hooks';
 import { UIStore } from '@/infra/stores/app/ui';
-import { AgoraEduCoreSDK, LaunchOption } from 'agora-edu-core';
+import { AgoraEduCoreSDK, AgoraEduSDKConfigParams, LaunchOption } from 'agora-edu-core';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import 'promise-polyfill/src/polyfill';
 import { ReactChild, useState } from 'react';
@@ -63,14 +63,21 @@ export type TranslateEnum =
 
 const devicePath = '/pretest';
 export class AgoraEduSDK extends AgoraEduCoreSDK {
+  static _region?: string;
+
+  static config(params: AgoraEduSDKConfigParams) {
+    super.config(params);
+    this._region = params.region;
+  }
+
   static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
     if (option.widgets) {
       if (!option.widgets.chat) {
-        option.widgets.chat = ChatWidgetFactory(option.region as string);
+        option.widgets.chat = ChatWidgetFactory(this._region!);
       }
     } else {
       option.widgets = {
-        chat: ChatWidgetFactory(option.region as string),
+        chat: ChatWidgetFactory(this._region!),
       };
     }
     return await super.launch(
