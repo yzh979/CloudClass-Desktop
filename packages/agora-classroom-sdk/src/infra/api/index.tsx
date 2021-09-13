@@ -63,11 +63,13 @@ export type TranslateEnum =
 
 const devicePath = '/pretest';
 export class AgoraEduSDK extends AgoraEduCoreSDK {
-  static _region?: string;
+  static _region?: string = 'CN';
 
   static config(params: AgoraEduSDKConfigParams) {
     super.config(params);
-    this._region = params.region;
+    if (params.hasOwnProperty('region')) {
+      this._region = params.region;
+    }
   }
 
   static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
