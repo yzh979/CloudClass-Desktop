@@ -6178,6 +6178,29 @@ agora-classroom-sdk@1.1.2-rc.3:
     workbox-range-requests "6.1.2"
     workbox-strategies "6.1.1"
 
+"agora-edu-core-local@file:packages/agora-edu-core-local":
+  version "1.1.2"
+  dependencies:
+    "@netless/combine-player" "1.1.4"
+    "@netless/cursor-tool" "0.0.7"
+    "@netless/iframe-bridge" "2.1.4"
+    "@netless/react-seek-slider" "1.0.4"
+    "@netless/video-js-plugin" "0.3.8"
+    "@netless/white-audio-plugin" "1.2.23"
+    "@netless/white-audio-plugin2" "2.0.5"
+    "@netless/white-video-plugin" "1.2.23"
+    "@netless/white-video-plugin2" "2.0.5"
+    agora-rte-sdk "1.1.2"
+    ali-oss "6.15.2"
+    lodash "4.17.21"
+    mobx "5.15.4"
+    mobx-react "6.3.1"
+    react "17.0.0"
+    rxjs "6.6.6"
+    uuid "3.3.3"
+    video.js "7.10.0"
+    white-web-sdk "2.13.16"
+
 agora-electron-sdk@3.4.6-build.722:
   version "3.4.6-build.722"
   resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.4.6-build.722.tgz#90760a8a6b37a35049bc98bec933d98002d88490"

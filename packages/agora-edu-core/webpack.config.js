@@ -32,7 +32,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
     },
   },
   module: {

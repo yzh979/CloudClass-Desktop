@@ -96,16 +96,28 @@
   "babel": {
     "presets": [
       [
-        "react-app",
+        "@babel/preset-env",
         {
-          "typescript": true
+          "useBuiltIns": "usage",
+          "debug": false,
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
         }
-      ]
+      ],
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
+      "@babel/preset-typescript"
     ],
     "plugins": [
       "@babel/plugin-proposal-object-rest-spread",
       "@babel/plugin-proposal-optional-chaining",
-      "@babel/plugin-syntax-dynamic-import",
+      "@babel/plugin-proposal-nullish-coalescing-operator",
       [
         "@babel/plugin-proposal-decorators",
         {
@@ -118,7 +130,6 @@
           "loose": true
         }
       ]
-    ],
-    "exclude": "node_modules"
+    ]
   }
 }
