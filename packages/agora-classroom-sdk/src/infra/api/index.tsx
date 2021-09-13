@@ -6,6 +6,7 @@ import 'promise-polyfill/src/polyfill';
 import { ReactChild, useState } from 'react';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
+import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
 
 export const UIContextProvider = ({ children }: { children: ReactChild }) => {
   const [store] = useState<UIStore>(() => new UIStore());
@@ -36,6 +37,13 @@ export interface ApplicationConfigParameters {
   ossConfig?: WhiteboardOSSConfig;
 }
 
+const ChatWidgetFactory = (region: string) => {
+  if (region.toUpperCase() === 'CN') {
+    return new AgoraHXChatWidget();
+  }
+  return new AgoraChatWidget();
+};
+
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
   | ''
@@ -56,6 +64,15 @@ export type TranslateEnum =
 const devicePath = '/pretest';
 export class AgoraEduSDK extends AgoraEduCoreSDK {
   static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
+    if (option.widgets) {
+      if (!option.widgets.chat) {
+        option.widgets.chat = ChatWidgetFactory(option.region as string);
+      }
+    } else {
+      option.widgets = {
+        chat: ChatWidgetFactory(option.region as string),
+      };
+    }
     return await super.launch(
       dom,
       option,
