@@ -2,15 +2,15 @@ import 'promise-polyfill/src/polyfill';
 import ReactDOM from 'react-dom';
 // import { App } from '@/infra/monolithic/app';
 import { isElectron } from '@/infra/utils';
-import { EduManager } from 'agora-edu-core';
-import { AppStoreInitParams, CoreContextProvider, eduSDKApi } from 'agora-edu-core';
+import { EduManager } from 'aa-agora-edu-core-lb';
+import { AppStoreInitParams, CoreContextProvider, eduSDKApi } from 'aa-agora-edu-core-lb';
 import { GlobalStorage } from '@/infra/utils';
 
 //@ts-ignore
 import { stopReportingRuntimeErrors } from 'react-error-overlay';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Premium } from './infra/monolithic/premium';
-import { BizPagePath } from '../../agora-edu-core/src/types';
+import { BizPagePath } from '../../aa-agora-edu-core-lb/src/types';
 import { EduSDKController } from './infra/api/controller';
 
 // NOTE: 改方法仅在开发环境生效，所以在开发环境禁止。

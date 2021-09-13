@@ -1,7 +1,7 @@
 import { ScreenShare } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useScreenShareContext } from 'agora-edu-core';
+import { useScreenShareContext } from 'aa-agora-edu-core-lb';
 
 export type ScreenShareContainerProps = {
   windowId: any;

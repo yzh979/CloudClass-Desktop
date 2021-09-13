@@ -10,7 +10,7 @@ import {
   useStreamListContext,
   useUserListContext,
   useRoomContext,
-} from 'agora-edu-core';
+} from 'aa-agora-edu-core-lb';
 
 export const useReaction = <T>(
   expression: (reaction: IReactionPublic) => T,

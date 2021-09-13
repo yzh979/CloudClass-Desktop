@@ -1,5 +1,5 @@
 import { RendererPlayer } from '@/ui-kit/utilities/renderer-player';
-import { useGlobalContext, useRoomContext, useStreamListContext } from 'agora-edu-core';
+import { useGlobalContext, useRoomContext, useStreamListContext } from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 

@@ -9,8 +9,8 @@ import {
   useRoomContext,
   useStreamListContext,
   useUserListContext,
-} from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-edu-core';
+} from 'aa-agora-edu-core-lb';
+import { EduRoleTypeEnum, EduStream, EduUser } from 'aa-agora-edu-core-lb';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';

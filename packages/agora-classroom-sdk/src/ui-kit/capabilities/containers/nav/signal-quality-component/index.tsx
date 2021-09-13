@@ -1,4 +1,4 @@
-import { useClassroomStatsContext, useMediaContext } from 'agora-edu-core';
+import { useClassroomStatsContext, useMediaContext } from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { IconTypes, Popover, SvgImg } from '~ui-kit';

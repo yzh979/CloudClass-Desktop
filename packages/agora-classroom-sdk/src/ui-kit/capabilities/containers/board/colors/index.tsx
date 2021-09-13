@@ -1,6 +1,6 @@
 import { Colors, t } from '~ui-kit';
 import { observer } from 'mobx-react';
-import { useBoardContext } from 'agora-edu-core';
+import { useBoardContext } from 'aa-agora-edu-core-lb';
 
 export const ColorsContainer = observer(() => {
   const { changeStroke, changeHexColor, setTool, currentColor, currentStrokeWidth } =

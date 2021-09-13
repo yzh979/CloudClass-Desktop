@@ -1,5 +1,5 @@
 import { RoomContainer } from '@/infra/containers/app-container';
-import { useGlobalContext } from 'agora-edu-core';
+import { useGlobalContext } from 'aa-agora-edu-core-lb';
 import { BizPageRouter } from '@/infra/types';
 import { observer } from 'mobx-react';
 import { AgoraCSSBasement } from '~ui-kit';

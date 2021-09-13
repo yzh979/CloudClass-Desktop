@@ -6,9 +6,9 @@ import {
   useScreenShareContext,
   useCloudDriveContext,
   RoomPhase,
-} from 'agora-edu-core';
+} from 'aa-agora-edu-core-lb';
 import { ZoomItemType } from '~ui-kit/components';
-import { EduRoleTypeEnum, EduRoomType } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduRoomType } from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import { useCallback, useMemo } from 'react';
 import { ColorsContainer } from '~capabilities/containers/board/colors';

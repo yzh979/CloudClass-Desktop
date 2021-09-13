@@ -1,5 +1,5 @@
 import { action, observable, computed, runInAction, autorun } from 'mobx';
-import type { AgoraWidgetContext } from 'agora-edu-core';
+import type { AgoraWidgetContext } from 'aa-agora-edu-core-lb';
 
 export class PluginStore {
   context: AgoraWidgetContext;

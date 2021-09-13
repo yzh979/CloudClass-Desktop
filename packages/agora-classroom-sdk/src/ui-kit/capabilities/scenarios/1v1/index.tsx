@@ -5,7 +5,7 @@ import {
   useGlobalContext,
   useRoomContext,
   useWidgetContext,
-} from 'agora-edu-core';
+} from 'aa-agora-edu-core-lb';
 import classnames from 'classnames';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';

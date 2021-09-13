@@ -8,7 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery';
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token';
-import { EduRoomTypeEnum } from 'agora-edu-core';
+import { EduRoomTypeEnum } from 'aa-agora-edu-core-lb';
 
 export const RecordPage = observer(() => {
   const homeStore = useHomeStore();

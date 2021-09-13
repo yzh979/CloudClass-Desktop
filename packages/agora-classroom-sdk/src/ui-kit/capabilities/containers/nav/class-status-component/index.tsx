@@ -1,5 +1,5 @@
 import { Inline, transI18n } from '~ui-kit';
-import { useLiveRoomStatsContext } from 'agora-edu-core';
+import { useLiveRoomStatsContext } from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { formatCountDown, TimeFormatType } from '@/infra/utils';

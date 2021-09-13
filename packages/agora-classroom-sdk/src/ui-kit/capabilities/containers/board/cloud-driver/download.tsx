@@ -1,4 +1,4 @@
-import { useCloudDriveContext } from 'agora-edu-core';
+import { useCloudDriveContext } from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import {
   Button,

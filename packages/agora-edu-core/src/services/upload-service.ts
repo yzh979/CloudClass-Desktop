@@ -830,7 +830,7 @@ export class UploadService extends ApiBase {
         },
       });
 
-      console.log('[agora-edu-core] res >>>>> ', res);
+      console.log('[aa-agora-edu-core-lb] res >>>>> ', res);
       if (res.res.status === 200) {
         const data = (res as any).data?.data ?? {};
         console.log('upload res data ', data);

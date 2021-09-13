@@ -1,5 +1,5 @@
-import { useBoardContext, mapFileType, PPTKind, useCloudDriveContext } from 'agora-edu-core';
-import { EduLogger } from 'agora-edu-core';
+import { useBoardContext, mapFileType, PPTKind, useCloudDriveContext } from 'aa-agora-edu-core-lb';
+import { EduLogger } from 'aa-agora-edu-core-lb';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
 import * as React from 'react';

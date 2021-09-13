@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 import { AgoraMediaDeviceEnum } from '@/infra/types';
-import { EduRoleTypeEnum, EduTextMessage } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduTextMessage } from 'aa-agora-edu-core-lb';
 import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
-import { ApplianceNames, Room } from 'agora-edu-core';
+import { ApplianceNames, Room } from 'aa-agora-edu-core-lb';
 import { agoraCaches } from './web-download.file';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';

@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useCallback } from 'react';
-import { useCloudDriveContext } from 'agora-edu-core';
+import { useCloudDriveContext } from 'aa-agora-edu-core-lb';
 import { useUIStore } from '@/infra/hooks';
 
 export interface UploadContainerProps {

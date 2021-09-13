@@ -10,7 +10,7 @@ import {
   useVideoControlContext,
   usePretestContext,
   useVolumeContext,
-} from 'agora-edu-core';
+} from 'aa-agora-edu-core-lb';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';

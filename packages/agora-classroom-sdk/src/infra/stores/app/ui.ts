@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isEmpty } from 'lodash';
 import { action, computed, observable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'aa-agora-edu-core-lb';
 
 export type ToastType = {
   id: string;

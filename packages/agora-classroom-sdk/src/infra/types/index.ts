@@ -1,4 +1,4 @@
-import { SceneDefinition } from 'agora-edu-core';
+import { SceneDefinition } from 'aa-agora-edu-core-lb';
 
 export declare type ListenerCallbackType<T> = [T] extends [(...args: infer U) => any]
   ? U

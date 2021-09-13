@@ -1,7 +1,7 @@
 import { UIContext } from '@/infra/hooks';
 import { UIStore } from '@/infra/stores/app/ui';
-import { AgoraEduCoreSDK, LaunchOption } from 'agora-edu-core';
-import { EduRoomTypeEnum } from 'agora-edu-core';
+import { AgoraEduCoreSDK, LaunchOption } from 'aa-agora-edu-core-lb';
+import { EduRoomTypeEnum } from 'aa-agora-edu-core-lb';
 import 'promise-polyfill/src/polyfill';
 import { ReactChild, useState } from 'react';
 import { LiveRoom } from '../monolithic/live-room';

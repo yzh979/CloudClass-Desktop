@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { RendererPlayer } from '~utilities/renderer-player';
 // import { IconButton, Icon } from '~ui-kit'
 // import { useCallback } from 'react'
-import { useBoardContext, useScreenShareContext } from 'agora-edu-core';
+import { useBoardContext, useScreenShareContext } from 'aa-agora-edu-core-lb';
 import classnames from 'classnames';
 
 export const ScreenSharePlayerContainer = observer(() => {
