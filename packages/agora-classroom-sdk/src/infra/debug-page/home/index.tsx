@@ -192,7 +192,7 @@ export const ProdHomePage =  observer(() => {
       if(!event.data){
         return
       }
-      window.opener.postMessage("recieved", "*")
+      window.opener && window.opener.postMessage("recieved", "*")
       const lauchOptions:LaunchOption = event.data
       lauchOptions.duration = lauchOptions.duration + 3600
       // TODO 参数校验
