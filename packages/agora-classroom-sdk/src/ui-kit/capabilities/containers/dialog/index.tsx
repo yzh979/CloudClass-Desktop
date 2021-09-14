@@ -368,10 +368,7 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
-
-  // LKLTODO
-  const {/*stopClass,*/destroyRoom} = useRoomContext()
-
+  const {stopClass,destroyRoom} = useRoomContext()
   const {removeDialog , addToast} = useUIStore()
 
   const {
@@ -384,8 +381,7 @@ export const TeacherExitDialog: React.FC<BaseDialogProps>  = ({id}) => {
       await stopRecording()
     }
     if(permanent){
-      // LKLTODO
-      // await stopClass()
+      await stopClass()
     }
     await destroyRoom()
     removeDialog(id)

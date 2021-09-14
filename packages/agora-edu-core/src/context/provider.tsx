@@ -197,7 +197,9 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    startClass,
+    stopClass
   } = useSceneStore()
 
   const {
@@ -206,9 +208,10 @@ export const useRoomContext = (): RoomContext => {
     kickOutOnce,
     join,
     liveClassStatus,
+    liveRecordStatus,
     roomProperties,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
   } = useRoomStore()
 
   const {
@@ -250,7 +253,10 @@ export const useRoomContext = (): RoomContext => {
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
-    flexRoomProperties: flexProperties
+    flexRoomProperties: flexProperties,
+    startClass,
+    stopClass,
+    liveRecordStatus
   }
 }
 

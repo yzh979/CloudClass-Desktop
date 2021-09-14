@@ -567,6 +567,9 @@ export type RoomContext = {
      * @version v1.1.2
      */
     flexRoomProperties: any;
+    startClass: () => void;
+    stopClass: () => void;
+    liveRecordStatus: any;
 }
 export type RoomDiagnosisContext = {
     /**

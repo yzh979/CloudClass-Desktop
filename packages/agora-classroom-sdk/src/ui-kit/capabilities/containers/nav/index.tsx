@@ -20,8 +20,7 @@ export const NavigationBar = observer(() => {
   const {
     roomInfo,
     liveClassStatus,
-    /* TODOLKL
-    liveRecordStatus*/
+    liveRecordStatus
   } = useRoomContext()
 
   // console.log('NavigationBar# isRecording', liveRecordStatus.isRecording, 'roomInfo', roomInfo)
@@ -52,9 +51,8 @@ export const NavigationBar = observer(() => {
   } = useUserListContext()
   const addRecordDialog = useCallback(() => {
     console.log('tag' , ' * * * * * addRecordDialog')
-    // LKLTODO
-    return addDialog(Record, {starting: /*liveRecordStatus.isRecording*/false})
-  }, [addDialog, Record/*, liveRecordStatus.isRecording*/])
+    return addDialog(Record, {starting: liveRecordStatus.isRecording})
+  }, [addDialog, Record, liveRecordStatus.isRecording])
 
 
   const listener = useCallback((e)=>{
@@ -105,12 +103,10 @@ export const NavigationBar = observer(() => {
     return formatCountDown(duration, TimeFormatType.Timeboard)
   }, [JSON.stringify(liveClassStatus), formatCountDown])
 
-  // const recordFormatTime = useMemo(() => {
-  //   const {duration} = liveRecordStatus
-  //   return formatCountDown(duration, TimeFormatType.Timeboard)
-  // }, [JSON.stringify(liveRecordStatus), formatCountDown])
-  // LKLTODO
-  const recordFormatTime = ""
+  const recordFormatTime = useMemo(() => {
+    const {duration} = liveRecordStatus
+    return formatCountDown(duration, TimeFormatType.Timeboard)
+  }, [JSON.stringify(liveRecordStatus), formatCountDown])
 
   const userType = useMemo(() => {
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
@@ -125,8 +121,7 @@ export const NavigationBar = observer(() => {
       isNative={isNative}
       classFormatTime={classFormatTime}
       classState={liveClassStatus.classState as BizClassStatus}
-      // LKLTODO
-      isRecording={/*liveRecordStatus.isRecording*/false}
+      isRecording={liveRecordStatus.isRecording}
       recordFormatTime={recordFormatTime}
       title={roomInfo.roomName}
       signalQuality={networkQuality as any}
