@@ -6217,12 +6217,12 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
-agora-edu-core@1.1.5-rc.2:
-  version "1.1.5-rc.2"
-  resolved "https://registry.nlark.com/agora-edu-core/download/agora-edu-core-1.1.5-rc.2.tgz?cache=0&sync_timestamp=1631601049442&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fagora-edu-core%2Fdownload%2Fagora-edu-core-1.1.5-rc.2.tgz#49ce6898f581f2cec4c1b0b60c291a4e830c38a8"
-  integrity sha1-Sc5omPWB8s7EwbC2DCkaToMMOKg=
+agora-edu-core@1.1.5-rc.5:
+  version "1.1.5-rc.5"
+  resolved "https://registry.nlark.com/agora-edu-core/download/agora-edu-core-1.1.5-rc.5.tgz?cache=0&sync_timestamp=1631614356123&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fagora-edu-core%2Fdownload%2Fagora-edu-core-1.1.5-rc.5.tgz#66b5f7856d132ce5c1c6cfa8fec36884013a9d23"
+  integrity sha1-ZrX3hW0TLOXBxs+o/sNohAE6nSM=
   dependencies:
-    agora-rte-sdk x.x.x
+    agora-rte-sdk "1.1.5"
 
 agora-electron-sdk@3.4.6-build.722:
   version "3.4.6-build.722"
@@ -6247,7 +6247,7 @@ agora-rtc-sdk-ng@4.7.0:
   resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.7.0.tgz#c9179b9dc8a38bc38aedc0d4f48d153babe079bb"
   integrity sha1-yRebnciji8OK7cDU9I0VO6vgebs=
 
-agora-rte-sdk@x.x.x:
+agora-rte-sdk@1.1.5:
   version "1.1.5"
   resolved "https://registry.nlark.com/agora-rte-sdk/download/agora-rte-sdk-1.1.5.tgz#4389f342c8d9246dd170b784d4675d122a3e6af6"
   integrity sha1-Q4nzQsjZJG3RcLeE1GddEio+avY=

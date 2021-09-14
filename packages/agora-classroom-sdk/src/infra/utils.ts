@@ -9,6 +9,7 @@ import { agoraCaches } from './web-download.file';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { transI18n } from '~ui-kit';
+dayjs.extend(duration);
 
 export enum TimeFormatType {
   Timeboard,

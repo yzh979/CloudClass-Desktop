@@ -148,6 +148,6 @@
     }
   },
   "dependencies": {
-    "agora-edu-core": "1.1.5"
+    "agora-edu-core": "1.1.5-rc.5"
   }
 }
