@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit';
 import { useGlobalContext } from 'agora-edu-core';
 import { transI18n } from '@/ui-kit/components';
+import { useUIStore } from '@/infra/hooks';
 
 export const HandsUpManagerContainer = observer(() => {
 
@@ -46,7 +47,7 @@ export const HandsUpReceiverContainer = observer(() => {
 
     const {
         addToast
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
         handsUpState,

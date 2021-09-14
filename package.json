@@ -23,7 +23,7 @@
     "release:electron:mac": "run-s build:rte-sdk build:edu-core pack:electron:mac",
     "release:electron:win": "run-s build:rte-sdk build:edu-core pack:electron:win",
     "release:demo": "run-s build:rte-sdk build:edu-core build:demo",
-    "dev": "run-s build:dev:rte-sdk build:dev:edu-core run:demo",
+    "dev": "run-s build:proto build:dev:rte-sdk build:dev:edu-core run:demo",
     "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-classroom-sdk yarn storybook",
     "dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run dev",
@@ -45,7 +45,8 @@
     "ci:build:web": "just release:web",
     "ci:build:electron:win": "just release:electron:win",
     "ci:build:electron:mac": "just release:electron:mac",
-    "ci:build:classroom:sdk": "just release:classroom:sdk"
+    "ci:build:classroom:sdk": "just release:classroom:sdk",
+    "build:proto": "lerna exec --scope=agora-edu-core npm run proto"
   },
   "repository": {
     "type": "git",

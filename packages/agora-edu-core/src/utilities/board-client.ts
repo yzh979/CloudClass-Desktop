@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState, ApplianceNames, LoggerReportMode } from 'white-web-sdk';
 import { videoPlugin2 } from '@netless/white-video-plugin2';
 import { audioPlugin2 } from '@netless/white-audio-plugin2';
+import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
 import { get } from 'lodash';
 import { BizLogger } from './biz-logger';
 import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
@@ -36,10 +37,14 @@ export class BoardClient extends EventEmitter {
   }
 
   initPlugins (identity: string) {
-    const plugins = createPlugins({"video2": videoPlugin2, "audio2": audioPlugin2});
-
-    plugins.setPluginContext("video2", {identity});
-    plugins.setPluginContext("audio2", {identity});
+    // const plugins = createPlugins({"video2": videoPlugin2, "audio2": audioPlugin2});
+    const plugins = createPlugins({
+      [PluginId]: videoJsPlugin()
+    })
+    const enable = identity === 'host' ? true : false
+    plugins.setPluginContext(PluginId, {enable, verbose: true})
+    // plugins.setPluginContext("video2", {identity});
+    // plugins.setPluginContext("audio2", {identity});
     this.plugins = plugins;
   }
   
@@ -96,13 +101,13 @@ export class BoardClient extends EventEmitter {
     if (isAssistant) {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
-        currentApplianceName: ApplianceNames.selector,
+        currentApplianceName: ApplianceNames.clicker,
         textSize: 24,
       })
     } else {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
-        currentApplianceName: ApplianceNames.selector,
+        currentApplianceName: ApplianceNames.clicker,
         textSize: 24,
       })
     }
@@ -185,10 +190,17 @@ export class BoardClient extends EventEmitter {
   }
 
   async destroy() {
+    //@ts-ignore
+    // this.room && this.room.dispose()
     if (this.room && !this.disconnected) {
       await this.room.disconnect()
       this.disconnected = true
     }
+  }
+
+  get bridge() {
+    if (!this.room) return
+    return this.room.getInvisiblePlugin(IframeBridge.kind)
   }
 
 }

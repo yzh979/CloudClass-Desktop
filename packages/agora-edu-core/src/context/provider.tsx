@@ -3,9 +3,15 @@ import { homeApi } from "../services/home-api"
 import { StorageCourseWareItem } from "../types"
 import { get } from "lodash"
 
-import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
+import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
-import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore, useMediaStore} from "./core"
+import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool } from './type'
+import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
+
+export {
+  ControlTool
+} from './type'
 
 export type {
  CoreAppContext,
@@ -16,25 +22,37 @@ export {
   CoreContextProvider
 } from './core'
 
-export const useChatContext = () => {
+/**
+ * 
+ * @returns 聊天能力池返回的内容
+ */
+export const useChatContext = (): ChatContext=> {
   const core = useCoreContext()
-  const { roomStore, sceneStore, uiStore } = core
+  const { roomStore, sceneStore } = core
   return {
-    isHost: sceneStore.sceneVideoConfig.isHost,
-    getHistoryChatMessage: roomStore.getHistoryChatMessage,
+    isHost: sceneStore.isHost,
     messageList: roomStore.chatMessageList,
-    sendMessage: roomStore.sendMessage,
-    muteChat: sceneStore.muteChat,
-    unmuteChat: sceneStore.unmuteChat,
-    chatCollapse: uiStore.chatCollapse,
-    setChatCollapse: uiStore.setChatCollapse,
+    conversationList: roomStore.chatConversationList,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
-    addChatMessage: roomStore.addChatMessage
+    sendMessage: roomStore.sendMessage,
+    sendMessageToConversation: roomStore.sendMessageToConversation,
+    muteChat: sceneStore.muteChat,
+    unmuteChat: sceneStore.unmuteChat,
+    muteUserChat: sceneStore.muteUserChat,
+    unmuteUserChat: sceneStore.unmuteUserChat,
+    addChatMessage: roomStore.addChatMessage,
+    addConversationChatMessage: roomStore.addConversationChatMessage,
+    getHistoryChatMessage: roomStore.getHistoryChatMessage,
+    getConversationList: roomStore.getConversationList,
+    getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage,
+    // REMOVED v1.1.1
+    // chatCollapse: uiStore.chatCollapse,
+    // toggleChatMinimize: uiStore.toggleChatMinimize,
   }
 }
 
-export const useStreamListContext = () => {
+export const useStreamListContext = (): StreamListContext => {
 
   const sceneStore = useSceneStore()
 
@@ -43,12 +61,12 @@ export const useStreamListContext = () => {
   const smallClassStore = useSmallClassStore()
 
   const {
-    teacherStream,
-    studentStreams,
     muteAudio,
     unmuteAudio,
     muteVideo,
     unmuteVideo,
+    teacherStream,
+    studentStreams,
     streamList,
     cameraEduStream
   } = sceneStore
@@ -63,6 +81,7 @@ export const useStreamListContext = () => {
   } = smallClassStore
 
   return {
+    localStream: cameraEduStream,
     streamList,
     teacherStream,
     studentStreams,
@@ -72,27 +91,29 @@ export const useStreamListContext = () => {
     muteVideo,
     unmuteVideo,
     revokeUserPermission,
-    localStream: cameraEduStream,
     grantUserPermission,
   }
 }
 
-export const usePretestContext = () => {
+export const useVolumeContext = (): VolumeContext => {
   const pretestStore = usePretestStore()
+
+  return {
+    microphoneLevel: pretestStore.microphoneLevel
+  }
+}
+
+export const usePretestContext = (): PretestContext => {
+  const pretestStore = usePretestStore()
+  const appStore = useCoreContext()
+  // const uiStore = useUIStore()
   const [isMirror, setMirror] = useState<boolean>(false)
 
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
 
-  const installPretest = () => {
-    const removeEffect = pretestStore.onDeviceTestError(({ type, error }) => {
-      if (type === 'video') {
-        setCameraError(error)
-      }
-      if (type === 'audio') {
-        setMicrophoneError(error)
-      }
-    })
+  const installPretest = (onError: DeviceErrorCallback) => {
+    const removeEffect = pretestStore.onDeviceTestError(onError)
     pretestStore.init({ video: true, audio: true })
     pretestStore.openTestCamera()
     pretestStore.openTestMicrophone({ enableRecording: true })
@@ -112,7 +133,7 @@ export const usePretestContext = () => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: pretestStore.microphoneLevel,
+    microphoneLevel: 0,
     isMirror: isMirror,
     setMirror,
     installPretest,
@@ -125,97 +146,115 @@ export const usePretestContext = () => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
+    pretestNoticeChannel: appStore.pretestNotice$
   }
 }
 
-export const useScreenShareContext = () => {
+export const useScreenShareContext = (): ScreenShareContext => {
   const {
-    customScreenShareItems,
+    customScreenSharePickerItems,
+    customScreenSharePickerType,
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
+    startNativeScreenShareBy
   } = useSceneStore()
 
+  const {
+    isShareScreen,
+    canSharingScreen,
+  } = useBoardStore()
+
   return {
-    nativeAppWindowItems: customScreenShareItems,
+    nativeAppWindowItems: customScreenSharePickerItems,
     screenShareStream,
     screenEduStream,
-    startOrStopSharing
+    startOrStopSharing,
+    // ADDED v1.1.1
+    isScreenSharing: isShareScreen,
+    customScreenSharePickerType,
+    startNativeScreenShareBy,
+    canSharingScreen
   }
 }
 
-export const useRoomContext = () => {
+export const useRoomContext = (): RoomContext => {
 
   const {
     destroyRoom,
   } = useCoreContext()
 
+  const sceneStore = useSceneStore()
+
   const {
-    startNativeScreenShareBy,
     roomInfo,
     classState,
+    sceneType,
+    startNativeScreenShareBy,
+    removeScreenShareWindow,
     muteVideo,
     unmuteVideo,
     muteAudio,
     unmuteAudio,
-    sceneType,
-    muteAllAudio
+    muteUserChat,
+    unmuteUserChat
   } = useSceneStore()
 
   const {
-    removeDialog,
-  } = useUIStore()
-
-  const {
-    teacherAcceptHandsUp,
-    teacherRejectHandsUp,
-    handsUpStudentList,
-    processUserCount,
-  } = useSmallClassStore()
-
-  const {
+    isJoiningRoom,
     kickOutBan,
     kickOutOnce,
     join,
     liveClassStatus,
-    liveRecordStatus
+    roomProperties,
+    updateFlexProperties,
+    flexProperties
   } = useRoomStore()
 
   const {
-    pauseClass,
-    startClass,
-    stopClass
-  } = useSceneStore()
-
+    handsUpStudentList,
+    processUserCount,
+    teacherAcceptHandsUp,
+    teacherRejectHandsUp
+  } = useSmallClassStore()
 
   return {
     sceneType,
     destroyRoom,
     joinRoom: join,
-    removeDialog,
+    // REMOVED v1.1.1
+    // removeDialog,
     startNativeScreenShareBy,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
     handsUpStudentList,
     processUserCount,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
     roomInfo,
     isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
     liveClassStatus,
-    liveRecordStatus,
-    muteVideo,
-    unmuteVideo,
-    muteAudio,
-    unmuteAudio,
-    muteAllAudio,
-    pauseClass,
-    startClass,
-    stopClass
+    // TO-REVIEW
+    // ui context?
+    removeScreenShareWindow,
+    roomProperties,
+    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
+      return sceneStore.queryCameraDeviceState(userList, userUuid, streamUuid)
+    },
+    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
+      return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
+    },
+    isJoiningRoom,
+    updateFlexRoomProperties: updateFlexProperties,
+    flexRoomProperties: flexProperties
   }
 }
 
-export const useRoomDiagnosisContext = () => {
+export const useRoomDiagnosisContext = (): RoomDiagnosisContext => {
   const {
     navigationState
   } = useRoomStore()
@@ -225,7 +264,7 @@ export const useRoomDiagnosisContext = () => {
   }
 }
 
-export const useGlobalContext = () => {
+export const useGlobalContext = (): GlobalContext => {
 
   const { isFullScreen } = useBoardStore()
   const appStore = useCoreContext()
@@ -233,44 +272,42 @@ export const useGlobalContext = () => {
   const mainPath = useCoreContext().params.mainPath
 
   const {
-    addDialog,
-    removeDialog,
-    addToast,
     toast$,
-    fireToast,
-    removeToast,
-    toastQueue,
-    checked,
-    loading,
-    dialogQueue,
-    updateChecked,
     dialog$,
-    fireDialog
-  } = useUIStore()
+    seq$
+  } = useCoreContext();
+
+  const {
+    joined,
+    isJoiningRoom,
+  } = useRoomStore()
 
   return {
-    loading,
-    isFullScreen,
-    addDialog,
-    removeDialog,
-    toast$,
-    fireToast,
-    addToast,
-    checked,
-    params: appStore.params,
-    dialogQueue,
-    removeToast,
-    toastQueue,
-    updateChecked,
+    // REMOVED v1.1.2
+    // addDialog,
+    // removeDialog,
+    // toast$,
+    // fireToast,
+    // addToast,
+    // checked,
+    // dialogQueue,
+    // removeToast,
+    // toastQueue,
+    // updateChecked,
+    // fireDialog
     mainPath,
     language: appStore.params.language,
+    loading: isJoiningRoom,
+    isFullScreen,
+    params: appStore.params,
+    isJoined: joined,
     toastEventObserver: toast$,
     dialogEventObserver: dialog$,
-    fireDialog,
+    sequenceEventObserver: seq$
   }
 }
 
-export const useBoardContext = () => {
+export const useBoardContext = (): BoardContext => {
   const {
     currentColor,
     currentStrokeWidth,
@@ -281,9 +318,7 @@ export const useBoardContext = () => {
     zoomValue,
     currentPage,
     totalPage,
-    courseWareList,
     ready,
-    downloadList,
     changeStroke,
     changeHexColor,
     mount,
@@ -292,37 +327,40 @@ export const useBoardContext = () => {
     zoomBoard,
     setZoomScale,
     changeFooterMenu,
-    putSceneByResourceUuid,
-    startDownload,
-    deleteSingle,
-    refreshState,
     updatePen,
     setLaserPoint,
     tools,
-    resourcesList,
     activeSceneName,
     boardPenIsActive,
     changeSceneItem,
-    removeMaterialList,
-    cancelUpload,
     room,
-    closeMaterial,
-    personalResources,
     installTools,
-    handleUpload,
-    publicResources,
     revokeBoardPermission,
     grantBoardPermission,
+    showBoardTool,
+    isBoardScreenShare,
     clearScene
   } = useBoardStore()
 
   const {
-    startOrStopSharing,
-  } = useSceneStore()
+    courseWareList,
+    downloadList,
+    putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    handleUpload,
+    publicResources,
+  } = useBoardStore()
 
   const {
-    roomInfo
-  } = useRoomStore()
+    startOrStopSharing
+  } = useScreenShareContext()
 
   const mountToDOM = useCallback((dom: HTMLDivElement | null) => {
     if (dom) {
@@ -337,13 +375,11 @@ export const useBoardContext = () => {
     zoomValue,
     currentPage,
     totalPage,
-    courseWareList,
     currentColor,
     currentStrokeWidth,
     hasPermission,
     currentSelector,
     lineSelector,
-    activeMap,
     ready,
     tools,
     changeStroke,
@@ -354,78 +390,137 @@ export const useBoardContext = () => {
     setZoomScale,
     changeFooterMenu,
     changeSceneItem,
-    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
+    startOrStopSharing,
+    updatePen,
+    activeMap,
+    boardPenIsActive,
+    setLaserPoint,
+    activeSceneName,
+    installTools,
+    revokeBoardPermission,
+    grantBoardPermission,
+    showBoardTool,
+    isCurrentScenePathScreenShare:isBoardScreenShare,
+    courseWareList,
+    downloadList,
     openCloudResource: putSceneByResourceUuid,
     startDownload,
     deleteSingle,
-    updatePen,
-    boardPenIsActive,
-    startOrStopSharing,
-    setLaserPoint,
-    resourcesList,
-    activeSceneName,
     refreshCloudResources: refreshState,
+    resourcesList,
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    installTools,
     personalResources,
-    publicResources,
-    revokeBoardPermission,
-    grantBoardPermission,
     doUpload: handleUpload,
+    publicResources,
     clearScene
   }
 }
 
-export const useStreamContext = () => {
-  const {streamList} = useSceneStore()
+export const useCloudDriveContext = (): CloudDriveContext => {
+  const {
+    downloadList,
+    putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    handleUpload,
+    publicResources,
+  } = useBoardStore()
 
+
+  return {
+    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
+    openCloudResource: putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    resourcesList,
+    refreshCloudResources: refreshState,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    publicResources,
+    doUpload: handleUpload,
+  }
+}
+
+export const useStreamContext = (): StreamContext => {
+  const {streamList} = useSceneStore()
   return {
     streamList
   }
 }
 
-export const useUserListContext = () => {
+
+export const useUserListContext = (): UserListContext => {
   const appStore = useCoreContext()
-  const smallClassStore = useSmallClassStore()
+  const {
+    isHost
+  } = useSceneStore()
 
-  const acceptedUserList = smallClassStore.acceptedList
+  const {
+    acceptedList:acceptedUserList,
+    teacherInfo,
+    rosterUserList,
+    toggleWhiteboardPermission,
+    toggleCamera,
+    toggleMic,
+    kick,
+    roleToString,
+    teacherAcceptHandsUp
+  } = useSmallClassStore()
 
-  const localUserUuid = appStore.roomInfo.userUuid
-  const teacherName = smallClassStore.teacherName
-  const myRole = smallClassStore.role
-  const rosterUserList = smallClassStore.rosterUserList
-  const handleRosterClick = smallClassStore.handleRosterClick
+  const {roomInfo} = appStore
+  const {
+    sceneType,
+    controlTools
+  } = useSceneStore()
+  // const localUserUuid = appStore.roomInfo.userUuid
+  let localUserInfo:EduUser = {
+    userUuid: roomInfo.userUuid,
+    userName: roomInfo.userName,
+    role: EduUserRoleEnum2EduUserRole(roomInfo.userRole, sceneType),
+    // TODO need merge with userlist properties
+    userProperties: {}
+  }
 
   const userList = appStore.sceneStore.userList
 
-  const {revokeCoVideo, teacherAcceptHandsUp} = smallClassStore
-
   return {
-    localUserUuid,
-    myRole,
-    rosterUserList,
-    teacherName,
-    handleRosterClick,
-    revokeCoVideo,
+    localUserUuid: localUserInfo.userUuid,
+    myRole: roleToString(roomInfo.userRole),
+    teacherName: teacherInfo?.userName || '',
     teacherAcceptHandsUp,
     userList,
-    acceptedUserList
+    acceptedUserList,
+    rosterUserList,
+    //v1.1.1
+    localUserInfo,
+    teacherInfo,
+    toggleWhiteboardPermission,
+    toggleCamera,
+    toggleMic,
+    controlTools,
+    kick,
+    isHost
   }
 }
 
-export const useRecordingContext = () => {
+export const useRecordingContext = (): RecordingContext => {
 
   const {
     isRecording,
-    recordStartTime,
     roomUuid
   } = useSceneStore()
 
   const appStore = useCoreContext()
-
-  const roomStore = useRoomStore()
 
   async function startRecording() {
     await eduSDKApi.updateRecordingState({
@@ -443,14 +538,13 @@ export const useRecordingContext = () => {
   }
 
   return {
-    recordStartTime,
     isRecording,
     startRecording,
     stopRecording,
   }
 }
 
-export const useHandsUpContext = () => {
+export const useHandsUpContext = (): HandsUpContext => {
   const {
     teacherUuid,
     handsUpState,
@@ -458,11 +552,14 @@ export const useHandsUpContext = () => {
     studentHandsUp,
     studentCancelHandsUp,
     handsUpStudentList,
-    coVideoUsers,
+    acceptedUserList: coVideoUsers,
     onlineUserCount,
     processUserCount,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
+    // revokeCoVideo,
+    teacherRevokeCoVideo,
+    studentExitCoVideo
   } = useSmallClassStore()
 
   return {
@@ -477,22 +574,24 @@ export const useHandsUpContext = () => {
     processUserCount,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
+    //v1.1.1
+    teacherRevokeCoVideo,
+    studentExitCoVideo
   }
 }
 
-export const useVideoControlContext = () => {
+export const useVideoControlContext = (): VideoControlContext => {
 
-  const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
   const smallClassStore = useSmallClassStore()
   const isHost = sceneStore.isHost
-  const teacherStream = sceneStore.teacherStream
-  const studentStreams = sceneStore.studentStreams
 
-  const firstStudent = studentStreams[0]
-
-  const sceneVideoConfig = sceneStore.sceneVideoConfig
+  const {
+    teacherStream,
+    studentStreams,
+    controlTools
+  } = sceneStore
 
   const userRole = sceneStore.roomInfo.userRole
 
@@ -521,9 +620,8 @@ export const useVideoControlContext = () => {
   }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
 
   const onSendStar = useCallback(async (uid: any) => {
-    await roomStore.sendReward(uid, 1)
-  }, [userRole, roomStore])
 
+  }, [userRole, sceneStore])
 
   const onWhiteboardClick = useCallback(async (userUuid: any) => {
     const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)
@@ -552,22 +650,27 @@ export const useVideoControlContext = () => {
 
 
   return {
-    teacherStream,
-    firstStudent,
-    studentStreams,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    sceneVideoConfig,
-    isHost,
     onOffAllPodiumClick,
-    canHoverHideOffAllPodium: !!acceptedUserList.length as any
+    canHoverHideOffAllPodium: !!acceptedUserList.length as any,
+    teacherStream,
+    firstStudent:studentStreams[0],
+    studentStreams,
+    sceneVideoConfig:{
+      isHost,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium)
+    },
+    isHost,
   }
 }
 
-export const useSmallClassVideoControlContext = () => {
+export const useSmallClassVideoControlContext = (): SmallClassVideoControlContext => {
 
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
@@ -576,9 +679,13 @@ export const useSmallClassVideoControlContext = () => {
   const teacherStream = sceneStore.teacherStream
   const studentStreams = smallClassStore.studentStreams
 
-  const firstStudent = studentStreams[0]
+  // const firstStudent = studentStreams[0]
 
-  const sceneVideoConfig = sceneStore.sceneVideoConfig
+  // const sceneVideoConfig = sceneStore.sceneVideoConfig
+
+  const {
+    controlTools
+  } = sceneStore
 
   const userRole = sceneStore.roomInfo.userRole
 
@@ -629,14 +736,26 @@ export const useSmallClassVideoControlContext = () => {
 
   return {
     teacherStream,
-    firstStudent,
     studentStreams,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    sceneVideoConfig,
-    // videoStreamList,
+    firstStudent: studentStreams[0],
+    sceneVideoConfig: {
+      isHost,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium)
+    },
+  }
+}
+
+export const useReportContext = (): ReportContext => {
+  const core = useCoreContext()
+  return {
+    //TODO: why?
+    eduManger: core.eduManager
   }
 }

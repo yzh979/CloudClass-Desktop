@@ -12,10 +12,12 @@ import { EduConfiguration } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { GenericErrorWrapper } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
-import { reportService } from '../core/services/report-service';
+import { rteReportService } from '../core/services/report-service';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
+import { getSDKDomain, setAppScenario } from '../core/media-service/utils';
+import { RTCProviderInitParams } from '../core/media-service/interfaces';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -56,13 +58,23 @@ export class EduManager extends EventEmitter {
     config: EduConfiguration
   ) {
     super()
+    setAppScenario(config.scenarioType)
     this.config = config
-    const buildOption: any = {
+    const buildOption: RTCProviderInitParams = {
+      eduManager: this,
       platform: this.config.platform,
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
-      appId: this.config.appId
+      appId: this.config.appId,
+      rtcArea: this.config.rtcArea ?? "GLOBAL",
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
+      cameraEncoderConfiguration: this.config.cameraEncoderConfigurations ?? {
+        width: 320,
+        height: 240,
+        frameRate: 15,
+        bitrate: 200
+      }
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -80,7 +92,7 @@ export class EduManager extends EventEmitter {
         appId: this.config.appId,
         rtmToken: this.config.rtmToken,
         rtmUid: this.config.rtmUid,
-        sdkDomain: `${this.config.sdkDomain}`
+        sdkDomain: `${this.config.sdkDomain}`,
       }
     )
     Object.assign(
@@ -90,11 +102,11 @@ export class EduManager extends EventEmitter {
         sdkDomain: this.config.sdkDomain
       }
     )
-    reportService.updateRtmConfig({
+    rteReportService.updateRtmConfig({
       rtmToken: this.config.rtmToken,
       rtmUid: this.config.rtmUid,
     })
-    reportService.setAppId(this.config.appId)
+    rteReportService.setAppId(this.config.appId)
   }
 
   updateRtmConfig(info: {
@@ -113,7 +125,15 @@ export class EduManager extends EventEmitter {
   private get rtmWrapper(): RTMWrapper {
     return this._rtmWrapper as RTMWrapper;
   }
-
+  get rtcSid(): string{
+    return this.mediaService.sessionId;
+  }
+  get rtmSid(): string{
+    return this.rtmWrapper.sessionId;
+  }
+  get vid(): number{
+    return this.config.vid!;
+  }
   get mediaService(): MediaService {
     return this._mediaService;
   }
@@ -170,13 +190,13 @@ export class EduManager extends EventEmitter {
   async login(userUuid: string) {
     try {
       // REPORT
-      reportService.initReportUserParams({sid: this._sessionId, appId: this.config.appId, uid: userUuid})
-      reportService.startTick('init', 'rtm', 'login')
+      rteReportService.initReportUserParams({sid: this._sessionId, appId: this.config.appId, uid: userUuid})
+      rteReportService.startTick('init', 'rtm', 'login')
       await this._login(userUuid)
-      reportService.reportElapse('init', 'rtm', {api: 'login', result: true})
-      reportService.startHB()
+      rteReportService.reportElapse('init', 'rtm', {api: 'login', result: true})
+      rteReportService.startHB()
     }catch(e) {
-      reportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
+      rteReportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
       throw e
     }
   }
@@ -199,7 +219,7 @@ export class EduManager extends EventEmitter {
             }
           }
         }
-        reportService.updateConnectionState(rtmWrapper.connectionState)
+        rteReportService.updateConnectionState(rtmWrapper.connectionState)
         this.fire('ConnectionStateChanged', evt)
       })
       rtmWrapper.on('MessageFromPeer', (evt: any) => {
@@ -216,7 +236,7 @@ export class EduManager extends EventEmitter {
         switch(cmd) {
           case EduPeerMessageCmdType.peer: {
             EduLogger.info(`custom chat message, PeerMessage.${EduPeerMessageCmdType.peer}: `, data, requestId)
-            const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+            const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data)
             this.emit('user-chat-message', {
               message: textMessage
             })
@@ -255,8 +275,8 @@ export class EduManager extends EventEmitter {
       await this.rtmWrapper.destroyRtm()
       this.removeAllListeners()
       this._rtmWrapper = undefined
-      reportService.stopHB()
-      reportService.resetParams()
+      rteReportService.stopHB()
+      rteReportService.resetParams()
       // refresh session id when logout to ensure next login get a new sid
       this._sessionId = uuidv4()
     }
@@ -266,7 +286,7 @@ export class EduManager extends EventEmitter {
 
     const roomUuid = params.roomUuid
     
-    reportService.initReportRoomParams({rid: roomUuid})
+    rteReportService.initReportRoomParams({rid: roomUuid})
     let classroomManager = new EduClassroomManager({
       roomUuid: roomUuid,
       roomName: params.roomName,

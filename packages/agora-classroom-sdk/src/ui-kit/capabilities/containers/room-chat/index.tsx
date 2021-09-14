@@ -4,21 +4,25 @@ import * as React from 'react';
 import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
 import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
+import { useUIStore } from '@/infra/hooks';
 
 export const RoomChat = observer(() => {
   const {
-    chatCollapse,
     canChatting,
     isHost,
     getHistoryChatMessage,
     unreadMessageCount,
     muteChat,
     unmuteChat,
-    setChatCollapse,
     messageList,
     sendMessage,
     addChatMessage
   } = useChatContext()
+
+  const {
+    chatCollapse,
+    toggleChatMinimize,
+  } = useUIStore()
 
   const {
     roomInfo
@@ -29,8 +33,10 @@ export const RoomChat = observer(() => {
   } = useGlobalContext()
 
   useEffect(() => {
-    if(isFullScreen && !chatCollapse){
-      setChatCollapse(true)
+    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
+      // 第一个条件 点击全屏默认聊天框最小化
+      // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
+      toggleChatMinimize()
     }
   }, [isFullScreen])
 
@@ -82,7 +88,9 @@ export const RoomChat = observer(() => {
       onText={(textValue: string) => {
         setText(textValue)
       }}
-      onCollapse={setChatCollapse}
+      onCollapse={() => {
+        toggleChatMinimize()
+      }}
       onSend={handleSendText}
       showCloseIcon={isFullScreen}
       onPullFresh={refreshMessageList}

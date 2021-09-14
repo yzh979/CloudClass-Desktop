@@ -1,6 +1,5 @@
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
-export * from 'white-web-sdk'
 
 export type AgoraExtAppUserInfo = {
   userUuid: string
@@ -23,11 +22,12 @@ export type AgoraExtAppContext = {
 }
 
 export type AgoraExtAppHandle = {
-  updateRoomProperty: (properties:any, cause: any) => Promise<void>
+  updateRoomProperty: (properties:any, common: any ,cause: any) => Promise<void>
   deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
 }
 
 export interface IAgoraExtApp {
+  language: string
   appIdentifier: string
   appName: string
   width: number
@@ -37,7 +37,41 @@ export interface IAgoraExtApp {
   extAppWillUnload():void
 }
 
-export type ConvertedFile = {
+export type AgoraWidgetUserInfo = {
+  userUuid: string
+  userName: string
+  roleType: number
+}
+
+export type AgoraWidgetRoomInfo = {
+  roomUuid: string
+  roomName: string
+  roomType: number
+}
+
+export type AgoraWidgetContext = {
+  // properties: any
+  events: any
+  actions: any
+  dependencies: Map<string, any>
+  localUserInfo: AgoraWidgetUserInfo,
+  roomInfo: AgoraWidgetRoomInfo,
+  language: string
+}
+
+export type AgoraWidgetHandle = {
+  updateRoomProperty: (properties:any, cause: any) => Promise<void>
+  deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
+}
+
+export interface IAgoraWidget {
+  widgetId: string
+  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext, widgetProps:any):void
+  widgetRoomPropertiesDidUpdate(properties:any, cause: any):void
+  widgetWillUnload():void
+}
+
+export type AgoraConvertedFile = {
   width: number,
   height: number,
   ppt: {
@@ -48,7 +82,7 @@ export type ConvertedFile = {
   conversionFileUrl: string,
 }
 
-export type ConvertedFileList = ConvertedFile[]
+export type ConvertedFileList = AgoraConvertedFile[]
 
 
 export type CourseWareItem = {
@@ -82,7 +116,6 @@ type RoomInfoParams = {
   userName: string,
   userRole: number,
   userUuid: string,
-  studentNum?: number
 }
 
 export type AgoraRegion = Uppercase<AgoraRegionString>
@@ -99,6 +132,11 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type MediaOptions = {
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
+  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -109,7 +147,10 @@ export type AppStoreConfigParams = {
   rtmToken: string,
   courseWareList: CourseWareList,
   region?: AgoraRegion,
+  rtcArea?: string,
+  rtmArea?: string,
   personalCourseWareList?: CourseWareList,
+  vid?: number,
   oss?: {
     region: string,
     bucketName: string,
@@ -119,7 +160,10 @@ export type AppStoreConfigParams = {
     endpoint: string,
   },
   recordUrl: string,
-  extApps?: IAgoraExtApp[]
+  extApps?: IAgoraExtApp[],
+  widgets?: {[key:string]: IAgoraWidget},
+  userFlexProperties?: {[key: string]: any}
+  mediaOptions?: MediaOptions
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -147,7 +191,6 @@ export type RoomInfo = {
   rtmToken: string,
   groupName?: string,
   groupUuid?: string,
-  studentNum?: number
 }
 
 export type DeviceInfo = {

@@ -8,6 +8,7 @@ import { get } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { StudentRoster } from '@/ui-kit/components';
 import { KickDialog } from '../../dialog';
+import { useUIStore } from '@/infra/hooks';
 
 
 
@@ -31,7 +32,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
     const {
         addDialog,
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
         muteVideo,
@@ -45,10 +46,13 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         localUserUuid,
         myRole,
         teacherName,
-        rosterUserList,
-        revokeCoVideo,
-        teacherAcceptHandsUp,
+        rosterUserList
     } = useUserListContext()
+
+    const {
+        teacherAcceptHandsUp,
+        teacherRevokeCoVideo
+    } = useHandsUpContext()
 
     const onMuteAll = useCallback(async () => {
         const userList = rosterUserList
@@ -82,7 +86,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             case 'podium': {
                 if (user.onPodium) {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await revokeCoVideo(user.uid)
+                        await teacherRevokeCoVideo(user.uid)
                     }
                 } else {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
@@ -157,7 +161,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             onSearch={(text: string) => {
                 setKeyword(text)
             }}
-            studentInClassCnt={roomInfo.studentNum}
+            studentInClassCnt={/*roomInfo.studentNum*/0}
             studentInRoomCnt={rosterUserList.length}
         />
     )
@@ -185,9 +189,7 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
 
     const {
         localUserUuid,
-        rosterUserList,
-        revokeCoVideo,
-        teacherAcceptHandsUp
+        rosterUserList
     } = useUserListContext()
     const {
         streamList
@@ -196,6 +198,8 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
 
     const {
         handsUpStudentList,
+        teacherAcceptHandsUp,
+        teacherRevokeCoVideo
     } = useHandsUpContext()
 
     const studentList = useMemo(() => {
@@ -220,7 +224,7 @@ export const StudentUserListContainer: React.FC<StudentUserListContainerProps> =
             case 'podium': {
                 if (user.onPodium) {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await revokeCoVideo(user.uid)
+                        await teacherRevokeCoVideo(user.uid)
                     }
                 } else {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {

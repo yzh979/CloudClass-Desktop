@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
-import { useCoreContext, usePretestStore, useUIStore } from './core';
+import { useCoreContext, usePretestStore } from './core';
+import { MediaContext } from './type';
 
-export const useMediaContext = ()=> {
+export const useMediaContext = (): MediaContext => {
     const {
         mediaStore,
         isElectron
@@ -11,11 +12,10 @@ export const useMediaContext = ()=> {
         networkQuality,
         delay,
         localPacketLostRate,
-    
     } = mediaStore;
-    const {
-      removeDialog
-    } = useUIStore()
+    // const {
+    //   removeDialog
+    // } = useUIStore()
   
     const pretestStore = usePretestStore()
   
@@ -27,7 +27,10 @@ export const useMediaContext = ()=> {
       microphoneId,
       speakerId,
       cameraRenderer,
-      microphoneLevel,
+      changeCamera,
+      changeMicrophone,
+      changeSpeakerVolume,
+      changeMicrophoneVolume,
     } = pretestStore
   
     const changeDevice = useCallback(async (deviceType: string, value: any) => {
@@ -72,9 +75,12 @@ export const useMediaContext = ()=> {
         microphoneId,
         speakerId,
         cameraRenderer,
-        microphoneLevel,
         changeDevice,
         changeAudioVolume,
-        removeDialog
+        // removeDialog
+        changeSpeakerVolume,
+        changeMicrophoneVolume,
+        changeCamera,
+        changeMicrophone,
     }
 }

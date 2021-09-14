@@ -7,6 +7,7 @@ import { escapeExtAppIdentifier } from "../utilities/ext-app";
 type ConfigResult = {
   customerId: string,
   customerCertificate: string,
+  vid: number,
   netless: {
     appId: string
     token: string,
@@ -64,6 +65,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async reportMicState(payload: {roomUuid: string, userUuid: string, state: number}): Promise<any> {
+    const res = await this.fetch({
+      url: `/v2/rooms/${payload.roomUuid}/users/${payload.userUuid}/device`,
+      method: 'PUT',
+      data: {
+        mic: payload.state
+      }
+    })
+    return res.data
+  }
+
   async checkIn(params: {
     roomUuid: string,
     roomName: string,
@@ -73,7 +85,8 @@ export class EduSDKApi extends ApiBase {
     role: number,
     startTime?: number,
     duration?: number,
-    region?: string
+    region?: string,
+    userProperties?: Record<string, any>
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'http', 'preflight')
@@ -87,7 +100,8 @@ export class EduSDKApi extends ApiBase {
         startTime: params.startTime,
         userName: params.userName,
         duration: params.duration,
-        boardRegion: params.region
+        boardRegion: params.region,
+        userProperties: params.userProperties
       }
     })
     res.data.ts = res.ts
@@ -120,7 +134,8 @@ export class EduSDKApi extends ApiBase {
       data: {
         mode: 'web',
         webRecordConfig: {
-          rootUrl: params.url
+          rootUrl: params.url,
+          videoBitrate: 3000
         },
         backupCount: 0
       }
@@ -145,6 +160,66 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async muteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 1
+      }
+    })
+  }
+
+  async unmuteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 0
+      }
+    })
+    return res.data
+  }
+
+  async getConversationHistoryChatMessage(params: {
+    roomUuid: string,
+    data: {
+      nextId: string,
+      sort: number,
+      studentUuid: string
+    }
+  }){
+    const { data: { nextId, sort, studentUuid}} = params
+    const isNextId = nextId ? `nextId=${nextId}&` : ''
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students/${studentUuid}/messages?${isNextId}sort=${sort}`,
+      method: 'GET',
+    })
+    return res.data
+  }
+
+
+  async getConversationList(params: {
+    roomUuid: string,
+    data: {
+      nextId: string
+    }
+  }){
+    const { data: { nextId } } = params
+    const isNextId = nextId ? `nextId=${nextId}&` : ''
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students?nextId=${isNextId}`,
+      method: 'GET',
+    })
+    return res.data
+  }
+
   async sendChat(params: {
     roomUuid: string,
     userUuid: string,
@@ -155,6 +230,22 @@ export class EduSDKApi extends ApiBase {
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/from/${params.userUuid}/chat`,
+      method: 'POST',
+      data: params.data
+    })
+    return res.data
+  }
+
+  async sendConversationChat(params: {
+    roomUuid: string,
+    userUuid: string,
+    data: {
+      message: string,
+      type: number
+    }
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students/${params.userUuid}/messages`,
       method: 'POST',
       data: params.data
     })
@@ -347,6 +438,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async selectShare(roomId: string, userUuid: string, payload: {selected: number}) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/1`,
+      method: 'PATCH',
+      data: {
+        selected: payload.selected
+      }
+    })
+    return res.data
+  }
+
   async startShareScreen(roomId: string, userUuid: string) {
     const state = 1
     const res = await this.fetch({
@@ -365,12 +467,13 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, cause: any) {
+  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, common: any, cause: any) {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'PUT',
       data: {
         properties,
+        common,
         cause
       }
     })
@@ -381,6 +484,18 @@ export class EduSDKApi extends ApiBase {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'DELETE',
+      data: {
+        properties,
+        cause
+      }
+    })
+    return res.data;
+  }
+
+  async updateFlexProperties(roomId: string, properties: any, cause: any) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/properties`,
+      method: 'PUT',
       data: {
         properties,
         cause

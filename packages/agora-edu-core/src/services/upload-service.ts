@@ -5,6 +5,7 @@ import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
 import OSS, { MultipartUploadResult } from "ali-oss";
 import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
+import axios from 'axios';
 
 export const mapFileType = (type: string): any => {
   if (type.match(/ppt|pptx|pptx/i)) {
@@ -33,7 +34,7 @@ export const mapFileType = (type: string): any => {
   return 'excel'
 }
 
-type MaterialDataResource = {
+export type MaterialDataResource = {
   id: string,
   name: string,
   ext: string,
@@ -60,7 +61,6 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
-      scenes: data.scenes
     }
   }
   return {
@@ -100,6 +100,9 @@ export type FetchStsTokenResult = {
   accessKeySecret: string,
   securityToken: string,
   ossEndpoint: string,
+  vendor: number,
+  preSignedUrl: string,
+  callbackHost: string,
 }
 
 export type HandleUploadType = {
@@ -120,6 +123,7 @@ export type HandleUploadType = {
 
 export class UploadService extends ApiBase {
   ossClient: OSS | null;
+  xhr: XMLHttpRequest;
   abortCheckpoint:{
     name?:string,
     uploadId?:string
@@ -127,6 +131,7 @@ export class UploadService extends ApiBase {
   constructor(params: ApiBaseInitializerParams) {
     super(params)
     this.ossClient = null
+    this.xhr = new XMLHttpRequest()
     this.abortCheckpoint = {
       name: '',
       uploadId: ''
@@ -311,6 +316,19 @@ export class UploadService extends ApiBase {
     })
 
     const ossConfig = fetchResult.data
+    const vendor = ossConfig.vendor
+    let result
+    if (vendor === 1) {
+      // aws
+      result = await this.handleUploadByAWS(ossConfig, payload)
+    } else if (vendor === 2) {
+      // ali
+      result = await this.handleUploadByAli(ossConfig, payload)
+    }
+    return result
+  }
+  
+  async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
     const key = ossConfig.ossKey
     this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
@@ -320,15 +338,15 @@ export class UploadService extends ApiBase {
       secure: true,
       stsToken: ossConfig.securityToken,
     })
-
+  
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     const resourceUuid = fetchCallbackBody.resourceUuid
     // const taskUuid = fetchCallbackBody.taskUuid
     // const taskToken = fetchCallbackBody.taskToken
-
+  
     // console.log('fetchCallbackBody ', fetchCallbackBody)
-
+  
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
         this.ossClient,
@@ -345,11 +363,12 @@ export class UploadService extends ApiBase {
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           // userUuid: payload.userUuid,
-          appId: this.appId
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
         })
-      // 产生问题在这, uploadResult 是空
+  
       console.log('uploadResult', uploadResult)
-
+  
       const resp = createPPTTask({
         uuid: uploadResult.taskUuid,
         kind: payload.kind,
@@ -364,8 +383,8 @@ export class UploadService extends ApiBase {
                 isTransFile: true,
               })
             },
-            onTaskFail: (err) => {
-              console.log(' onTaskFail ', err)
+            onTaskFail: () => {
+              console.log(' onTaskFail ')
               payload.onProgress({
                 phase: 'finish',
                 progress: 1,
@@ -382,16 +401,16 @@ export class UploadService extends ApiBase {
             },
         }
       })
-
+  
       const ppt = await resp.checkUtilGet();
-
+  
       payload.onProgress({
         phase: 'finish',
         progress: 1,
         isTransFile: true,
         isLastProgress: true
       })
-
+  
       let materialResult = await this.createMaterial({
         taskUuid: ppt.uuid,
         url: uploadResult.ossURL,
@@ -442,9 +461,10 @@ export class UploadService extends ApiBase {
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           userUuid: payload.userUuid,
-          appId: this.appId
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
         })
-
+  
       const result: CourseWareUploadResult = {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
@@ -455,16 +475,155 @@ export class UploadService extends ApiBase {
       }
       return result
     }
+
   }
+
+  async handleUploadByAWS (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
+    const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
+    
+    const resourceUuid = fetchCallbackBody.resourceUuid
+
+    if (payload.converting === true) {
+      const uploadResult: any = await this.addFileToAWS(
+        payload.file,
+        (...args: any) => {
+          payload.onProgress({
+            phase: 'finish',
+            progress: args[0]
+          })
+        },
+        {
+          callbackBody: ossConfig.callbackBody,
+          contentType: ossConfig.callbackContentType,
+          preSignedUrl: ossConfig.preSignedUrl,
+          roomUuid: payload.roomUuid,
+          // userUuid: payload.userUuid,
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
+        }
+      )
+      console.log('upload-service [12]', uploadResult)
+      const resp = createPPTTask({
+        uuid: uploadResult.taskUuid,
+        kind: payload.kind,
+        taskToken: uploadResult.taskToken,
+        region: this.region,
+        callbacks: {
+          onProgressUpdated: progress => {
+            console.log(' onProgressUpdated ', progress)
+              payload.onProgress({
+                phase: 'finish',
+                progress: progress.convertedPercentage,
+                isTransFile: true,
+              })
+            },
+            onTaskFail: () => {
+              console.log(' onTaskFail ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+            onTaskSuccess: () => {
+              console.log(' onTaskSuccess ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+        }
+      })
+  
+      const ppt = await resp.checkUtilGet();
+  
+      payload.onProgress({
+        phase: 'finish',
+        progress: 1,
+        isTransFile: true,
+        isLastProgress: true
+      })
+  
+      let materialResult = await this.createMaterial({
+        taskUuid: ppt.uuid,
+        url: uploadResult.ossURL,
+        roomUuid: payload.roomUuid,
+        // userUuid: payload.userUuid,
+        resourceName: payload.resourceName,
+        resourceUuid,
+        taskToken: uploadResult.taskToken,
+        ext: payload.ext,
+        size: uploadResult.size,
+        taskProgress: {
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
+          convertedPercentage: 100,
+          convertedFileList: ppt.scenes
+        }
+      })
+      return {
+        resourceUuid: resourceUuid,
+        resourceName: uploadResult.resourceName,
+        ext: uploadResult.ext,
+        size: fetchCallbackBody.size,
+        url: uploadResult.ossURL,
+        scenes: ppt.scenes,
+        taskProgress: {
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
+          convertedPercentage: 100,
+          convertedFileList: ppt.scenes
+        },
+        updateTime: materialResult.data.updateTime,
+        taskUuid: uploadResult.taskUuid,
+      }
+    } else {
+      const uploadResult: any = await this.addFileToAWS(
+        payload.file,
+        (...args: any) => {
+          payload.onProgress({
+            phase: 'finish',
+            progress: args[0],
+            isLastProgress: true
+          })
+        },
+        {
+          callbackBody: ossConfig.callbackBody,
+          contentType: ossConfig.callbackContentType,
+          preSignedUrl: ossConfig.preSignedUrl,
+          roomUuid: payload.roomUuid,
+          // userUuid: payload.userUuid,
+          appId: this.appId,
+          callbackHost: ossConfig.callbackHost
+        }
+      )
+      console.log('upload-service [1]', uploadResult)
+      const result: CourseWareUploadResult = {
+        resourceUuid: resourceUuid,
+        resourceName: uploadResult.resourceName,
+        ext: uploadResult.ext,
+        size: fetchCallbackBody.size,
+        url: uploadResult.ossURL,
+        updateTime: uploadResult.updateTime,
+      }
+      return result
+    }
+
+  }
+
    cancelFileUpload() {
     if (this.ossClient) {
       (this.ossClient as any).cancel()
+    }
+    if (this.xhr) {
+      this.xhr.abort()
     }
     console.log('cancelFileUpload click cancel')
   }
 
   get uploadCallbackPrefix() {
-    const getDomain = {
+    const getDomain: Record<string, string> = {
       'https://api.agora.io': 'https://api-solutions.agoralab.co/',
       'https://api-test.agora.io/preview': 'https://api-solutions-pre.agoralab.co/',
       'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
@@ -481,9 +640,8 @@ export class UploadService extends ApiBase {
   }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-    const prefix = this.uploadCallbackPrefix
+    const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
@@ -520,6 +678,36 @@ export class UploadService extends ApiBase {
       console.log('error', err)
     }
 }
+
+  addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
+    const prefix = ossParams.callbackHost
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
+    return new Promise(async (resolve, reject) => {
+        let config = {
+          headers: {
+            'Content-Type': file.type,
+          },
+          onUploadProgress: (progressEvent: any) => {
+            let percentCompleted = Math.floor(progressEvent.loaded * 100 / progressEvent.total);
+            onProgress(percentCompleted / 100)
+          }
+        }
+        try {
+          await axios.put(ossParams.preSignedUrl, file, config)
+          const result = await axios.post(callbackUrl, JSON.parse(ossParams.callbackBody), {
+            headers: {
+              ['content-type']: ossParams.contentType
+            }
+          })
+          resolve({
+            ...result.data.data,
+            ossURL: result.data.data.url
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
+  }
 
   async fetchImageInfo(file: File, x: number, y: number) {
     await new Promise(resolve => {

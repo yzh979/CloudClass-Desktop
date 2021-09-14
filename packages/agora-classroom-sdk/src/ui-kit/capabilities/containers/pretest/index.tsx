@@ -28,7 +28,7 @@ export const PretestContainer = observer(() => {
         stopPretestMicrophone,
     } = usePretestContext()
 
-    useEffect(() => installPretest(), [])
+    useEffect(() => installPretest(() => {}), [])
 
     const VideoPreviewPlayer = useCallback(() => {
         return (

@@ -56,6 +56,17 @@ export class MessageSerializer {
     }
   }
 
+  static getEduPeerTextMessage(data: any): EduTextMessage {
+    return {
+      fromUser: this.getFromUser(data),
+      type: get(data, 'type'),
+      message: get(data, 'message'),
+      messageId: get(data, 'peerMessageId'),
+      sensitiveWords: get(data, 'sensitiveWords', []),
+      timestamp: get(data, 'ts') || get(data, 'sendTime'),
+    }
+  }
+
   static getRoomInfo(data: any): any {
     return {
       roomInfo: get(data, 'roomInfo'),
@@ -113,7 +124,8 @@ export class MessageSerializer {
           userUuid: it.userUuid,
           userName: it.userName,
           role: it.role,
-          isChatAllowed: it.muteChat,
+          // isChatAllowed: it.muteChat,
+          // muteChat: it.muteChat,
           userProperties: it.userProperties,
           streamUuid: it.streamUuid,
           updateTime: it.updateTime,
@@ -152,7 +164,8 @@ export class MessageSerializer {
           userUuid: it.userUuid,
           userName: it.userName,
           role: it.role,
-          isChatAllowed: it.muteChat,
+          // isChatAllowed: it.muteChat,
+          // muteChat: it.muteChat,
           userProperties: it.userProperties,
           streamUuid: it.streamUuid,
           updateTime: it.updateTime,
@@ -209,7 +222,8 @@ export class MessageSerializer {
           userUuid: it.userUuid,
           userName: it.userName,
           role: it.role,
-          isChatAllowed: it.muteChat,
+          // isChatAllowed: it.muteChat,
+          // muteChat: it.muteChat,
           userProperties: it.userProperties,
           streamUuid: it.streamUuid,
           updateTime: it.updateTime,
@@ -223,7 +237,8 @@ export class MessageSerializer {
           userName: it.userName,
           state: it.state,
           role: it.role,
-          isChatAllowed: it.muteChat,
+          // isChatAllowed: it.muteChat,
+          // muteChat: it.muteChat,
           userProperties: it.userProperties,
           streamUuid: it.streamUuid,
           updateTime: it.updateTime,
@@ -242,7 +257,8 @@ export class MessageSerializer {
       role: get(data, 'role'),
       updateTime: get(data, 'updateTime'),
       state: get(data, 'state', 1),
-      isChatAllowed: get(data, 'muteChat'),
+      // isChatAllowed: get(data, 'muteChat'),
+      // muteChat: get(data, 'muteChat'),
       userProperties: get(data, 'userProperties'),
       streamUuid: get(data, 'streamUuid'),
     }

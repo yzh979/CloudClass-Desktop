@@ -18,6 +18,7 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useMemo, useEffect } from 'react'
 import { debounce } from 'lodash'
 import { useState } from 'react'
+import { useUIStore } from '@/infra/hooks'
 
 const calcSeatSize = () => {
   const seatWidth = window.innerWidth * (360/1920)
@@ -55,7 +56,7 @@ export const MidClassScenario = observer(() => {
   }, [roomInfo.userRole])
   const {
     addDialog,
-  } = useGlobalContext()
+  } = useUIStore()
   const handleExit = () => {
     addDialog(Exit)
   }

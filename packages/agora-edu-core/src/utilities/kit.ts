@@ -8,6 +8,7 @@ import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
+import { PluginId } from '@netless/video-js-plugin';
 
 const OSS_PREFIX = '';
 
@@ -342,39 +343,41 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
+export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
 
 
   console.log("video file", file.url)
 
   room.insertPlugin(
-    'video2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-          src: file.url
+          src: file.url,
+          type: mimeType
           // isNavigationDisable: false
       }
     }
   )
 }
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
+export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
 
   console.log("audio file", file.url)
 
   room.insertPlugin(
-    'audio2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-        src: file.url
+        src: file.url,
+        type: mimeType
           // isNavigationDisable: false
       }
     }
@@ -451,7 +454,7 @@ export type BytesType = number | string
 
 export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
   const bytes = +fileBytes
-  if(bytes == 0) return '0 Bytes';
+  if(bytes == 0) return '- -';
   const k = 1000,
     dm = decimalPoint || 2,
     units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
@@ -669,7 +672,7 @@ export class ZoomController extends EventEmitter {
   }
 }
 
-export const transLineTool = {
+export const transLineTool: Record<any, any> = {
   'pen': 'pen',
   'square': 'square',
   'circle': 'circle',
@@ -680,7 +683,7 @@ export const transLineTool = {
   [ApplianceNames.straight]: 'line',
 }
 
-export const transToolBar = {
+export const transToolBar: Record<any, any> = {
   'pen': ApplianceNames.pencil,
   'square': ApplianceNames.rectangle,
   'circle': ApplianceNames.ellipse,
@@ -689,6 +692,7 @@ export const transToolBar = {
   'text': ApplianceNames.text,
   'hand': ApplianceNames.hand,
   'eraser': ApplianceNames.eraser,
+  'clicker': ApplianceNames.clicker,
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,
@@ -699,6 +703,7 @@ export const transToolBar = {
   [ApplianceNames.straight]: ApplianceNames.straight,
   [ApplianceNames.arrow]: ApplianceNames.arrow,
   [ApplianceNames.selector]: ApplianceNames.selector,
+  // [ApplianceNames.clicker]: ApplianceNames.clicker,
   // 'blank-page': 'new-page',
   // 'cloud': 'cloud',
   // 'follow': 'follow',

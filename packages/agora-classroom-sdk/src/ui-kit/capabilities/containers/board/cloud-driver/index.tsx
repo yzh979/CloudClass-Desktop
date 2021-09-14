@@ -15,6 +15,7 @@ import { StorageContainer } from './storage';
 import { UploadContainer } from './upload';
 import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
+import { useUIStore } from '@/infra/hooks'
 
 export const calcUploadFilesMd5 = async (file: File) => {
   return new Promise(resolve => {
@@ -56,7 +57,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   const {
     checked,
     removeDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const checkList$ = new BehaviorSubject<string[]>([])
 

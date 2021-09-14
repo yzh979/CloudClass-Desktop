@@ -5,7 +5,7 @@ import { RtmLogLevel } from './constants';
 import { get } from 'lodash';
 import { EduLogger } from '../logger';
 import { GenericErrorWrapper } from '../utils/generic-error';
-import { reportService } from '../services/report-service';
+import { rteReportService } from '../services/report-service';
 
 //@ts-ignore
 AgoraRTM.setParameter({ 
@@ -15,7 +15,8 @@ AgoraRTM.setParameter({
 })
 
 // const logFilter = ENABLE_LOG ? AgoraRTM.LOG_FILTER_DEBUG : AgoraRTM.LOG_FILTER_OFF;
-const logFilter = AgoraRTM.LOG_FILTER_OFF
+//@ts-ignore
+const logFilter = AgoraRTM.LOG_FILTER_DEBUG
 
 export enum StepPhase {
   isFinished = 1
@@ -62,6 +63,10 @@ export class RTMWrapper extends EventEmitter {
 
   get client(): ReturnType<typeof AgoraRTM.createInstance> {
     return this._client as any;
+  }
+
+  get sessionId(): string {
+    return (this.client as any).context.sid;
   }
 
   private releaseChannels() {
@@ -175,11 +180,11 @@ export class RTMWrapper extends EventEmitter {
   public async join(channel: any, bus: any, config: any) {
     try {
       // REPORT
-      reportService.startTick('joinRoom', 'rtm', 'joinChannel')
+      rteReportService.startTick('joinRoom', 'rtm', 'joinChannel')
       await this._join(channel, bus, config)
-      reportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: true})
+      rteReportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: true})
     }catch(e) {
-      reportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: false, errCode: `${e.code || e.message}`})
+      rteReportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: false, errCode: `${e.code || e.message}`})
       throw e
     }
   }

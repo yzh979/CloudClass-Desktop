@@ -5,10 +5,7 @@ node_modules
 .DS_Store
 release
 dist
-*.ts~
-*.*~
 pkgs/
-packages/
 es
 lib
 *.zip

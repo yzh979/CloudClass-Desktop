@@ -8,6 +8,7 @@ import { useBoardContext, useGlobalContext } from 'agora-edu-core';
 import IconImg from './assets/img.png'
 import IconPpt from './assets/ppt.png'
 import IconWord from './assets/word.png'
+import { useUIStore } from '@/infra/hooks';
 
 
 export interface UploadContainerProps {
@@ -23,7 +24,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
 
   const {
     updateChecked
-  } = useGlobalContext()
+  } = useUIStore()
 
   const [checkMap, setCheckMap] = React.useState<Record<string, any>>({})
 

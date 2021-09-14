@@ -23,6 +23,7 @@ import IconEase from './assets/icon-ease.png'
 import IconEaseActive from './assets/icon-ease-active.png'
 import IconMouse from './assets/icon-mouse.png'
 import IconMouseActive from './assets/icon-mouse-active.png'
+import { useUIStore } from '@/infra/hooks'
 export const allTools: ToolItem[] = [
   {
     value: 'selection',
@@ -169,7 +170,7 @@ const TabsContainer = observer(() => {
 
   const {
     addDialog,
-  } = useGlobalContext()
+  } = useUIStore()
   return (
     <Tabs className="whiteboard-tab" activeKey={activeSceneName} type="editable-card"
       onChange={changeSceneItem}>
@@ -203,10 +204,13 @@ const TabsContainer = observer(() => {
 export const WhiteboardContainer = observer(() => {
 
   const {
-    isFullScreen,
+    isFullScreen
+  } = useGlobalContext()
+
+  const {
     addDialog,
     removeDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const {
     roomInfo,

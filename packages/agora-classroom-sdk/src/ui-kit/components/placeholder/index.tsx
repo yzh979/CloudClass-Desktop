@@ -47,7 +47,7 @@ export const Placeholder: FC<PlaceholderProps> = ({
 
 export interface CameraPlaceHolderProps extends BaseProps {
   userType?: 'student' | 'teacher';
-  state?: 'loading' | 'broken' | 'muted',
+  state?: 'loading' | 'broken' | 'muted' | 'disabled',
   children?: React.ReactNode;
 }
 
