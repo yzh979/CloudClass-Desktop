@@ -59,6 +59,7 @@ export class BoardClient extends EventEmitter {
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
+      preloadDynamicPPT: true,
       loggerOptions: {
         reportQualityMode: LoggerReportMode.AlwaysReport,
         reportDebugLogMode: LoggerReportMode.AlwaysReport,
