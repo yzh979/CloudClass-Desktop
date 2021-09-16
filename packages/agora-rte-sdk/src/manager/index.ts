@@ -275,6 +275,7 @@ export class EduManager extends EventEmitter {
       await rtmWrapper.login({
         userUuid,
         rtmToken,
+        rtmArea: this.config.rtmArea,
         appId: this.config.appId,
         uploadLog: true,
       });

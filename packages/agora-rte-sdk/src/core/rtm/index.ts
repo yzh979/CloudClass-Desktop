@@ -131,6 +131,8 @@ export class RTMWrapper extends EventEmitter {
   }
 
   async login(config: any) {
+    console.warn('set-rtm-area', config);
+    this.agoraRtm.setArea({ areaCodes: [config.rtmArea] });
     const client = this.agoraRtm.createInstance(config.appId, {
       enableLogUpload: config.uploadLog,
       logFilter: logFilter,
