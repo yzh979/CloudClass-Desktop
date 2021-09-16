@@ -63,7 +63,7 @@ export const Modal: ModalType = ({
   ...restProps
 }) => {
   if (component) {
-    return React.cloneElement((component as unknown) as React.ReactElement, {
+    return React.cloneElement(component as unknown as React.ReactElement, {
       onOk,
       onCancel,
     });
