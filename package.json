@@ -38,7 +38,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
     "release:apaas:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
-    "release:classroom:sdk": "run-s build:proto release:apaas:sdk",
+    "release:classroom:sdk": "run-s release:apaas:sdk",
     "release:electron:mac": "run-s release:demo pack:electron:mac",
     "release:electron:win": "run-s release:demo pack:electron:win",
     "release:edu-core": "run-s build:rte-sdk build:edu-core copy:edu-core-proto",
