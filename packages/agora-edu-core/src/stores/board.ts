@@ -1099,16 +1099,19 @@ export class BoardStore extends ZoomController {
       ? 'host'
       : 'guest';
     const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
-    this._boardClient = new BoardClient({
-      identity,
-      appIdentifier: this.appStore.params.config.agoraNetlessAppId,
-      enable,
-    });
+    this._boardClient =
+      this._boardClient ||
+      new BoardClient({
+        identity,
+        appIdentifier: this.appStore.params.config.agoraNetlessAppId,
+        enable,
+      });
     this.boardClient.on('onPhaseChanged', (state: any) => {
       this.boardConnectionState = state;
       if (state === 'disconnected') {
-        this.online = false;
+        this.reset();
       } else if (state === 'connected') {
+        this.whiteBoardContainer && this.room.bindHtmlElement(this.whiteBoardContainer);
         // 重连成功后老师重新设置白板的模式
         if (identity === 'host') {
           this.room?.setViewMode(ViewMode.Broadcaster);
@@ -1980,7 +1983,7 @@ export class BoardStore extends ZoomController {
   @observable
   resizeObserver!: ResizeObserver;
 
-  whiteBoardContainer?: HTMLElement;
+  whiteBoardContainer?: HTMLDivElement;
 
   @action.bound
   mount(dom: any) {
