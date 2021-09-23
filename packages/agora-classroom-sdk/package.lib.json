@@ -91,7 +91,7 @@
       "target": [
         {
           "target": "zip",
-          "arch": ["ia32"]
+          "arch": ["x64"]
         }
       ]
     },

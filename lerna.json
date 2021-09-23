@@ -2,5 +2,9 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "independent",
+  "agora_electron": {
+    "electron_version": "12.0.0",
+    "prebuilt": true
+  }
 }
