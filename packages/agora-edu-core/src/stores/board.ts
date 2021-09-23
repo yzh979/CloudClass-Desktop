@@ -79,6 +79,23 @@ export type GlobalRoomScene = {
 
 export type { Resource };
 
+const defaultScenePrefix = 'convertcdn.netless.link';
+
+const pattern = /convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert/;
+function resolveStrPattern(result: any) {
+  const str = result.scenes[0]!.ppt!.src;
+  const res = str.match(pattern);
+  return res ? res[0] : '';
+}
+
+function getScenePathPrefix(result: MaterialDataResource, type: string = 'staticConvert') {
+  const guardScenePath = (result: any) => {
+    return result.scenes && result.scenes[0] && result.scenes[0].ppt && result.scenes[0].ppt.src;
+  };
+
+  return guardScenePath(result) ? resolveStrPattern(result) : `${defaultScenePrefix}/${type}`;
+}
+
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
     return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
@@ -2649,26 +2666,32 @@ export class BoardStore extends ZoomController {
         return;
       }
       const type: string = resourceExists.ext === 'pptx' ? 'dynamicConvert' : 'staticConvert';
-      await agoraCaches.startDownload(taskUuid, type, (progress: number, controller: any) => {
-        const newProgress = this.progressMap[taskUuid] ?? 0;
-        if (progress >= newProgress) {
-          if (taskUuid === this.initCourseWare.taskUuid) {
-            this.initCourseWareProgress = progress;
-          }
-          const info: any = {
-            progress,
-          };
-          if (info.progress === 100) {
-            Object.assign(info, {
-              download: true,
-            });
-          }
+      const prefix = getScenePathPrefix(resourceExists, type);
+      await agoraCaches.startDownload(
+        prefix,
+        taskUuid,
+        type,
+        (progress: number, controller: any) => {
+          const newProgress = this.progressMap[taskUuid] ?? 0;
+          if (progress >= newProgress) {
+            if (taskUuid === this.initCourseWare.taskUuid) {
+              this.initCourseWareProgress = progress;
+            }
+            const info: any = {
+              progress,
+            };
+            if (info.progress === 100) {
+              Object.assign(info, {
+                download: true,
+              });
+            }
 
-          this.updateDownloadById(taskUuid, info);
-          this.progressMap[taskUuid] = progress;
-        }
-        this.controller = controller;
-      });
+            this.updateDownloadById(taskUuid, info);
+            this.progressMap[taskUuid] = progress;
+          }
+          this.controller = controller;
+        },
+      );
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`);
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`);

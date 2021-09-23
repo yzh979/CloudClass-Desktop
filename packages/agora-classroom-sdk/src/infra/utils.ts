@@ -5,7 +5,6 @@ import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { ApplianceNames, Room } from 'agora-edu-core';
-import { agoraCaches } from './web-download.file';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { transI18n } from '~ui-kit';

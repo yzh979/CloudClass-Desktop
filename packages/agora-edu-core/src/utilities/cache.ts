@@ -104,6 +104,7 @@ export class AgoraCaches {
   };
 
   public startDownload = async (
+    prefix: string,
     taskUuid: string,
     type: string,
     onProgress?: (progress: number, controller: AbortController) => void,
@@ -124,7 +125,7 @@ export class AgoraCaches {
     };
     const controller = new AbortController();
     const signal = controller.signal;
-    const zipUrl = `https://${resourcesHost}/${type}/${taskUuid}.zip`;
+    const zipUrl = `https://${prefix}/${taskUuid}.zip`;
     const res = await fetch(zipUrl, {
       method: 'get',
       signal: signal,

@@ -30,3 +30,5 @@ export * from './services/edu-sdk-api';
 export * from './services/home-api';
 
 export * from 'agora-rte-sdk';
+
+export * from './utilities/cache';

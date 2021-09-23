@@ -87,15 +87,39 @@ class PreFetchZipStrategy extends NetworkFirst {
     const blob = await response.blob();
     const zipReader = await this.getZipReader(blob);
     const entry = await zipReader.getEntries();
-    return await this.cacheResources(entry, type);
+
+    const defaultScenePrefix = 'convertcdn.netless.link';
+
+    const pattern = /convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert/;
+    function resolveStrPattern(result: any) {
+      const str = result.scenes[0]!.ppt!.src;
+      const res = str.match(pattern);
+      return res ? res[0] : '';
+    }
+
+    function getScenePathPrefix(result: any, type: string = 'staticConvert') {
+      const guardScenePath = (result: any) => {
+        return (
+          result.scenes && result.scenes[0] && result.scenes[0].ppt && result.scenes[0].ppt.src
+        );
+      };
+
+      return guardScenePath(result) ? resolveStrPattern(result) : `${defaultScenePrefix}/${type}`;
+    }
+
+    const prefix = getScenePathPrefix(response.url);
+    return await this.cacheResources(prefix, entry, type);
   }
 
-  public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
+  public cacheResources = (
+    prefix: string,
+    entries: any,
+    type: CacheResourceType,
+  ): Promise<void> => {
     return new Promise((fulfill, reject) => {
-      return Promise.allSettled(entries.map((data: any) => this.cacheEntry(data, type))).then(
-        fulfill as any,
-        reject,
-      );
+      return Promise.allSettled(
+        entries.map((data: any) => this.cacheEntry(data, type, prefix)),
+      ).then(fulfill as any, reject);
     });
   };
 
@@ -113,20 +137,24 @@ class PreFetchZipStrategy extends NetworkFirst {
     return getMimeType(filename);
   };
 
-  public getLocation = (filename?: string, type?: CacheResourceType): string => {
+  public getLocation = (prefix: string, filename?: string, type?: CacheResourceType): string => {
     if (filename) {
-      return `https://${resourcesHost}/${type}/${filename}`;
+      return `https://${prefix}/${filename}`;
     }
-    return `https://${resourcesHost}/dynamicConvert/${filename}`;
+    return `https://${prefix}/dynamicConvert/${filename}`;
   };
 
-  public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
+  public cacheEntry = async (
+    entry: any,
+    type: CacheResourceType,
+    prefix: string,
+  ): Promise<void> => {
     if (entry.directory) {
       return Promise.resolve();
     }
     const data = await entry.getData(new BlobWriter());
     const cache = await agoraCaches.openCache(cacheName);
-    const location = this.getLocation(entry.filename, type);
+    const location = this.getLocation(prefix, entry.filename, type);
     // swLog('location', location)
     const response = new Response(data, {
       headers: {
@@ -134,7 +162,7 @@ class PreFetchZipStrategy extends NetworkFirst {
       },
     });
     if (entry.filename === 'index.html') {
-      cache.put(this.getLocation(), response.clone());
+      cache.put(this.getLocation(prefix), response.clone());
       return Promise.resolve();
     }
     return cache.put(location, response);
@@ -153,13 +181,13 @@ const cacheZipResourceHandler = async (options: any) => {
   return ZipFirstStrategy.handle(options);
 };
 
-const netlessZipResourcesPattern = new RegExp(
-  '^https://convertcdn.netless.link/(static|dynamic)Convert/(\\S+).zip$',
-);
+const netlessZipResourcesPattern =
+  /^https:\/\/convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert\/(\S+).zip$/;
 
 registerRoute(netlessZipResourcesPattern, cacheZipResourceHandler, 'GET');
 
-const resourcePattern = new RegExp('^https://convertcdn.netless.link/(static|dynamic)Convert');
+const resourcePattern =
+  /^https:\/\/convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert/;
 
 const cacheFirst = new CacheFirst({ cacheName });
 const cacheRangeFile = new CacheFirst({

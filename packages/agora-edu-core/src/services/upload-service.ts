@@ -3,7 +3,7 @@ import { CourseWareUploadResult, CreateMaterialParams } from '../types';
 import { fileSizeConversionUnit } from '../utilities/kit';
 import { EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
 import OSS, { MultipartUploadResult } from 'ali-oss';
-import { createPPTTask } from 'white-web-sdk';
+import { createPPTTask, SceneDefinition } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from './base';
 import axios from 'axios';
 import _ from 'lodash';
