@@ -5,7 +5,7 @@ import { AppStoreInitParams } from '../api/declare';
 export type CoreAppContext = Record<string, EduScenarioAppStore>;
 
 export const CoreContext = createContext<EduScenarioAppStore>(
-  (null as unknown) as EduScenarioAppStore,
+  null as unknown as EduScenarioAppStore,
 );
 
 export const CoreContextProvider = ({
