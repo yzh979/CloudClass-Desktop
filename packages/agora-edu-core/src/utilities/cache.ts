@@ -114,7 +114,10 @@ export class AgoraCaches {
       return;
     }
     const channel = new BroadcastChannel('onFetchProgress');
-    channel.onmessage = ({ data }: any) => {
+    channel.onmessage = (...args: any[]) => {
+      console.log('onFetchProgress: ', args);
+      const data = !args[0] ? '' : args[0];
+      // const {data} = args
       //   console.log('startDownload ', data.url)
       if (data.url.match(taskUuid)) {
         if (onProgress) {
@@ -125,7 +128,7 @@ export class AgoraCaches {
     };
     const controller = new AbortController();
     const signal = controller.signal;
-    const zipUrl = `https://${prefix}/${taskUuid}.zip`;
+    const zipUrl = `${prefix}/${taskUuid}.zip`;
     const res = await fetch(zipUrl, {
       method: 'get',
       signal: signal,
@@ -152,13 +155,38 @@ export class AgoraCaches {
     const zipReader = await this.getZipReader(blob);
     const entry = await zipReader.getEntries();
     const cacheType = response.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
-    console.log('cacheType ', cacheType, ' url ', response.url);
-    return await this.cacheResources(entry, cacheType);
+    // console.log('cacheType ', cacheType, ' url ', response.url);
+
+    const defaultScenePrefix = 'convertcdn.netless.link';
+
+    const pattern = /^(?<protocol>.*):\/\/(?<prefix>.*(static|dynamic)Convert)\/.*$/;
+    function resolveStrPattern(result: any) {
+      const str = result.scenes[0]!.ppt!.src;
+      const res = str.match(pattern);
+      return res ? `https://${res.groups.prefix}` : '';
+    }
+
+    function getScenePathPrefix(result: any, type: string = 'staticConvert') {
+      const guardScenePath = (result: any) => {
+        return (
+          result.scenes && result.scenes[0] && result.scenes[0].ppt && result.scenes[0].ppt.src
+        );
+      };
+
+      return guardScenePath(result) ? resolveStrPattern(result) : `${defaultScenePrefix}/${type}`;
+    }
+
+    const prefix = getScenePathPrefix(response.url);
+    return await this.cacheResources(prefix, entry, cacheType);
   }
 
-  public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
+  public cacheResources = (
+    prefix: string,
+    entries: any,
+    type: CacheResourceType,
+  ): Promise<void> => {
     return new Promise((fulfill, reject) => {
-      return Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(
+      return Promise.all(entries.map((data: any) => this.cacheEntry(data, type, prefix))).then(
         fulfill as any,
         reject,
       );
@@ -181,27 +209,31 @@ export class AgoraCaches {
     return contentTypesByExtension[extension] || 'text/plain';
   };
 
-  public getLocation = (filename?: string, type?: CacheResourceType): string => {
+  public getLocation = (prefix: string, filename?: string, type?: CacheResourceType): string => {
     if (filename) {
-      return `https://${resourcesHost}/${type}/${filename}`;
+      return `https://${prefix}/${filename}`;
     }
-    return `https://${resourcesHost}/dynamicConvert/${filename}`;
+    return `https://${prefix}/${filename}`;
   };
 
-  public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
+  public cacheEntry = async (
+    entry: any,
+    type: CacheResourceType,
+    prefix: string,
+  ): Promise<void> => {
     if (entry.directory) {
       return Promise.resolve();
     }
     const data = await entry.getData(new BlobWriter());
     const cache = await agoraCaches.openCache(cacheStorageKey);
-    const location = this.getLocation(entry.filename, type);
+    const location = this.getLocation(prefix, entry.filename, type);
     const response = new Response(data, {
       headers: {
         'Content-Type': this.getContentType(entry.filename),
       },
     });
     if (entry.filename === 'index.html') {
-      cache.put(this.getLocation(), response.clone());
+      cache.put(this.getLocation(prefix), response.clone());
       return Promise.resolve();
     }
     return cache.put(location, response);

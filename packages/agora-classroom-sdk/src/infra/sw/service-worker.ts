@@ -90,11 +90,11 @@ class PreFetchZipStrategy extends NetworkFirst {
 
     const defaultScenePrefix = 'convertcdn.netless.link';
 
-    const pattern = /convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert/;
+    const pattern = /^(?<protocol>.*):\/\/(?<prefix>.*(static|dynamic)Convert)\/.*$/;
     function resolveStrPattern(result: any) {
       const str = result.scenes[0]!.ppt!.src;
       const res = str.match(pattern);
-      return res ? res[0] : '';
+      return res ? `https://${res.groups.prefix}` : '';
     }
 
     function getScenePathPrefix(result: any, type: string = 'staticConvert') {
@@ -141,7 +141,7 @@ class PreFetchZipStrategy extends NetworkFirst {
     if (filename) {
       return `https://${prefix}/${filename}`;
     }
-    return `https://${prefix}/dynamicConvert/${filename}`;
+    return `https://${prefix}/${filename}`;
   };
 
   public cacheEntry = async (
@@ -155,7 +155,6 @@ class PreFetchZipStrategy extends NetworkFirst {
     const data = await entry.getData(new BlobWriter());
     const cache = await agoraCaches.openCache(cacheName);
     const location = this.getLocation(prefix, entry.filename, type);
-    // swLog('location', location)
     const response = new Response(data, {
       headers: {
         'Content-Type': this.getContentType(entry.filename),
@@ -182,7 +181,7 @@ const cacheZipResourceHandler = async (options: any) => {
 };
 
 const netlessZipResourcesPattern =
-  /^https:\/\/convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert\/(\S+).zip$/;
+  /^(?<protocol>.*):\/\/(?<prefix>.*(static|dynamic)Convert)\/(?<taskUuid>.*)\.zip/;
 
 registerRoute(netlessZipResourcesPattern, cacheZipResourceHandler, 'GET');
 
@@ -203,21 +202,21 @@ const cacheRangeFileHandler = async (options: any) => {
   return cacheRangeFile.handle(options);
 };
 
-registerRoute(({ url }: any) => {
-  const res = url.href.match(resourcePattern) && url.href.match(/\.(mp4|mp3|flv|avi|wav)$/i);
-  // swLog("static large file url", url.href, " hints ", res, " url ", url)
-  return res;
-}, cacheRangeFileHandler);
+// registerRoute(({ url }: any) => {
+//   const res = url.href.match(resourcePattern) && url.href.match(/\.(mp4|mp3|flv|avi|wav)$/i);
+//   // swLog("static large file url", url.href, " hints ", res, " url ", url)
+//   return res;
+// }, cacheRangeFileHandler);
 
-registerRoute(
-  ({ url }: any) => {
-    const res = url.href.match(resourcePattern) && !url.href.match(/\.(mp4|mp3|flv|avi|wav|zip)$/i);
-    // swLog("static assets file url", url.href, " hints ", res, " url ", url)
-    return res;
-  },
-  cacheNetworkRaceHandler,
-  'GET',
-);
+// registerRoute(
+//   ({ url }: any) => {
+//     const res = url.href.match(resourcePattern) && !url.href.match(/\.(mp4|mp3|flv|avi|wav|zip)$/i);
+//     // swLog("static assets file url", url.href, " hints ", res, " url ", url)
+//     return res;
+//   },
+//   cacheNetworkRaceHandler,
+//   'GET',
+// );
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
