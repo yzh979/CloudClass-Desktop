@@ -81,11 +81,11 @@ export type { Resource };
 
 const defaultScenePrefix = 'convertcdn.netless.link';
 
-const pattern = /convertcdn(-us-sv|-gb-lon|-sg|-in-mum)?.netless.link\/(static|dynamic)Convert/;
+const pattern = /^(?<protocol>.*):\/\/(?<prefix>.*(static|dynamic)Convert)/;
 function resolveStrPattern(result: any) {
   const str = result.scenes[0]!.ppt!.src;
   const res = str.match(pattern);
-  return res ? res[0] : '';
+  return res ? `https://${res.groups.prefix}` : '';
 }
 
 function getScenePathPrefix(result: MaterialDataResource, type: string = 'staticConvert') {
@@ -93,7 +93,11 @@ function getScenePathPrefix(result: MaterialDataResource, type: string = 'static
     return result.scenes && result.scenes[0] && result.scenes[0].ppt && result.scenes[0].ppt.src;
   };
 
-  return guardScenePath(result) ? resolveStrPattern(result) : `${defaultScenePrefix}/${type}`;
+  if (guardScenePath(result)) {
+    return resolveStrPattern(result);
+  } else {
+    return `${defaultScenePrefix}/${type}`;
+  }
 }
 
 const transformConvertedListToScenes = (taskProgress: any) => {
