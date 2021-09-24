@@ -1849,7 +1849,7 @@ export class RoomStore extends SimpleInterval {
             return true;
           }
         }
-        if (sceneType === 4) {
+        if (sceneType === 4 || sceneType === 2) {
           const canPublishRTCRoles = [EduRoleTypeEnum.teacher];
           if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
             return true;
