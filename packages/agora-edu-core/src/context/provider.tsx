@@ -626,8 +626,8 @@ export const useVideoControlContext = (): VideoControlContext => {
   }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
 
   const onSendStar = useCallback(async (uid: any) => {
-
-  }, [userRole, sceneStore])
+    await smallClassStore.sendReward(uid)
+  }, [userRole, smallClassStore])
 
   const onWhiteboardClick = useCallback(async (userUuid: any) => {
     const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)
