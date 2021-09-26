@@ -144,7 +144,7 @@ export class SmallClassStore {
         hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
         holderState: props.holderState,
         placeHolderText: props.text,
-        stars: +this.appStore.roomStore.getRewardByUid(user.userUuid),
+        stars: +this.appStore.roomStore.getRewardByUid(localUser.userUuid),
         whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
         micVolume: this.sceneStore.localVolume,
       } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
