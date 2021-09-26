@@ -1,32 +1,62 @@
-import React from 'react'
+import React, {useState, useCallback} from 'react'
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
 
 export interface HandsUpSenderProps extends BaseProps {
-  state?: 'default' | 'actived' | 'forbidden';
-  onClick: () => Promise<void> | void;
+  onMouseDown: () => Promise<void> | void;
+  onMouseUp: () => Promise<void> | void;
 }
 
-export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'default'}) => {
+export type HandsUpStateEnum = 'hands-up-before' | 'hands-up-ing' | 'hands-up-after'
 
-  const mapping = {
-    'default': "#7B88A0",
-    'actived': "#357BF6",
-    'forbidden': "#BDBDCA"
+export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onMouseDown, onMouseUp}) => {
+
+  const [handsUpState, setHandsUpState] = useState<HandsUpStateEnum>('hands-up-before');
+  const [countDownNum, setCountDownNum] = useState<number>(3);
+
+  const handleMouseDown = () => {
+    if(handsUpState === 'hands-up-before'){
+      setHandsUpState('hands-up-ing');
+      onMouseDown()
+    }
   }
 
-  const color = mapping[state || 'default']
+  const handleMouseUp = () => {
+    if(handsUpState === 'hands-up-ing'){
+      setHandsUpState('hands-up-after');
+      start();
+      onMouseUp();
+    }
+  }
+
+  const start = () => {
+    let tempNum = countDownNum;
+    let timer = setInterval(()=>{
+      if ( tempNum > 0 ) {
+        tempNum -= 1;
+        setCountDownNum(tempNum);
+      } else {
+        clearInterval(timer);
+        setCountDownNum(3);
+        setHandsUpState('hands-up-before');
+      }
+    }, 1000);
+  }
 
   return (
     <Card
-      className={["hands-up-sender", state === 'forbidden' ? '' : 'sender-can-hover'].join(" ")}
+      className={["hands-up-sender"]}
       width={40}
       height={40}
       borderRadius={40}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
     >
-      {/*TODO: fix hover */}
-      <Icon type={state === 'default' ? "hands-up-student" : "hands-up"} color={color} onClick={onClick} />
+      { handsUpState === 'hands-up-before' ? 
+        <Icon type='hands-up-before' useSvg size={24}/> : 
+         <div className="hands-up-ing">{countDownNum}</div>}
     </Card>
   )
 }

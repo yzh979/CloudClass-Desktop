@@ -116,6 +116,7 @@ export class SmallClassStore {
           // micVolume: volumeLevel,
           stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${acceptedUser.userUuid}`),
+          waveArmState: this.waveArmStudentList.some((it)=>it.userUuid===acceptedUser.userUuid),
         })
       } else {
         const localUser = this.sceneStore.localUser
@@ -143,6 +144,7 @@ export class SmallClassStore {
             placeHolderText: props.text,
             stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
             whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
+            waveArmState: this.waveArmStudentList.some((it)=>it.userUuid===acceptedUser.userUuid),
             // micVolume: this.sceneStore.localVolume,
           } as any)
           // .concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
@@ -244,6 +246,19 @@ export class SmallClassStore {
   }
 
   @computed
+  get waveArmStudentList(){
+    const userList = get(this.roomStore.sceneStore, 'userList', [])
+    const progressList = get(this.roomStore, 'roomProperties.processes.waveArm.progress', [])
+    const ids = progressList.map((e: any) => e.userUuid)
+    return userList.filter(({userUuid}: EduUser) => ids.includes(userUuid))
+    .map(({userUuid, userName}: EduUser) => ({
+      userUuid,
+      userName,
+      coVideo: this.acceptedIds.includes(userUuid),
+    }))
+  }
+
+  @computed
   get studentsMap() {
     // if (this.roomInfo.roomType === EduSceneType.SceneLarge) {
     const map = {}
@@ -263,7 +278,7 @@ export class SmallClassStore {
   }
 
   @action.bound
-  async studentHandsUp(teacherUuid: string) {
+  async studentHandsUp(teacherUuid: string,) {
     try {
       await eduSDKApi.startHandsUp({
         roomUuid: this.roomUuid,
@@ -277,6 +292,25 @@ export class SmallClassStore {
       throw error;
     }
   }
+
+  @action.bound
+  async studentHandsUping(teacherUuid: string, duration: -1 | 3) {
+    try {
+      await eduSDKApi.startWaveArm({
+        roomUuid: this.roomUuid,
+        toUserUuid: teacherUuid,
+        timout: duration,
+        retry: true
+      })
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      const {result, reason} = BusinessExceptions.getErrorText(error)
+      // this.appStore.fireToast(result, {reason})
+      // console.log('studentHandsUp err', error)
+      throw error;
+    }
+  }
+
 
   @action.bound
   async studentCancelHandsUp() {

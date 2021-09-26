@@ -55,6 +55,20 @@
   background-image: url('./assets/camera-close.png');
 }
 
+.camera-wave-arm-placeholder{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-size: 100px 100px;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-image: url('./assets/wave-arm.gif');
+  display: none;
+}
+.camera-wave-arm-placeholder.camera-wave-arm-ing{
+  display: block;
+}
+
 .maxiumn-wrap {
   position: relative;
   display: flex;

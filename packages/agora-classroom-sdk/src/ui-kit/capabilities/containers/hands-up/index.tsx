@@ -7,10 +7,7 @@ import { useUIStore } from '@/infra/hooks';
 export const HandsUpManagerContainer = observer(() => {
 
     const {
-        teacherHandsUpState,
-        processUserCount,
-        onlineUserCount,
-        handsUpStudentList,
+        waveArmStudentList,
         teacherAcceptHandsUp,
         teacherRejectHandsUp,
     } = useHandsUpContext()
@@ -30,12 +27,8 @@ export const HandsUpManagerContainer = observer(() => {
 
     return (
         <HandsUpManager
-            processUserCount={processUserCount}
-            onlineUserCount={onlineUserCount}
-            unreadCount={0}
-            state={teacherHandsUpState as any}
             onClick={handleUpdateList}
-            studentList={handsUpStudentList}
+            studentList={waveArmStudentList}
         />
     )
 })
@@ -48,31 +41,22 @@ export const HandsUpReceiverContainer = observer(() => {
     } = useUIStore()
 
     const {
-        handsUpState,
-        studentHandsUp,
-        studentCancelHandsUp,
-        teacherUuid
+        teacherUuid,
+        studentHandsUping
     } = useHandsUpContext()
 
-    const handleClick = async () => {
-        switch(handsUpState) {
-            case 'default': {
-                await studentHandsUp(teacherUuid)
-                addToast(transI18n('co_video.hands_up_requsted'), 'success')
-                break;
-            }
-            case 'actived': {
-                await studentCancelHandsUp()
-                addToast(transI18n('co_video.hands_up_cancelled'), 'warning')
-                break;
-            }
-        }
+    const handleMouseDown = async () => {
+        await studentHandsUping(teacherUuid, -1);
+    }
+
+    const handleMouseUp = async () => {
+        await studentHandsUping(teacherUuid, 3);
     }
 
     return (
         <HandsUpSender
-            state={handsUpState as any}
-            onClick={handleClick}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
         />
     )
 })

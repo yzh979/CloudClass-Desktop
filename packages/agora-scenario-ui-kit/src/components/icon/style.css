@@ -105,6 +105,12 @@
 .icon-vote.vote{
   background-image: url('./assets/svg/icon-vote.svg');
 }
+.icon-hands-up-before.hands-up-before{
+  background-image: url('./assets/svg//icon-hands-up-before.svg');
+}
+.icon-hands-up-active.hands-up-active{
+  background-image: url('./assets/svg/icon-hands-up-active.svg');
+}
 
 .icon-user-svg{
   display: inline-block;
