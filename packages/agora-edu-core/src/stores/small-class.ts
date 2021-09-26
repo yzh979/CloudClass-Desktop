@@ -244,21 +244,16 @@ export class SmallClassStore {
 
   @computed
   get studentsMap() {
-    if (this.roomInfo.roomType === EduSceneType.SceneLarge) {
-      const map = {}
-      return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
+    const map = {}
+    return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
         acc[user.userUuid] = {
           uid: user.userUuid,
           name: user.userName,
           role: user.role,
           userProperties: user.userProperties
         }
-        return acc;
-      }, map)
-    } else {
-      const studentsMap = get(this.roomStore, 'roomProperties.students', {})
-      return studentsMap
-    }
+        return acc
+    }, map)
   }
 
   @action.bound
