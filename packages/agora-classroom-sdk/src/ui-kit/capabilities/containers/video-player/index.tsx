@@ -2,7 +2,7 @@ import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmall
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
+import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer, CameraWaveArmPlaceHolder} from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
 import { StreamVolumeIndicator } from './volume-indicator';
@@ -356,6 +356,7 @@ export const MidVideoMarqueeContainer = observer(() => {
           : null
         }
         <CameraPlaceHolder state={stream.holderState} />
+        <CameraWaveArmPlaceHolder state={stream.waveArmState}/>
         </>
       )
       }))

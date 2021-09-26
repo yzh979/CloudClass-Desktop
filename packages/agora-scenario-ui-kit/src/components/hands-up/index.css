@@ -19,6 +19,8 @@
     width: 100%;
     padding: 4px 10px 4px 16px;
     @apply box-border flex justify-between items-center;
+    border-bottom: 1px solid #EEEEF7;
+    height: 41px;
 }
 
 .hands-up {
@@ -33,14 +35,19 @@
 .student-item .student-name {
     font-size: 14px;
     color: #586376;
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
 .students-hands-up .hands-up-card {
-    min-height: 37px !important;
-    height: auto !important;
+    /* min-height: 37px !important; */
+    /* height: auto !important; */
     width: 210px !important;
-    max-height: 290px !important;
+    height: 246px !important;
+    overflow: scroll;
 }
 
 .hands-up .unread-count {
@@ -59,16 +66,35 @@
     justify-content: center;
 }
 
+.card-hands-up-active{
+    background-color: #0273ff;
+}
+
 .hands-box-line {
     display: inline-flex;
     justify-content: center;
     align-items: center;
 }
 
+.hands-up-count{
+    padding: 2px 5px;
+    background: red;
+    color: #fff;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateX(50%);
+    border-radius: 16px;
+    font-size: 12px;
+    height: 16px;
+    line-height: 12px;
+    text-align: center;
+}
+
 
 .received-card-enter {
     /* animation: move-card 0.8s 0.2s ease-in-out; */
-    animation: change-card-bg 0.5s linear 0s 3;
+    animation: change-card-bg 0.1s linear 0.5s 3;
 }
 .received-card-enter .icon-hands-up {
     /* animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out; */
@@ -141,14 +167,6 @@
     cursor: pointer;
 }
 
-.sender-can-hover:hover {
-    background-color: #357BF6;
-}
-.sender-can-hover:hover > i::before {
-    content: '\e696';
-    color: #fff;
-}
-
 .hands-up-manager:not(.can-not-hover):hover i::before {
     content: '\e696';
     color: #639AFA;
@@ -156,7 +174,7 @@
 
 .operation-icon-wrap {
     display: flex;
-    width: 62px;
+    width: 24px;
     justify-content: space-between;
 }
 
@@ -166,4 +184,15 @@
 
 .customize-dialog-popover .popover-inner {
     border-radius: 12px;
+}
+
+.hands-up-ing{
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+    background-color: #0273ff;
+    color: #ffffff;
+    text-align: center;
+    line-height: 40px;
+    user-select:none;
 }

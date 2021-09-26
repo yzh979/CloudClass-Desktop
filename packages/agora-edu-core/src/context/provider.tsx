@@ -640,7 +640,9 @@ export const useHandsUpContext = (): HandsUpContext => {
     teacherRejectHandsUp,
     // revokeCoVideo,
     teacherRevokeCoVideo,
-    studentExitCoVideo
+    studentExitCoVideo,
+    studentHandsUping,
+    waveArmStudentList,
   } = useSmallClassStore()
 
   return {
@@ -657,7 +659,9 @@ export const useHandsUpContext = (): HandsUpContext => {
     teacherRejectHandsUp,
     //v1.1.1
     teacherRevokeCoVideo,
-    studentExitCoVideo
+    studentExitCoVideo,
+    studentHandsUping,
+    waveArmStudentList,
   }
 }
 

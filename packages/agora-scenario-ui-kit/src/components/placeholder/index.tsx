@@ -12,6 +12,7 @@ import noQuestion from './assets/noquestion.svg';
 import boardDisconnected from './assets/board-disconnected.png'
 import {transI18n} from '~components/i18n'
 import { Button } from '~components/button'
+import classNames from 'classnames';
 
 type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
 
@@ -68,6 +69,28 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
     [`${className}`]: !!className,
   });
 
+  return (
+    <div className={cls}>
+      {children}
+    </div>
+  )
+}
+
+export interface CameraWaveArmPlaceHolderProps extends BaseProps {
+  state?: boolean,
+  children?: React.ReactNode;
+}
+
+export const CameraWaveArmPlaceHolder: React.FC<CameraWaveArmPlaceHolderProps> = ({
+  children,
+  state = false,
+  className,
+}) => {
+  const cls = classnames({
+    ['camera-wave-arm-placeholder']: 1,
+    ['camera-wave-arm-ing']: state,
+    [`${className}`]: !!className
+  });
   return (
     <div className={cls}>
       {children}

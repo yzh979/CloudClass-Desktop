@@ -42,7 +42,8 @@ export type EduMediaStream = {
     cameraDevice: number;
     micDevice: number;
     hasStream: boolean;
-    holderState: 'loading' | 'muted' | 'broken' | 'disabled'
+    holderState: 'loading' | 'muted' | 'broken' | 'disabled',
+    waveArmState?: boolean,
 }
 export type ToastType = {
     id: string,
@@ -1112,6 +1113,13 @@ export type HandsUpContext = {
      */
     studentHandsUp: (teacherUuid: string) => Promise<void>,
     /**
+     * 学生举手 持续一直举手
+     * @param teacherUuid 老师的uuid
+     * @param duration 持续的时间 -1:永久 3:3秒钟
+     * @version v1.1.0
+     */
+    studentHandsUping: (teacherUuid: string, duration: 3 | -1) => Promise<void>,
+    /**
      * 学生取消举手
      * @version v1.1.0
      */
@@ -1121,6 +1129,11 @@ export type HandsUpContext = {
      * @version v1.1.0
      */
     handsUpStudentList: {
+        userUuid: string;
+        userName: string;
+        coVideo: boolean;
+    }[],
+    waveArmStudentList: {
         userUuid: string;
         userName: string;
         coVideo: boolean;
