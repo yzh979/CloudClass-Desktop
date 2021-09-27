@@ -34,6 +34,7 @@ export const useChatContext = (): ChatContext=> {
     messageList: roomStore.chatMessageList,
     conversationList: roomStore.chatConversationList,
     unreadMessageCount: roomStore.unreadMessageCount,
+    setLastReadMessageTs: roomStore.setLastReadMessageTs,
     canChatting: sceneStore.canChatting,
     sendMessage: roomStore.sendMessage,
     sendMessageToConversation: roomStore.sendMessageToConversation,

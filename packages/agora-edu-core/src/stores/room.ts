@@ -15,7 +15,7 @@ import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
 import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
-import { BizLogger } from "../utilities/kit"
+import { BizLogger, storage } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
@@ -329,9 +329,6 @@ export class RoomStore extends SimpleInterval {
   }
 
   @observable
-  unreadMessageCount: number = 0
-
-  @observable
   joined: boolean = false
 
   @observable
@@ -348,6 +345,9 @@ export class RoomStore extends SimpleInterval {
 
   @observable
   windowHeight: number = 0
+
+  @observable
+  lastReadMessageTs: number = storage.getLastReadMessageTs()
 
   @observable
   trophyFlyout: TrophyType = {
@@ -530,7 +530,6 @@ export class RoomStore extends SimpleInterval {
     this.joining = false
     this.resetRoomProperties()
     this.roomChatMessages = []
-    this.unreadMessageCount = 0
     this.joined = false
     this.roomJoined = false
     this.time = 0
@@ -951,15 +950,15 @@ export class RoomStore extends SimpleInterval {
   get roomInfo() {
     return this.appStore.roomInfo
   }
-  @action.bound
-  resetUnreadMessageCount() {
-    this.unreadMessageCount = 0
-  }
+  // @action.bound
+  // resetUnreadMessageCount() {
+  //   this.unreadMessageCount = 0
+  // }
 
-  @action.bound
-  incrementUnreadMessageCount() {
-    this.unreadMessageCount++
-  }
+  // @action.bound
+  // incrementUnreadMessageCount() {
+  //   this.unreadMessageCount++
+  // }
 
   @computed
   get delay(): string {
@@ -2081,5 +2080,28 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  @action.bound
+  setLastReadMessageTs() {
+    let chatMessageCnt = this.roomChatMessages.length
+    let ts = chatMessageCnt > 0 ? this.roomChatMessages[chatMessageCnt - 1].ts : 0
+    storage.setLastReadMessageTs(ts)
+    this.lastReadMessageTs = ts
+    BizLogger.info(`[chat] last read message ts update to ${ts}`)
+  }
+
+  @computed
+  get unreadMessageCount() {
+    let count = 0;
+    for(let i = this.roomChatMessages.length - 1; i >= 0; i--) {
+      let m = this.roomChatMessages[i]
+      if(m.ts > this.lastReadMessageTs) {
+        count++
+      } else {
+        break
+      }
+    }
+    return count
   }
 }

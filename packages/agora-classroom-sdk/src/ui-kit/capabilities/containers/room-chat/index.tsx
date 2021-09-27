@@ -16,7 +16,8 @@ export const RoomChat = observer(() => {
     unmuteChat,
     messageList,
     sendMessage,
-    addChatMessage
+    addChatMessage,
+    setLastReadMessageTs,
   } = useChatContext()
 
   const {
@@ -36,6 +37,7 @@ export const RoomChat = observer(() => {
     if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
       // 第一个条件 点击全屏默认聊天框最小化
       // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
+      setLastReadMessageTs()
       toggleChatMinimize()
     }
   }, [isFullScreen])
@@ -89,12 +91,13 @@ export const RoomChat = observer(() => {
         setText(textValue)
       }}
       onCollapse={() => {
+        setLastReadMessageTs()
         toggleChatMinimize()
       }}
       onSend={handleSendText}
       showCloseIcon={isFullScreen}
       onPullFresh={refreshMessageList}
-      unreadCount={unreadMessageCount}
+      unreadCount={!chatCollapse ? 0 : unreadMessageCount}
     />
   )
 })

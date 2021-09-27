@@ -209,6 +209,26 @@ export class PersistLocalStorage {
     }
   }
 
+  
+  setLastReadMessageTs(ts:number) {
+    try {
+      this.storage.setItem("lrm", `${ts}`)
+    } catch(err) {
+      console.error(`[core-storage] setLastReadMessageTs failed: ${err}`)
+    }
+  }
+
+  getLastReadMessageTs():number {
+    let ts = 0
+    try {
+      let lrm = this.storage.getItem("lrm") || "0"
+      ts = parseInt(lrm)
+    } catch(err) {
+      console.error(`[core-storage] getLastReadMessageTs failed: ${err}`)
+    }
+    return ts
+  }
+
 }
 
 export const GlobalStorage = new CustomStorage();

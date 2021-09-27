@@ -45,7 +45,7 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
       [hours_text, mins_text, seconds_text].forEach(item => item && formatItems.push(item))
     }
   }
-  console.log(formatItems.join(' '))
+  // console.log(formatItems.join(' '))
   return duration.format(formatItems.join(' '))
 }
 
@@ -161,7 +161,6 @@ export class PersistLocalStorage {
       return []
     }
   }
-
 }
 
 export const GlobalStorage = new CustomStorage();

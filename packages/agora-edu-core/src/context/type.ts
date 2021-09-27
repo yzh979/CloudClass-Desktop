@@ -175,6 +175,7 @@ export type ChatContext = {
      * @version v1.1.2
      */
     unmuteUserChat: (userUuid:string) => Promise<void>
+    setLastReadMessageTs: () => void
 }
 export type StreamListContext = {
     /**
