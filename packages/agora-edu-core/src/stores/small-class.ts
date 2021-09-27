@@ -248,6 +248,7 @@ export class SmallClassStore {
     return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
         acc[user.userUuid] = {
           uid: user.userUuid,
+          userUuid: user.userUuid,
           name: user.userName,
           role: user.role,
           userProperties: user.userProperties
