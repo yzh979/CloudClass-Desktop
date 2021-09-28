@@ -1,8 +1,8 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
-
+import { transI18n } from '~ui-kit'
 export interface HandsUpSenderProps extends BaseProps {
   onMouseDown: () => Promise<void> | void;
   onMouseUp: () => Promise<void> | void;
@@ -14,8 +14,19 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onMouseDown, onMous
 
   const [handsUpState, setHandsUpState] = useState<HandsUpStateEnum>('hands-up-before');
   const [countDownNum, setCountDownNum] = useState<number>(3);
+  const [firstTip, setFirstTip] = useState<boolean>(true);
+
+  useEffect(() => {
+    setFirstTip(true)
+  }, [])
 
   const handleMouseDown = () => {
+    if(firstTip){
+      const tipTimer = setTimeout(()=>{
+        setFirstTip(false);
+        clearTimeout(tipTimer);
+      }, 3000);
+    }
     if(handsUpState === 'hands-up-before'){
       setHandsUpState('hands-up-ing');
       onMouseDown()
@@ -57,6 +68,7 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onMouseDown, onMous
       { handsUpState === 'hands-up-before' ? 
         <Icon type='hands-up-before' useSvg size={24}/> : 
          <div className="hands-up-ing">{countDownNum}</div>}
+      { handsUpState !== 'hands-up-before' && firstTip ? <div className="hands-up-tip">{transI18n('hands_up_tip')}</div> : null}
     </Card>
   )
 }
