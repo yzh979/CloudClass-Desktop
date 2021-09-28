@@ -1849,9 +1849,18 @@ export class RoomStore extends SimpleInterval {
             return true;
           }
         }
-        if (sceneType === 4 || sceneType === 2) {
+        if ([2, 4].includes(sceneType)) {
           const canPublishRTCRoles = [EduRoleTypeEnum.teacher];
-          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+          const acceptedList = get(
+            this.appStore.roomStore,
+            'roomProperties.processes.handsUp.accepted',
+            [],
+          );
+          const userUuid = this.roomInfo.userUuid;
+          if (
+            canPublishRTCRoles.includes(this.roomInfo.userRole) ||
+            acceptedList.findIndex((item: any) => item.userUuid === userUuid) >= 0
+          ) {
             return true;
           }
         }
