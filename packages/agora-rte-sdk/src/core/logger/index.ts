@@ -264,17 +264,41 @@ export class EduLogger {
 
   static async enableUpload(roomUuid: string, isElectron: boolean) {
     const ids = [];
-    // Upload Electron log
-    if (isElectron) {
-      ids.push(await this.uploadElectronLog(roomUuid))
+
+    try {
+      // Web upload log
+      ids.push(await this.uploadLog(roomUuid))
+    } catch(e) {
+      EduLogger.error(`[LOG] upload web log failed ${e}`)
     }
-    // Web upload log
-    ids.push(await this.uploadLog(roomUuid))
+
+    try {
+      // Upload Electron log
+      if (isElectron) {
+        ids.push(await this.uploadElectronLog(roomUuid))
+      }
+    } catch(e) {
+      EduLogger.error(`[LOG] upload electron log failed ${e}`)
+    }
+
+    // clean logs
+    this.cleanLog()
+
     return ids.join("#")
   }
 
   private async uploadCefLog() {
 
+  }
+
+  static async cleanLog() {
+    const count = await db.logs.count()
+    EduLogger.info(`[LOG] log count ${count}...`)
+    if(count > 50000) {
+      EduLogger.warn(`[LOG] LOG FILE TOO LARGE, begin clean up...`)
+      await db.clear()
+      EduLogger.warn(`[LOG] LOG FILE TOO LARGE, end clean up...`)
+    }
   }
 
   static async uploadLog(roomId: string) {
