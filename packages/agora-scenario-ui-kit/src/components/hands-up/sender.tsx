@@ -15,29 +15,36 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onMouseDown, onMous
   const [handsUpState, setHandsUpState] = useState<HandsUpStateEnum>('hands-up-before');
   const [countDownNum, setCountDownNum] = useState<number>(3);
   const [firstTip, setFirstTip] = useState<boolean>(true);
+  const [promise, setPromise] = useState<Promise<any> | null>(null)
 
   useEffect(() => {
     setFirstTip(true)
   }, [])
 
   const handleMouseDown = () => {
-    if(firstTip){
-      const tipTimer = setTimeout(()=>{
-        setFirstTip(false);
-        clearTimeout(tipTimer);
-      }, 3000);
-    }
-    if(handsUpState === 'hands-up-before'){
-      setHandsUpState('hands-up-ing');
-      onMouseDown()
-    }
+    setPromise(new Promise(async (resolve: (value: any)=>void, reject: (value: any)=>void)=>{
+      if(firstTip){
+        const tipTimer = setTimeout(()=>{
+          setFirstTip(false);
+          clearTimeout(tipTimer);
+        }, 3000);
+      }
+      if(handsUpState === 'hands-up-before'){
+        setHandsUpState('hands-up-ing');
+        await onMouseDown();
+        resolve && resolve(null);
+      }
+    }));
   }
 
   const handleMouseUp = () => {
     if(handsUpState === 'hands-up-ing'){
-      setHandsUpState('hands-up-after');
-      start();
-      onMouseUp();
+      promise?.then(async ()=>{
+        setHandsUpState('hands-up-after');
+        start();
+        await onMouseUp();
+        setPromise(null);
+      });
     }
   }
 
