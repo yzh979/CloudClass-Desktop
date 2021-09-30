@@ -45,19 +45,12 @@ export const HandsUpReceiverContainer = observer(() => {
         studentHandsUping
     } = useHandsUpContext()
 
-    const handleMouseDown = async () => {
-        await studentHandsUping(teacherUuid, -1);
-    }
-
-    const handleMouseUp = async () => {
-        await studentHandsUping(teacherUuid, 3);
+    const handsUpDuration = async (duration: 3 | -1) => {
+        await studentHandsUping(teacherUuid, duration);
     }
 
     return (
-        <HandsUpSender
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-        />
+        <HandsUpSender handsUpDuration={handsUpDuration}/>
     )
 })
 
