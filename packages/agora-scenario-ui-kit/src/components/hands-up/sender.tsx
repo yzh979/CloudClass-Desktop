@@ -3,6 +3,7 @@ import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
 import { transI18n } from '~ui-kit'
+import { useInterval } from "~utilities/hooks"
 export interface HandsUpSenderProps extends BaseProps {
   handsUpDuration: (duration: 3 | -1) => Promise<void> | void;
 }
@@ -83,19 +84,21 @@ class FSM {
 export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration }) => {
 
   const [fsm, setFSM] = useState<FSM>(new FSM('hands-up-before'));
+
+  const [firstTip, setFirstTip] = useState<boolean>(false);
+  const [showTip, setShowTip] = useState<boolean>(false);
+
   const [countDownNum, setCountDownNum] = useState<number>(3);
-  const [firstTip, setFirstTip] = useState<boolean>(true);
-  const [tipTimer ,setTipTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
-  const [countDownTimer, setCountDownTimer] = useState<ReturnType<typeof setInterval> | null>(null);
   const [showCountDown, setShowCountDown] = useState<boolean>(false);
+  const [startCountDown, setStartCountDown] = useState<boolean>(false);
 
 
   useEffect(() => {
-    setFirstTip(true);
     let promise: Promise<any> | null = null;
     fsm.whenAfter('hands-up-before', 'hands-up-ing', ()=>{
       setShowCountDown(true);
       setCountDownNum(3);
+      setStartCountDown(false);
       promise = new Promise(async (resolve: any)=>{
         await handsUpDuration(-1);
         resolve();
@@ -103,7 +106,8 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration })
     });
     fsm.whenAfter('hands-up-ing', 'hands-up-after', ()=>{
       setShowCountDown(true);
-      startCountDown(3);
+      setCountDownNum(3);
+      setStartCountDown(true);
       promise?.then(async ()=>{
         await handsUpDuration(3);
         promise = null;
@@ -111,18 +115,8 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration })
     });
   }, [])
 
-  const showFirstTips = () => {
-    tipTimer && clearTimeout(tipTimer);
-    if(firstTip){
-      setTipTimer(setTimeout(() => {
-        setFirstTip(false);
-        tipTimer && clearTimeout(tipTimer);
-      }, 3000));
-    };
-  }
-
   const handleMouseDown = () => {
-    showFirstTips();
+    setFirstTip(true);
     fsm.changeState('hands-up-ing');
   }
 
@@ -130,25 +124,29 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration })
     fsm.changeState('hands-up-after');
   }
 
-  useEffect(() => {
-    if(countDownNum <= 0) {
-      countDownTimer && clearInterval(countDownTimer);
-      setShowCountDown(false);
+  useEffect(()=>{
+    if(firstTip){
+      setShowTip(true);
+      const timer = setTimeout(() => {
+        setShowTip(false);
+        clearTimeout(timer);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  }, [countDownNum, countDownTimer])
+  }, [firstTip])
 
-  const startCountDown = (time:number) => {
-    setCountDownNum(time)
-    countDownTimer && clearInterval(countDownTimer);
-    let tmpCount = time
-    let timer = setInterval(() => {
-      if (countDownNum > 0) {
-        tmpCount--
-        setCountDownNum(tmpCount);
+  useInterval((timer: any)=>{
+    if(startCountDown){
+      if(countDownNum > 1){
+        setCountDownNum(countDownNum - 1);
+      }else{
+        setStartCountDown(false);
       }
-    }, 1000);
-    setCountDownTimer(timer)
-  }
+    }else{
+      setShowCountDown(false);
+      clearInterval(timer);
+    }
+  }, 1000, startCountDown)
 
   return (
     <Card
@@ -163,7 +161,7 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration })
       { !showCountDown ?
         <Icon type='hands-up-before' useSvg size={24} /> :
         <div className="hands-up-ing">{countDownNum}</div>}
-      { fsm.getCurrentState() !== 'hands-up-before' && firstTip ? <div className="hands-up-tip">{transI18n('hands_up_tip')}</div> : null}
+      { fsm.getCurrentState() !== 'hands-up-before' && showTip ? <div className="hands-up-tip">{transI18n('hands_up_tip')}</div> : null}
     </Card>
   )
 }
