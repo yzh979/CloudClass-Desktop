@@ -3,6 +3,7 @@ import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
 import { transI18n } from '~ui-kit'
+import { useInterval } from "~utilities/hooks"
 export interface HandsUpSenderProps extends BaseProps {
   handsUpDuration: (duration: 3 | -1) => Promise<void> | void;
 }
@@ -134,22 +135,18 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ handsUpDuration })
     }
   }, [firstTip])
 
-  useEffect(()=>{
+  useInterval((timer: any)=>{
     if(startCountDown){
-      const timer = setInterval(() => {
-        setCountDownNum((num) => {
-          if(num <=1 ){
-            setShowCountDown(false);
-            clearInterval(timer);
-            return 0;
-          }else{
-            return num - 1;
-          }
-        });
-      }, 1000);
-      return () => clearInterval(timer);
+      if(countDownNum > 1){
+        setCountDownNum(countDownNum - 1);
+      }else{
+        setStartCountDown(false);
+      }
+    }else{
+      setShowCountDown(false);
+      clearInterval(timer);
     }
-  }, [startCountDown]);
+  }, 1000, startCountDown)
 
   return (
     <Card

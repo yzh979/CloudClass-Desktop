@@ -90,6 +90,19 @@ export const useTimeout = (fn: CallableFunction, delay: number) => {
   }, [timer])
 }
 
+export const useInterval = (fun: CallableFunction, delay: number, start: boolean) => {
+  const myRef = useRef<any>(null);
+  useEffect(() => {
+    myRef.current = fun;
+  }, [fun]);
+  useEffect(() => {
+    const id = setInterval(() => {
+      myRef.current(id);
+    }, delay);
+    return () => clearInterval(id);
+  }, [start]);
+}
+
 export const useAudioPlayer = (url: string) => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
