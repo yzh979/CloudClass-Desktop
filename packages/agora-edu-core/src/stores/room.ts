@@ -1714,20 +1714,6 @@ export class RoomStore extends SimpleInterval {
           // update scene store
           if (newClassState !== undefined && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState;
-            if (this.sceneStore.classState === 1) {
-              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0);
-              this.addInterval(
-                'timer',
-                () => {
-                  this.appStore.updateTime(+get(classroom, 'roomStatus.startTime', 0));
-                },
-                ms,
-              );
-            } else {
-              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0);
-              BizLogger.info('end time', this.sceneStore.startTime);
-              this.delInterval('timer');
-            }
           }
 
           // update startTime
@@ -1817,7 +1803,6 @@ export class RoomStore extends SimpleInterval {
       });
 
       const roomInfo = roomManager.getClassroomInfo();
-      this.sceneStore.startTime = +get(roomInfo, 'roomStatus.startTime', 0);
 
       const mainStream = roomManager.data.streamMap['main'];
 
