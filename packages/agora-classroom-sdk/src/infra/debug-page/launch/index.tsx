@@ -54,7 +54,7 @@ export const LaunchPage = observer(() => {
     if(getQuery('h5share')){
       let roomUuid = getQuery('roomid');
       let roomName = getQuery('roomname') || roomUuid;
-      let userUuid = "guest"+(''+new Date().getTime()).substr(3);
+      let userUuid = "guest"+(''+new Date().getTime()).substr(3) + EduRoleTypeEnum.student;
       let {rtmToken} = await homeApi.login(userUuid);
       console.log('## rtm Token', rtmToken)
       let language = getQuery('lang') || "zh";
@@ -63,7 +63,7 @@ export const LaunchPage = observer(() => {
         pretest: false,
         courseWareList: [],
         language: language as LanguageEnum,
-        userUuid: `${userUuid}` + EduRoleTypeEnum.student,
+        userUuid: `${userUuid}`,
         rtmToken,
         roomUuid: `${roomUuid}`,
         roomType: EduRoomTypeEnum.RoomBigClass,
