@@ -359,9 +359,9 @@ export class MediaStore {
         this.appStore.roomStore.sceneStore.stopWebSharing();
       }
 
-      if (evt.operation === 'pulled') {
-        handleDevicePulled(evt);
-      }
+      // if (evt.operation === 'pulled') {
+      //   handleDevicePulled(evt);
+      // }
       BizLogger.info('track-ended', evt);
     });
     this.mediaService.on(
