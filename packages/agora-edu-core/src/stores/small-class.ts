@@ -4,7 +4,7 @@ import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
 import { RoomStore } from './room';
 import { action, computed } from 'mobx';
-import { get } from 'lodash';
+import { cloneWith, get } from 'lodash';
 import { EduStream, EduUser, EduVideoSourceType, EduRoleTypeEnum, RemoteUserRenderer, LocalUserRenderer } from 'agora-rte-sdk';
 import { EduMediaStream } from './scene';
 import { BusinessExceptions } from '../utilities/biz-error';
@@ -335,6 +335,9 @@ export class SmallClassStore {
         toUserUuid: userUuid
       })
     } catch(err) {
+      if(err.message == 'Process conflict!'){
+        return;
+      }
       const error = GenericErrorWrapper(err)
       const {result, reason} = BusinessExceptions.getErrorText(error)
       this.appStore.fireToast(result, {reason})
