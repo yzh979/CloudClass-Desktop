@@ -1,0 +1,153 @@
+{
+  "name": "agora-classroom-sdk",
+  "version": "1.1.5-rc.3",
+  "homepage": ".",
+  "sideEffects": false,
+  "keywords": ["agora", "WebRTC", "latest", "AgoraFlexibleClassroom", "Education"],
+  "main": "lib/edu_sdk.bundle.js",
+  "types": "lib/agora-classroom-sdk/src/infra/api/index.d.ts",
+  "swSrcPath": "./src/infra/sw/service-worker.ts",
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "usage",
+          "debug": false,
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
+        }
+      ],
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-optional-chaining",
+      "@babel/plugin-proposal-nullish-coalescing-operator",
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  },
+  "agora_electron": {
+    "electron_version": "12.0.0",
+    "prebuilt": true
+  },
+  "dmg": {
+    "compression": "store",
+    "npmRebuild": false,
+    "title": "agora_edu",
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ]
+  },
+  "build": {
+    "extraMetadata": {
+      "main": "build/index.js"
+    },
+    "productName": "AgoraFlexibleClassroom",
+    "appId": "io.agora.education",
+    "files": ["build/**/*"],
+    "artifactName": "${productName}-${version}.${ext}",
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "icons/favicon.png",
+      "entitlements": "entitlements.mac.plist",
+      "category": "io.agora.Education",
+      "hardenedRuntime": true,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "AgoraEdu Classroom acquire your microphone permission",
+        "NSCameraUsageDescription": "AgoraEdu Classroom acquire your camera permission"
+      }
+    },
+    "win": {
+      "icon": "icons/favicon.png",
+      "target": [
+        {
+          "target": "zip",
+          "arch": ["ia32"]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "icons/favicon.png",
+      "target": ["deb", "rpm", "snap", "AppImage"],
+      "category": "Development"
+    },
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    }
+  },
+  "resolutions": {
+    "react": "17.0.0",
+    "react-dom": "17.0.0"
+  },
+  "scripts": {
+    "install_electron": "node ./scripts/postinstall.js",
+    "electron": "cross-env REACT_APP_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run electron:web\" \"wait-on http://localhost:3000 && npm run electron:client\"",
+    "electron:client": "cross-env electron ./app/",
+    "electron:web": "cross-env BROWSER=none react-app-rewired start",
+    "electron:copy:web": "cross-env NODE_ENV=production REACT_APP_RUNTIME_PLATFORM=electron react-app-rewired build",
+    "electron:copy:electron": "cpx ./app/**/*.js ./build",
+    "electron:build": "npm run electron:copy:web && npm run electron:copy:electron",
+    "dev": "cross-env NODE_ENV=development BABEL_NODE=development TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired start",
+    "s": "yarn dev",
+    "webpack": "webpack --config webpack.dev.server.js",
+    "storybook": "start-storybook -p 6006 --no-manager-cache",
+    "build:types": "tsc -p ./ts.release.json && tsc-alias -p ts.release.json",
+    "build": "cross-env NODE_ENV=production TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "eject": "react-scripts eject",
+    "pack:mac": "cross-env ELECTRON_PROD_URL=https://webdemo.agora.io/main_land npm run electron:build && electron-builder --mac",
+    "pack:win": "cross-env ELECTRON_PROD_URL=https://webdemo.agora.io/main_land npm run electron:build && electron-builder --win",
+    "bundle:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "pack:npm": "run-s bundle:npm build:types",
+    "doc": "typedoc --o"
+  },
+  "eslintConfig": {
+    "extends": ["react-app", "prettier"]
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+  },
+  "peerDependencies": {
+    "agora-electron-sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "agora-electron-sdk": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "agora-edu-core": "1.1.5-rc.7"
+  }
+}

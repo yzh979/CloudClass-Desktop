@@ -6139,44 +6139,28 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
-agora-classroom-sdk@1.1.2-rc.3:
-  version "1.1.2-rc.3"
-  resolved "https://registry.nlark.com/agora-classroom-sdk/download/agora-classroom-sdk-1.1.2-rc.3.tgz#6d89c435b1c509310d9217e08f216483aa28d26c"
-  integrity sha1-bYnENbHFCTENkhfgjyFkg6oo0mw=
+agora-edu-core@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/agora-edu-core/download/agora-edu-core-1.1.2.tgz#60c78d104a708dac475f3101cf379a53c7301daf"
+  integrity sha1-YMeNEEpwjaxHXzEBzzeaU8cwHa8=
   dependencies:
-    "@netless/fetch-progress" "0.0.1"
+    "@netless/combine-player" "1.1.4"
+    "@netless/cursor-tool" "0.0.7"
     "@netless/iframe-bridge" "2.1.4"
-    "@tailwindcss/forms" "0.2.1"
-    "@types/react-transition-group" "4.4.1"
-    "@zip.js/zip.js" "2.2.22"
-    adm-zip "0.4.14"
-    agora-access-token "2.0.4"
-    animate.css "4.1.1"
-    bowser "1.9.4"
-    broadcast-channel "^3.7.0"
-    classnames "2.2.6"
-    fetch-progress "1.3.0"
-    i18next "20.1.0"
-    jszip "3.6.0"
+    "@netless/react-seek-slider" "1.0.4"
+    "@netless/white-audio-plugin" "1.2.23"
+    "@netless/white-audio-plugin2" "2.0.5"
+    "@netless/white-video-plugin" "1.2.23"
+    "@netless/white-video-plugin2" "2.0.5"
+    agora-rte-sdk "1.1.2"
+    ali-oss "6.15.2"
+    lodash "4.17.21"
     mobx "5.15.4"
     mobx-react "6.3.1"
-    pinyinlite "1.2.1"
-    rc-notification "4.4.0"
-    rc-select "12.1.6"
-    rc-slider "9.7.1"
-    rc-tabs "11.7.3"
-    rc-tooltip "5.1.1"
-    rc-trigger "5.2.3"
-    rc-util "5.8.1"
     react "17.0.0"
-    react-dom "17.0.0"
-    react-draggable "4.4.3"
-    react-i18next "11.8.12"
-    react-router "5.2.0"
-    react-select "4.3.0"
-    react-transition-group "4.4.1"
-    workbox-range-requests "6.1.2"
-    workbox-strategies "6.1.1"
+    rxjs "6.6.6"
+    uuid "3.3.3"
+    white-web-sdk "2.12.21"
 
 agora-electron-sdk@3.4.6-build.722:
   version "3.4.6-build.722"
@@ -6200,6 +6184,20 @@ agora-rtc-sdk-ng@4.5.0:
   version "4.5.0"
   resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.5.0.tgz#3d4ea890fe2f18df4d398298424c76ac985c4bd7"
   integrity sha1-PU6okP4vGN9NOYKYQkx2rJhcS9c=
+
+agora-rte-sdk@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.nlark.com/agora-rte-sdk/download/agora-rte-sdk-1.1.2.tgz#e09dd140bdac5c5c607137fded8af0715bf8b885"
+  integrity sha1-4J3RQL2sXFxgcTf97YrwcVv4uIU=
+  dependencies:
+    agora-rtc-sdk-ng "4.5.0"
+    agora-rtm-sdk "1.4.2"
+    tslib "2.2.0"
+
+agora-rtm-sdk@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.nlark.com/agora-rtm-sdk/download/agora-rtm-sdk-1.4.2.tgz#d4595b27e2bc24d554403397f0ae1e5caa5bb602"
+  integrity sha1-1FlbJ+K8JNVUQDOX8K4eXKpbtgI=
 
 agora-rtm-sdk@1.4.3:
   version "1.4.3"
@@ -7013,7 +7011,7 @@ atob-lite@^2.0.0:
   resolved "https://registry.yarnpkg.com/atob-lite/-/atob-lite-2.0.0.tgz#0fef5ad46f1bd7a8502c65727f0367d5ee43d696"
   integrity sha1-D+9a1G8b16hQLGVyfwNn1e5D1pY=
 
-atob@^2.1.2:
+atob@^2.1.0, atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
@@ -16827,7 +16825,7 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
-mathjs@6.6.5:
+mathjs@6.6.5, mathjs@^6.2.2:
   version "6.6.5"
   resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-6.6.5.tgz#6bbad1fa3ac09e8f7106ef64af8d3908f877b8e8"
   integrity sha512-jvRqk7eoEHBcx/lskmy05m+8M7xDHAJcJzRJoqIsqExtlTHPDQO0Zv85g5F0rasDAXF+DLog/70hcqCJijSzPQ==
@@ -17389,6 +17387,14 @@ mobx-react@6.3.1:
   dependencies:
     mobx-react-lite "^2.2.0"
 
+mobx-react@^5.4.4:
+  version "5.4.4"
+  resolved "https://registry.nlark.com/mobx-react/download/mobx-react-5.4.4.tgz#b3de9c6eabcd0ed8a40036888cb0221ab9568b80"
+  integrity sha1-s96cbqvNDtikADaIjLAiGrlWi4A=
+  dependencies:
+    hoist-non-react-statics "^3.0.0"
+    react-lifecycles-compat "^3.0.2"
+
 mobx-react@^7.2.0:
   version "7.2.0"
   resolved "https://registry.nlark.com/mobx-react/download/mobx-react-7.2.0.tgz#241e925e963bb83a31d269f65f9f379e37ecbaeb"
@@ -17400,6 +17406,11 @@ mobx@5.15.4:
   version "5.15.4"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
   integrity sha512-xRFJxSU2Im3nrGCdjSuOTFmxVDGeqOHL+TyADCGbT0k4HHqGmx5u2yaHNryvoORpI4DfbzjJ5jPmuv+d7sioFw==
+
+mobx@^4.15.7:
+  version "4.15.7"
+  resolved "https://registry.nlark.com/mobx/download/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
+  integrity sha1-kzKBJow7Rli2zyUm6HLPeOpIq5U=
 
 mobx@^6.3.2:
   version "6.3.3"
@@ -18042,6 +18053,11 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
+
+numeric@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.npm.taobao.org/numeric/download/numeric-1.2.6.tgz#765b02bef97988fcf880d4eb3f36b80fa31335aa"
+  integrity sha1-dlsCvvl5iPz4gNTrPza4D6MTNao=
 
 nwsapi@^2.2.0:
   version "2.2.0"
@@ -21403,7 +21419,7 @@ react-is@^17.0.1, react-is@^17.0.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
@@ -25496,11 +25512,6 @@ type-fest@^0.8.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-type-fest@^1.1.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.2.3.tgz#0f01bd89ca65ba5f3ebbb1646b314e2138d1f460"
-  integrity sha512-w81kTuuq5V8j7aZamYO9TJ+LYqhw11mkHyMISJIRl2+uMYmgOj3yhSLk2qH6lznyTicBOdMrudxrrVvCQzK1tQ==
-
 type-is@~1.6.17, type-is@~1.6.18:
   version "1.6.18"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.18.tgz#4e552cd05df09467dcbc4ef739de89f2cf37c131"
@@ -26908,6 +26919,31 @@ which@^2.0.1, which@^2.0.2:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
+
+white-web-sdk@2.12.21:
+  version "2.12.21"
+  resolved "https://registry.npmmirror.com/white-web-sdk/download/white-web-sdk-2.12.21.tgz#4b316666c5f6b352763d7769d325d6dd62c0d5d2"
+  integrity sha1-SzFmZsX2s1J2PXdp0yXW3WLA1dI=
+  dependencies:
+    "@netless/canvas-polyfill" "^0.0.4"
+    atob "^2.1.0"
+    bezier-js "^2.4.4"
+    color "^3.1.0"
+    detect-it "^3.0.5"
+    es6-symbol "^3.1.1"
+    mathjs "^6.2.2"
+    mobx "^4.15.7"
+    mobx-react "^5.4.4"
+    numeric "^1.2.6"
+    query-string "5"
+    react "^16.8.0"
+    react-dom "^16.8.0"
+    resize-observer-polyfill "^1.5.1"
+    spark-md5 "^3.0.0"
+    textarea-caret-ts "^4.1.0"
+    url-parse "^1.4.0"
+    uuid "^7.0.3"
+    xml-js "^1.6.11"
 
 white-web-sdk@2.13.20:
   version "2.13.20"

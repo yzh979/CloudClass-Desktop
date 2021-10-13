@@ -1,0 +1,76 @@
+{
+  "name": "agora-edu-core",
+  "version": "1.1.5-rc.7",
+  "main": "lib/index.js",
+  "keywords": [
+    "Agora",
+    "WebRTC",
+    "latest",
+    "AgoraFlexibleClassroom",
+    "Education",
+    "TypesScript",
+    "JavaScript"
+  ],
+  "types": "lib/index.d.ts",
+  "author": "agora",
+  "maintainers": ["liyang@agora.io"],
+  "license": "MIT",
+  "scripts": {
+    "build:docs": "npx typedoc",
+    "build": "run-s build:js build:types",
+    "build:dev:js": "run-s proto build:dev:bundle build:types",
+    "build:types": "tsc -p tsconfig.json",
+    "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
+    "build:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "build:js": "run-s proto build:release:bundle:js build:types",
+    "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
+    "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
+    "proto": "run-s protojs protots"
+  },
+  "dependencies": {
+    "agora-rte-sdk": "x.x.x"
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "usage",
+          "debug": false,
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
+        }
+      ],
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ],
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-optional-chaining",
+      "@babel/plugin-proposal-nullish-coalescing-operator",
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  }
+}

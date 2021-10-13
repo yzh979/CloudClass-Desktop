@@ -88,10 +88,6 @@
     "url": "https://github.com/agoraio-community/CloudClass-Desktop/issues"
   },
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
-  "dependencies": {
-    "agora-edu-core": "1.1.2",
-    "type-fest": "^1.1.3"
-  },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",

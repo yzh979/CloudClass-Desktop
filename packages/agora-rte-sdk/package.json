@@ -1,7 +1,7 @@
 {
   "name": "agora-rte-sdk",
-  "version": "1.1.2",
-  "apaas_version": "1.1.2",
+  "version": "1.1.5-rc.7",
+  "apaas_version": "1.1.5-rc.7",
   "description": "> TODO: description",
   "author": "agora",
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
