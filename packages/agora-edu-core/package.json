@@ -27,7 +27,8 @@
     "build:js": "run-s proto build:release:bundle:js build:types",
     "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
     "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
-    "proto": "run-s protojs protots"
+    "proto": "run-s protojs protots",
+    "bundle:release": "run-s build"
   },
   "devDependencies": {
     "@babel/core": "7.13.15",

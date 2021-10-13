@@ -7,14 +7,14 @@ import { globalConfigs } from '../../utilities/config';
 import { eduSDKApi } from '../../services/edu-sdk-api';
 import { checkConfigParams, checkLaunchOption } from './validator';
 // import { setRoutesMap, defaultRoutePath } from "./resolver"
-// @ts-ignore
-import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
 import { MainController } from './controller';
 
 const controller = new MainController();
 
 // //@ts-ignore
 // window.AgCtrl = controller;
+export type { SceneDefinition, Room, PluginProps } from 'white-web-sdk';
+export { ApplianceNames, PPTKind, RoomPhase } from 'white-web-sdk';
 
 export type AgoraEduBoardScene = SceneDefinition;
 
@@ -25,13 +25,6 @@ export type AgoraEduCourseWare = {
   scenes: AgoraEduBoardScene[];
   url: string;
   type: string;
-};
-
-export const ChatWidgetFactory = (region: string) => {
-  if (region.toUpperCase() === 'CN') {
-    return new AgoraHXChatWidget();
-  }
-  return new AgoraChatWidget();
 };
 
 type SDKConfig = {
@@ -52,7 +45,7 @@ const getLiveRoomPath = (roomType: number) => {
 
 export class AgoraEduCoreSDK {
   static get version(): string {
-    return '1.1.0';
+    return '1.1.5-rc.7';
   }
 
   static _debug: boolean = false;
@@ -143,17 +136,6 @@ export class AgoraEduCoreSDK {
 
       if (option.pretest) {
         mainPath = globalConfigs.routesMap.pretestPath;
-      }
-
-      // TODO: find better way to handle default widgets
-      if (option.widgets) {
-        if (!option.widgets.chat) {
-          option.widgets.chat = ChatWidgetFactory(globalConfigs._region);
-        }
-      } else {
-        option.widgets = {
-          chat: ChatWidgetFactory(globalConfigs._region),
-        };
       }
 
       const params = {
