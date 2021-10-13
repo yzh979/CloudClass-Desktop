@@ -24,11 +24,14 @@
     "build:types": "tsc -p tsconfig.json",
     "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "pack:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production' --config webpack.release.js",
     "build:js": "run-s proto build:release:bundle:js build:types",
+    "pack:js": "run-s proto pack:release:bundle:js build:types",
+    "release": "run-s pack:js",
     "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
     "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
     "proto": "run-s protojs protots",
-    "bundle:release": "run-s build"
+    "bundle:release": "run-s release"
   },
   "devDependencies": {
     "@babel/core": "7.13.15",
