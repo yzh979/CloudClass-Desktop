@@ -73,11 +73,11 @@
     "easemob-websdk": "3.6.3",
     "react": "17.0.0",
     "react-dom": "17.0.0",
-    "react-intl": "^5.20.6",
+    "react-intl": "5.20.12",
     "react-redux": "7.2.4",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
-    "twemoji": "^13.1.0"
+    "twemoji": "13.1.0"
   },
   "peerDependencies": {
     "react": "17.0.0",
