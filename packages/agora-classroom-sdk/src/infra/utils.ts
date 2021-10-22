@@ -9,6 +9,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { transI18n } from '~ui-kit';
 
+dayjs.extend(duration);
+
 export enum TimeFormatType {
   Timeboard,
   Message,

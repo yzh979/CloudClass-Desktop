@@ -13,8 +13,11 @@ import './index.css';
 import RcDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.min.css';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { Icon } from '~components';
 import { SvgImg } from '~components/svg-img';
+
+dayjs.extend(duration);
 
 export interface CalendarProps extends BaseProps {
   className?: string;

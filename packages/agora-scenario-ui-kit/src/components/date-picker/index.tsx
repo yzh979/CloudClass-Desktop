@@ -14,7 +14,10 @@ import { Calendar } from '~components/calendar';
 import { Popover } from '~components/popover';
 import { Icon } from '~components/icon';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import iconCalendarSvg from '~components/icon/assets/svg/icon-calendar.svg';
+
+dayjs.extend(duration);
 
 export interface DatePickerProps extends BaseProps {
   className?: string;

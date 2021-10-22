@@ -1,5 +1,8 @@
 import Dexie, { IndexableType, IndexableTypeArrayReadonly, Table } from 'dexie';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 const DATABASE_NAME = `AgoraEduLogger`;
 const TABLE_NAME = `logs`;

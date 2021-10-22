@@ -1,5 +1,6 @@
 import { useCloudDriveContext } from 'agora-edu-core';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { observer } from 'mobx-react';
 import {
   Col,
@@ -12,6 +13,8 @@ import {
   transI18n,
   SvgImg,
 } from '~ui-kit';
+
+dayjs.extend(duration);
 
 export const StorageContainer = observer(() => {
   const { publicResources, openCloudResource } = useCloudDriveContext();

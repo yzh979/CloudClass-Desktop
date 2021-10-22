@@ -2,6 +2,9 @@ import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
 import { BizHeader, BizHeaderProps, MonitorInfo } from '.';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 const monitor: MonitorInfo = {
   cpuUsage: 20,

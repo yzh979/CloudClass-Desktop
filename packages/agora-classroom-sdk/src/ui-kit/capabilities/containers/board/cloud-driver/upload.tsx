@@ -12,11 +12,14 @@ import {
   SvgImg,
 } from '~ui-kit';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useCloudDriveContext } from 'agora-edu-core';
 import { useUIStore } from '@/infra/hooks';
+
+dayjs.extend(duration);
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void;
