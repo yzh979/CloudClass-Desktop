@@ -103,6 +103,7 @@ export type CourseWareItem = {
   ext: string,
   url: string,
   conversion: {
+    [key: string]: string,
     type: string,
   },
   size: number,
