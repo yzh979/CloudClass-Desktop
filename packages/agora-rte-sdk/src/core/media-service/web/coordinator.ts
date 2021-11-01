@@ -38,6 +38,9 @@ export class AgoraWebStreamCoordinator extends EventEmitter {
   }
 
   updateRtcClient(client: IAgoraRTCClient) {
+    // reset
+    this.rtcAudioStreams.clear();
+    this.rtcVideoStreams.clear();
     this.client = client;
   }
 
