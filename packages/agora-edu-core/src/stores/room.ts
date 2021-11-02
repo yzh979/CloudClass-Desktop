@@ -6,7 +6,7 @@ import { action, computed, IReactionDisposer, observable, reaction, runInAction 
 import { Subject } from "rxjs"
 import { v4 as uuidv4 } from 'uuid'
 import { EduScenarioAppStore } from "."
-import { IAgoraExtApp, regionMap } from "../api/declare"
+import { AgoraEduEvent, IAgoraExtApp, regionMap } from "../api/declare"
 import { EduBoardService } from "../services/edu-board-service"
 import { EduRecordService } from "../services/edu-record-service"
 import { eduSDKApi } from "../services/edu-sdk-api"
@@ -1093,15 +1093,19 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore._canChatting = checkInResult.muteChat ? false : true
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
-      this.appStore.boardStore.init({
-        boardId: checkInResult.board.boardId,
-        boardToken: checkInResult.board.boardToken,
-        boardRegion: checkInResult.board.boardRegion,
-      }).catch((err) => {
+      try {
+        await this.appStore.boardStore.init({
+          boardId: checkInResult.board.boardId,
+          boardToken: checkInResult.board.boardToken,
+          boardRegion: checkInResult.board.boardRegion,
+        })
+        this.appStore.appController.callback(AgoraEduEvent.ready, { type: 'whiteboard' });
+      } catch (err) {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
         this.appStore.isNotInvisible && this.appStore.fireToast('toast.failed_to_join_board')
-      })
+      }
+      
       this.stopJoining()
 
       // logout will clean up eduManager events, so we need to put the listener here

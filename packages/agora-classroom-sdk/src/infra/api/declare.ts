@@ -44,7 +44,7 @@ export interface RoomParameters {
   roomType: number
 }
 
-export type ListenerCallback = (evt: AgoraEduEvent) => void
+export type ListenerCallback = (evt: AgoraEduEvent, params?: EventCallableFunctionParams) => void
 
 export type PPTDataType = {
   active: boolean,
@@ -91,3 +91,7 @@ export enum PPTProgressPhase {
   Uploading,
   Converting,
 }
+
+export type EventCallableFunctionParams = {
+  type: 'whiteboard';
+};

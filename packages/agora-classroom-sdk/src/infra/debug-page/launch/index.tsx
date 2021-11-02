@@ -1,4 +1,4 @@
-import { AgoraEduSDK, AgoraEduEvent} from '../../api'
+import { AgoraEduSDK, AgoraEduEvent, EventCallableFunctionParams} from '../../api'
 import {ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
 import { useHomeStore } from '@/infra/hooks'
 import { isEmpty } from 'lodash'
@@ -56,8 +56,8 @@ export const LaunchPage = observer(() => {
         recordUrl: 'https://webdemo.agora.io/flexible-classroom/record_page',
         // recordUrl: 'https://live.i2study.net/record',
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
-        listener: (evt: AgoraEduEvent) => {
-          console.log("launch#listener ", evt)
+        listener: (evt: AgoraEduEvent, params?: EventCallableFunctionParams) => {
+          console.log("launch#listener ", evt, params?.type)
           if (evt === AgoraEduEvent.destroyed) {
             history.push('/')
           }

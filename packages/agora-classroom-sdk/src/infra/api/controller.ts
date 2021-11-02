@@ -1,5 +1,5 @@
 import { unmountComponentAtNode } from 'react-dom'
-import { AgoraEduEvent } from './declare'
+import { AgoraEduEvent, EventCallableFunctionParams } from './declare'
 import { render } from 'react-dom'
 import { ReactElement } from 'react'
 
@@ -9,7 +9,7 @@ export enum EduSDKInternalStateEnum {
   Destroyed = "destroyed"
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent, params?: EventCallableFunctionParams) => any
 
 export abstract class ClassRoomAbstractStore {
 
