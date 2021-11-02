@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { AgoraEduEvent, AgoraEduSDK } from '../../api';
 import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
 import { transI18n } from '~ui-kit';
+import { EventCallableFunctionParams } from 'agora-edu-core';
 
 const ChatWidgetFactory = (region: string) => {
   if (region.toUpperCase() === 'CN') {
@@ -166,8 +167,8 @@ export const LaunchPage = observer(() => {
             },
           ],
           // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
-          listener: (evt: AgoraEduEvent) => {
-            console.log('launch#listener ', evt);
+          listener: (evt: AgoraEduEvent, params?: EventCallableFunctionParams) => {
+            console.log('launch#listener ', evt, params?.type);
             if (evt === AgoraEduEvent.destroyed) {
               history.push('/');
             }
