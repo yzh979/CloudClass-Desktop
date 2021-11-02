@@ -296,6 +296,16 @@ export class PretestStore {
 
   @computed
   get microphoneList(): any[] {
+    const [defaultMicrophone] = this._microphoneList.filter(({ deviceId, kind }) => {
+      return deviceId === 'default' && kind === 'audioinput';
+    });
+    // keep defautl device in list as it will be chosen by defaut
+    const microphoneList = defaultMicrophone ? this._microphoneList.filter(({ deviceId, groupId, kind }) => {
+      return deviceId === 'default' || (
+        defaultMicrophone.groupId !== groupId && kind === 'audioinput'
+      );
+    }): this._microphoneList;
+
     return [
       {
         deviceId: AgoraMediaDeviceEnum.Disabled,
@@ -303,7 +313,7 @@ export class PretestStore {
         label: CustomizeDeviceLabel.Disabled,
         i18n: true
       }
-    ].concat(this._microphoneList)
+    ].concat(microphoneList) 
   }
 
   @observable
