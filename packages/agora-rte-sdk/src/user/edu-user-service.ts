@@ -229,7 +229,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         videoSourceType: this.screenStream.stream.videoSourceType,
         audioSourceType: this.screenStream.stream.audioSourceType,
         videoState: true,
-        audioState: false,
+        audioState: true,
       } as any)
       const screenStreamData = new EduStreamData({
         state: 1,

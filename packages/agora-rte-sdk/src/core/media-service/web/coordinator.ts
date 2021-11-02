@@ -28,6 +28,7 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
     rtcVideoStreams: Map<string,IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
     rtcAudioStreams: Map<string,IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
     subscribeOptions: StreamSubscribeOptions = {}
+    deleteRtcVideoStreamBuff: IAgoraRTCRemoteUser | null | undefined = null;
 
     queueTasks: StreamUpdateTask[] = []
     currentTask?: StreamUpdateTask
@@ -56,6 +57,7 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
     removeRtcStream(user: IAgoraRTCRemoteUser, mediaType: "video" | "audio") {
         let snapshot = this.beginUpdate()
         if (mediaType === 'audio') {
+            this.deleteRtcVideoStreamBuff = this.rtcVideoStreams.get(`${user.uid}`);
             this.rtcAudioStreams.delete(`${user.uid}`)
         }
         if (mediaType === 'video') {
@@ -224,6 +226,21 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
                         }
                     }))
                 }
+                if (this.deleteRtcVideoStreamBuff) {
+                    promises.push(
+                      new Promise(async (resolve) => {
+                        try {
+                          await this.client?.unsubscribe(this.deleteRtcVideoStreamBuff!, 'video');
+                          this.emit('user-unpublished', this.deleteRtcVideoStreamBuff, 'video');
+                          resolve(true);
+                        } catch (e) {
+                          console.error(e.stack);
+                          resolve(false);
+                        }
+                      }),
+                    );
+                    this.deleteRtcVideoStreamBuff = null;
+                  }
             })
 
             offlineAudioStreams.forEach(streamUuid => {
