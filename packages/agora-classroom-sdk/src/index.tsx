@@ -10,6 +10,8 @@ import { GlobalStorage } from '@/infra/utils';
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";
 
+import "video.js/dist/video-js.css";
+
 // NOTE: 改方法仅在开发环境生效，所以在开发环境禁止。
 if (process.env.NODE_ENV === "development") {
   stopReportingRuntimeErrors(); // disables error overlays

@@ -67,7 +67,7 @@
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
     "@netless/fetch-progress": "0.0.1",
-    "@netless/video-js-plugin": "0.3.3",
+    "@netless/video-js-plugin": "0.3.8",
     "white-web-sdk": "2.13.20"
   },
 
