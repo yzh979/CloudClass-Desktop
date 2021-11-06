@@ -1007,7 +1007,7 @@ export class BoardStore extends ZoomController {
       floatBar: true,
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
-      disableNewPencil: false,
+      disableNewPencil: true,
       wrappedComponents: [IframeWrapper],
       invisiblePlugins: [IframeBridge]
     })
