@@ -8,7 +8,6 @@ import { eduSDKApi } from '../../services/edu-sdk-api';
 import { checkConfigParams, checkLaunchOption } from './validator';
 // import { setRoutesMap, defaultRoutePath } from "./resolver"
 import { MainController } from './controller';
-import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
 
 const controller = new MainController();
 
@@ -26,13 +25,6 @@ export type AgoraEduCourseWare = {
   scenes: AgoraEduBoardScene[];
   url: string;
   type: string;
-};
-
-export const ChatWidgetFactory = (region: string) => {
-  if (region.toUpperCase() === 'CN') {
-    return new AgoraHXChatWidget();
-  }
-  return new AgoraChatWidget();
 };
 
 type SDKConfig = {
@@ -144,16 +136,6 @@ export class AgoraEduCoreSDK {
 
       if (option.pretest) {
         mainPath = globalConfigs.routesMap.pretestPath;
-      }
-
-      if (option.widgets) {
-        if (!option.widgets.chat) {
-          option.widgets.chat = ChatWidgetFactory(globalConfigs._region);
-        }
-      } else {
-        option.widgets = {
-          chat: ChatWidgetFactory(globalConfigs._region),
-        };
       }
 
       const params = {

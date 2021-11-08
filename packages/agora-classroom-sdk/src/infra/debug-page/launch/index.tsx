@@ -10,7 +10,15 @@ import { useHistory } from 'react-router-dom';
 import { AgoraEduEvent, AgoraEduSDK } from '../../api';
 import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
 import { transI18n } from '~ui-kit';
-import { EventCallableFunctionParams } from 'agora-edu-core';
+import { EventCallableFunctionParams, globalConfigs } from 'agora-edu-core';
+import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
+
+export const ChatWidgetFactory = (region: string) => {
+  if (region.toUpperCase() === 'CN') {
+    return new AgoraHXChatWidget();
+  }
+  return new AgoraChatWidget();
+};
 
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
@@ -72,6 +80,18 @@ export const LaunchPage = observer(() => {
         const genH5Scenes = (size: number) => {
           return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
         };
+
+        if (launchOption.widgets) {
+          if (!launchOption.widgets.chat) {
+            // have widgets but not have chat use default chat
+            launchOption.widgets.chat = ChatWidgetFactory(globalConfigs._region);
+          }
+        } else {
+          // no widgets use default chat
+          launchOption.widgets = {
+            chat: ChatWidgetFactory(globalConfigs._region),
+          };
+        }
 
         const size = 14;
 
