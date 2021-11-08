@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "1.1.5-rc.8",
+  "version": "1.1.5-rc.9",
   "homepage": ".",
   "sideEffects": false,
   "keywords": ["agora", "WebRTC", "latest", "AgoraFlexibleClassroom", "Education"],
@@ -59,6 +59,6 @@
     }
   },
   "dependencies": {
-    "agora-edu-core": "1.1.5-rc.8"
+    "agora-edu-core": "1.1.5-rc.9"
   }
 }
