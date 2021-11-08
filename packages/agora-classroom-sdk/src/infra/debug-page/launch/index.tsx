@@ -1,6 +1,5 @@
 import { useHomeStore } from '@/infra/hooks';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
 //@ts-ignore
 import { AgoraExtAppCountDown } from 'agora-plugin-gallery';
 import MD5 from 'js-md5';
@@ -12,13 +11,6 @@ import { AgoraEduEvent, AgoraEduSDK } from '../../api';
 import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
 import { transI18n } from '~ui-kit';
 import { EventCallableFunctionParams } from 'agora-edu-core';
-
-const ChatWidgetFactory = (region: string) => {
-  if (region.toUpperCase() === 'CN') {
-    return new AgoraHXChatWidget();
-  }
-  return new AgoraChatWidget();
-};
 
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
