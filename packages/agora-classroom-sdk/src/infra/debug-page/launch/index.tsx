@@ -81,18 +81,6 @@ export const LaunchPage = observer(() => {
           return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
         };
 
-        if (launchOption.widgets) {
-          if (!launchOption.widgets.chat) {
-            // have widgets but not have chat use default chat
-            launchOption.widgets.chat = ChatWidgetFactory(globalConfigs._region);
-          }
-        } else {
-          // no widgets use default chat
-          launchOption.widgets = {
-            chat: ChatWidgetFactory(globalConfigs._region),
-          };
-        }
-
         const size = 14;
 
         roomRef.current = await AgoraEduSDK.launch(dom, {
