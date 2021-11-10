@@ -957,6 +957,7 @@ export class BoardStore extends ZoomController {
           },
         });
       await this.aClassJoinBoard({
+        uid: this.localUserUuid,
         uuid: info.boardId,
         roomToken: info.boardToken,
         role: this.userRole,
@@ -1020,7 +1021,7 @@ export class BoardStore extends ZoomController {
         //   animationMode: AnimationMode.Immediately,
         // });
       }
-      this.scale = this.room.state.zoomScale
+      this.scale = this.room.state.cameraState.scale
     }
   }
   
@@ -1515,7 +1516,7 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       // this.room.moveCamera({scale})
     }
-    this.scale = this.room.state.zoomScale
+    this.scale = this.room.state.cameraState.scale
   }
 
   @computed 
