@@ -1021,7 +1021,9 @@ export class BoardStore extends ZoomController {
         //   animationMode: AnimationMode.Immediately,
         // });
       }
-      this.scale = this.room.state.cameraState.scale
+      if(this.room.state.cameraState) {
+        this.scale = this.room.state.cameraState.scale
+      }
     }
   }
   
@@ -1077,7 +1079,7 @@ export class BoardStore extends ZoomController {
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
       }
-      if (state.cameraState.scale) {
+      if (state.cameraState) {
         runInAction(() => {
           this.scale = state.cameraState.scale
         })
@@ -1516,7 +1518,9 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       // this.room.moveCamera({scale})
     }
-    this.scale = this.room.state.cameraState.scale
+    if(this.room.state.cameraState) {
+      this.scale = this.room.state.cameraState.scale
+    }
   }
 
   @computed 
