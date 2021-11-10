@@ -1077,9 +1077,9 @@ export class BoardStore extends ZoomController {
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
       }
-      if (state.zoomScale) {
+      if (state.cameraState.scale) {
         runInAction(() => {
-          this.scale = state.zoomScale
+          this.scale = state.cameraState.scale
         })
       }
       if (state.sceneState) {
