@@ -17,6 +17,7 @@ const App = observer(() => {
       dependencies: pluginStore.context.dependencies
     })
     client.join({
+      uid: "<netless room uid>",
       uuid: "<netless room uuid>",
       roomToken: "<netless roomToken>"
     }).then(() => {
