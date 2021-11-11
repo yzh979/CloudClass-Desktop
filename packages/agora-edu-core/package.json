@@ -71,7 +71,7 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.2.17",
+    "@netless/window-manager": "0.2.18",
     "agora-rte-sdk": "1.1.2",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",
