@@ -14,96 +14,101 @@ const stateColorDict: Record<string, string> = {
 }
 
 export interface HandsUpManagerProps extends BaseHandsUpProps {
-  state?: HandsUpState;
-  timeout?: number;
+  // state?: HandsUpState;
+  // timeout?: number;
   onClick: HandleUpClick;
-  unreadCount?: number;
+  // unreadCount?: number;
   studentList: StudentInfo[];
-  processUserCount: number;
-  onlineUserCount: number;
+  // processUserCount: number;
+  // onlineUserCount: number;
 }
 
 export const HandsUpManager: FC<HandsUpManagerProps> = ({
-  width = 108,
-  height = 41,
-  borderRadius = 20,
-  state = 'default',
-  timeout = 1500,
-  unreadCount = 0,
+  width = 40,
+  height = 40,
+  borderRadius = 40,
+  // state = 'default',
+  // timeout = 1500,
+  // unreadCount = 0,
   className,
   studentList = [],
-  onlineUserCount = 0,
-  processUserCount = 0,
+  // onlineUserCount = 0,
+  // processUserCount = 0,
   onClick,
   ...restProps
 }) => {
   const cls = classnames({
     [`hands-up hands-up-manager`]: 1,
-    ['can-not-hover']: processUserCount === 0,
+    // ['can-not-hover']: processUserCount === 0,
     [`${className}`]: !!className
   });
 
-  const handleClick = () => {
-
-  }
-
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
-  const [animStart, setAnimStart] = useState<boolean>(false);
 
-  useWatch(processUserCount, prev => {
-    if (prev !== undefined && processUserCount > prev) {
-      setAnimStart(true)
-    } else {
-      setAnimStart(false)
+  const [handsUpCount, setHandsUpCount] = useState<number>(0);
+
+  const [twinkle, setTwinkle] = useState<boolean>(false);
+
+  const [twinkleFlag, setTwinkleFlag] = useState(false)
+
+  useEffect(() => {
+    setHandsUpCount(studentList.length);
+    if(studentList.length > 0){
+      setTwinkle(true);
+    }else{
+      setTwinkle(false);
     }
-  })
+  }, [studentList, studentList.length])
 
-  const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo)
+  useEffect(()=>{
+    let timer: null | ReturnType<typeof setInterval> = null;
+    let tempTwinkleFlag = false;
+    if(twinkle){
+      timer = setInterval(()=>{
+        setTwinkleFlag(tempTwinkleFlag = !tempTwinkleFlag);
+      }, 500);
+    }else{
+      setTwinkleFlag(false);
+    }
+    return ()=>{
+      timer && clearInterval(timer)
+    }
+  }, [twinkle]);
 
   const content = useCallback(() => {
     return (<StudentsHandsUpList
       onClick={onClick}
-      students={coVideoList}
+      students={studentList}
     />)
-  }, [coVideoList, onClick])
+  }, [studentList, onClick])
 
   return (
     <div className={cls} {...restProps}>
-      <CSSTransition
-        in={!animStart}
-        timeout={timeout}
-        classNames={'received-card'}
-        onEntered={() => {
-          setAnimStart(false)
+      <Popover
+        visible={popoverVisible}
+        onVisibleChange={(visible) => {
+          setPopoverVisible(visible)
         }}
-      >
-        <Popover
-          visible={popoverVisible}
-          onVisibleChange={(visible) => {
-            setPopoverVisible(visible)
-          }}
-          overlayClassName="customize-dialog-popover"
-          trigger="hover"
-          content={content}
-          placement="topRight">
-          <Card
-            width={width}
-            height={height}
-            borderRadius={borderRadius}
-          >
-            {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
-            <div className="hands-box-line">
-              <Icon
-                size={28}
-                onClick={handleClick}
-                type={processUserCount ? (popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'}
-                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']}
-              />
-              <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
-            </div>
-          </Card>
-        </Popover>
-      </CSSTransition>
+        overlayClassName="customize-dialog-popover"
+        trigger="hover"
+        content={content}
+        placement="leftBottom">
+        <Card
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
+          className={twinkleFlag ? 'card-hands-up-active' : ''}
+        >
+          <div className="hands-box-line">
+            <Icon
+              type={twinkleFlag ? 'hands-up-active' : "hands-up-before"}
+              useSvg
+              size={24}
+            />
+          </div>
+          {handsUpCount ? <span className="hands-up-count">{handsUpCount > 99 ? "99+" : handsUpCount}</span> : null }
+        </Card>
+      </Popover>
     </div>
   )
 }
@@ -173,25 +178,13 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
       >
         {
           students.map((item, index) => (
-            <div className="student-item" key={index}>
+            <div className="student-item" key={item.userUuid}>
               <span className="student-name">{item?.userName}</span>
               <span className="operation-icon-wrap">
-                {/* <Icon 
-                  type="checked"
-                  useSvg
-                  onClick={() => onClick("confirm", item)}
-                /> */}
-                <div style={{ cursor: 'pointer' }} onClick={() => onClick('confirm', item) } >
-                  {checked}
-                </div>
-                {/* <Icon 
-                  type="close" 
-                  useSvg
-                  onClick={() => onClick("cancel", item)}
-                /> */}
-                <div style={{ cursor: 'pointer' }} onClick={() => onClick("cancel", item)}>
-                  {close}
-                </div>
+                {
+                  item.coVideo ? <Icon type='on-podium' color='#357bf6'/> : 
+                  <Icon type='invite-to-podium' color='#7b89a0' hover={true} onClick={() => onClick('confirm', item)}/>
+                }
               </span>
             </div>
           ))

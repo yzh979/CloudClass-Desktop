@@ -953,12 +953,23 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   videoTrackMap: Map<string, ICameraVideoTrack | undefined> = new Map()
   audioTrackMap: Map<string, IMicrophoneAudioTrack | undefined> = new Map()
 
+  get cameraEncoderConfiguration() {
+    let config = this.options.cameraEncoderConfiguration
+    return {
+      width:config.width,
+      height:config.height,
+      frameRate:config.frameRate,
+      bitrateMax:config.bitrate
+    }
+  }
+
+
   async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer') {
     const track = this.videoTrackMap.get(type)
     if (!track) {
       const videoTrack = await this.agoraWebSdk.createCameraVideoTrack({
         cameraId: this.videoDeviceConfig.get(type),
-        encoderConfig: this.options.cameraEncoderConfiguration,
+        encoderConfig: this.cameraEncoderConfiguration,
       })
       const trackId = videoTrack.getTrackId()
       this.videoTrackMap.set(type, videoTrack)

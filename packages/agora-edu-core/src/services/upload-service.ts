@@ -50,7 +50,11 @@ export type MaterialDataResource = {
   updateTime: number,
   scenes?: any[],
   access: MaterialAccess,
-  isUnavailable: boolean
+  isUnavailable: boolean,
+  conversion?: {
+    [key: string]: string,
+    type: string,
+  },
 }
 
 export const transDataToResource = (data: CourseWareItem, access: MaterialAccess): MaterialDataResource => {
@@ -98,6 +102,7 @@ export type UploadConversionType = {
   preview: boolean,
   scale: number,
   outputFormat: string
+  canvasVersion?: boolean
 }
 
 export type FetchStsTokenResult = {
@@ -339,11 +344,13 @@ export class UploadService extends ApiBase {
     //   return queryResult.data
     // }
     const extLowerCase = payload.ext ? payload.ext.toLowerCase() : payload.ext
+    const payloadConversion = payload.conversion ? payload.conversion : {}
     const conversion = payload.converting ? {
         type: extLowerCase === 'pptx' ? 'dynamic' : 'static',
         preview: true,
         scale: globalConfigs._materialScale,
         outputFormat: 'png',
+        ...payloadConversion
       } : undefined
     let fetchResult = await this.fetchStsToken({
       roomUuid: payload.roomUuid,

@@ -26,7 +26,9 @@ const svgDict: string[] = [
   'clicker',
   'answer',
   'vote',
-  'save-board'
+  'save-board',
+  'hands-up-before',
+  'hands-up-active',
 ]
 
 export interface IconProps extends BaseProps {

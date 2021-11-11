@@ -73,4 +73,6 @@ export type IconTypes =
   | 'answer'
   | 'vote'
   | 'preview'
-  | 'save-board';
+  | 'save-board'
+  | 'hands-up-before'
+  | 'hands-up-active';

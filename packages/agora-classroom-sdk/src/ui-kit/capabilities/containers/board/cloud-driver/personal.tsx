@@ -177,6 +177,7 @@ export const PersonalStorageContainer = observer(() => {
       resourceUuid: resourceUuid,
       converting: isNeedConverting,
       kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
+      conversion: isDynamic ? { canvasVersion: true } : {},
       onProgress: async (evt: any) => {
         const { progress, isTransFile = false, isLastProgress = false, failed = false } = evt;
         const parent = Math.floor(progress * 100)

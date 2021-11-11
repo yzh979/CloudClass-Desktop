@@ -944,7 +944,20 @@ export class BoardStore extends ZoomController {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
     try {
+    
+      WindowManager.register({
+          kind: "Slide",
+          appOptions: {
+            // 打开这个选项显示 debug 工具栏
+            debug: false,
+          },
+          src: async () => {
+            const app = await import("@netless/app-slide");
+            return app.default ?? app;
+          },
+        });
       await this.aClassJoinBoard({
+        uid: this.localUserUuid,
         uuid: info.boardId,
         roomToken: info.boardToken,
         role: this.userRole,
@@ -1008,7 +1021,9 @@ export class BoardStore extends ZoomController {
         //   animationMode: AnimationMode.Immediately,
         // });
       }
-      this.scale = this.room.state.zoomScale
+      if(this.room.state.cameraState) {
+        this.scale = this.room.state.cameraState.scale
+      }
     }
   }
   
@@ -1064,9 +1079,9 @@ export class BoardStore extends ZoomController {
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
       }
-      if (state.zoomScale) {
+      if (state.cameraState) {
         runInAction(() => {
-          this.scale = state.zoomScale
+          this.scale = state.cameraState.scale
         })
       }
       if (state.sceneState) {
@@ -1503,7 +1518,9 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       // this.room.moveCamera({scale})
     }
-    this.scale = this.room.state.zoomScale
+    if(this.room.state.cameraState) {
+      this.scale = this.room.state.cameraState.scale
+    }
   }
 
   @computed 
@@ -2014,14 +2031,29 @@ export class BoardStore extends ZoomController {
       const scenePath = `/${resource.id}`
 
       if(!this.isResourceAlreadyOpened({ scenePath })){
-        await this.windowManager?.addApp({
-          kind: BuiltinApps.DocsViewer,
-          options: {
-              scenePath,
+        if (resource?.conversion?.canvasVersion) { // 判断是否为带 canvasVersion 参数的转换文件
+          await this.windowManager?.addApp({
+            kind: "Slide",
+            options: {
+              scenePath: `/ppt${scenePath}`,
               title: resource.name,
-              scenes
-          }
-        });
+            },
+            attributes: {
+              taskId: resource.taskUuid,
+            }
+          });
+
+        } else {
+
+          await this.windowManager?.addApp({
+            kind: BuiltinApps.DocsViewer,
+            options: {
+                scenePath,
+                title: resource.name,
+                scenes
+            }
+          });
+        }
       }
     }
   }
