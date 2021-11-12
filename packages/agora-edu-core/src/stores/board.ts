@@ -1008,6 +1008,7 @@ export class BoardStore extends ZoomController {
     reportService.startTick('joinRoom', 'board', 'join');
     try {
       await this.aClassJoinBoard({
+        uid: this.localUserUuid,
         uuid: info.boardId,
         roomToken: info.boardToken,
         role: this.userRole,
@@ -1080,7 +1081,9 @@ export class BoardStore extends ZoomController {
           animationMode: AnimationMode.Immediately,
         });
       }
-      this.scale = this.room.state.zoomScale;
+      if (this.room.state.cameraState) {
+        this.scale = this.room.state.cameraState.scale;
+      }
     }
   }
 
@@ -1145,9 +1148,9 @@ export class BoardStore extends ZoomController {
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState);
       }
-      if (state.zoomScale) {
+      if (state.cameraState) {
         runInAction(() => {
-          this.scale = state.zoomScale;
+          this.scale = state.cameraState.scale;
         });
       }
       if (state.sceneState) {
@@ -1565,7 +1568,9 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       this.room.moveCamera({ scale });
     }
-    this.scale = this.room.state.zoomScale;
+    if (this.room.state.cameraState) {
+      this.scale = this.room.state.cameraState.scale;
+    }
   }
 
   @computed

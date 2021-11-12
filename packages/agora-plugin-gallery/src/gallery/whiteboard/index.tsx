@@ -18,6 +18,7 @@ const App = observer(() => {
     });
     client
       .join({
+        uid: '<netless room uuid>',
         uuid: '<netless room uuid>',
         roomToken: '<netless roomToken>',
       })

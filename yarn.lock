@@ -2050,6 +2050,11 @@
     comment-json "^4.1.0"
     find-up "^4.1.0"
 
+"@juggle/resize-observer@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
+  integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
+
 "@lerna/add@3.21.0":
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.21.0.tgz#27007bde71cc7b0a2969ab3c2f0ae41578b4577b"
@@ -26945,11 +26950,12 @@ white-web-sdk@2.12.21:
     uuid "^7.0.3"
     xml-js "^1.6.11"
 
-white-web-sdk@2.13.20:
-  version "2.13.20"
-  resolved "https://registry.npmmirror.com/white-web-sdk/download/white-web-sdk-2.13.20.tgz#da1b5175c0c8ca37c323a90d0b6e93c365e94217"
-  integrity sha1-2htRdcDIyjfDI6kNC26Tw2XpQhc=
+white-web-sdk@2.15.3:
+  version "2.15.3"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.15.3.tgz#e347192fad60bdf6c03dabffd211555c0242b323"
+  integrity sha512-AVRAa6pHPU9x4raTpykEUUTpQ7FnbKoYGmjoIIaT6YWUvDXYOUGt1PPZza2NTPFZAewlVhKu35x4omj8UPUMYA==
   dependencies:
+    "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"
     "@netless/xml-js" "1.6.15"
     atob "^2.1.2"
@@ -26965,7 +26971,6 @@ white-web-sdk@2.13.20:
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"
-    resize-observer-polyfill "^1.5.1"
     spark-md5 "^3.0.0"
     textarea-caret-ts "^4.1.0"
     url-parse "^1.4.0"

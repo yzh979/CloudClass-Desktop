@@ -1,6 +1,6 @@
 {
   "name": "agora-edu-core",
-  "version": "1.1.5-rc.9",
+  "version": "1.1.5-rc.11",
   "main": "lib/index.js",
   "keywords": [
     "Agora",
@@ -16,7 +16,7 @@
   "maintainers": ["liyang@agora.io"],
   "license": "MIT",
   "dependencies": {
-    "agora-rte-sdk": "1.1.5-rc.9"
+    "agora-rte-sdk": "1.1.5-rc.11"
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
