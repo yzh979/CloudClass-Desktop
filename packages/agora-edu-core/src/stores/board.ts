@@ -1034,8 +1034,10 @@ export class BoardStore extends ZoomController {
     if (this.userRole === EduRoleTypeEnum.teacher) {
       console.log('setView Mode', this.userRole);
       this.room.setViewMode(ViewMode.Broadcaster);
+      this.room.disableCameraTransform = false;
+    } else {
+      this.room.disableCameraTransform = true;
     }
-    // TODO: zoom controller should make 16:9 work
     // this.room.disableCameraTransform = this.userRole !== EduRoleTypeEnum.teacher
 
     if (this.online && this.room) {
@@ -1200,7 +1202,6 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
-      disableCameraTransform: true,
       wrappedComponents: [IframeWrapper],
       invisiblePlugins: [IframeBridge],
       ...this.appStore.params.config.boardOptions,

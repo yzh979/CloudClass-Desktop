@@ -36,8 +36,7 @@ export const ZoomController: FC<ZoomControllerProps> = ({
   const fontColor = '#7B88A0';
   return (
     <div className={cls} {...restProps}>
-      {/* TODO: zoom controller should make 16:9 work */}
-      {/* {maximum ? (
+      {maximum ? (
         <Tooltip title={t('tool.fullScreen')} placement="top">
           <SvgImg
             style={{ color: fontColor }}
@@ -77,7 +76,7 @@ export const ZoomController: FC<ZoomControllerProps> = ({
           onClick={() => clickHandler('zoom-in')}
         />
       </Tooltip>
-      <span className="line"></span> */}
+      <span className="line"></span>
       <Tooltip title={t('tool.prev')} placement="top">
         <SvgImg
           style={{ color: fontColor }}
