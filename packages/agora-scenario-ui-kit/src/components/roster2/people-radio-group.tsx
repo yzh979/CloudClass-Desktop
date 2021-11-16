@@ -21,8 +21,17 @@ export default ({ name, onChange }: RadioGroupProps) => {
   return (
     <div className="flex">
       {userTypes.map(({ label, value }) => (
-        <label className="flex items-center mr-4" key={value}>
+        <label
+          className="flex items-center mr-4"
+          style={{
+            marginRight: 8,
+            alignItems: 'center',
+          }}
+          key={value}>
           <input
+            style={{
+              marginRight: 6,
+            }}
             className="mr-1"
             type="radio"
             value={value}

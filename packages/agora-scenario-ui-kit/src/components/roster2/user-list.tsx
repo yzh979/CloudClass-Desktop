@@ -307,7 +307,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               </div>
             ) : null}
             {userType === 'teacher' ? (
-              <div className="mt-4">
+              <div className="mt-4" style={{ marginTop: 8 }}>
                 <PeopleRadioGroup
                   name="memberType"
                   onChange={(type) => {
