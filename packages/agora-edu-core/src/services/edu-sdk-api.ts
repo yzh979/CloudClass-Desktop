@@ -529,6 +529,49 @@ export class EduSDKApi extends ApiBase {
     });
     return res.data;
   }
+
+  async fetchUserList(
+    roomId: string,
+    params: {
+      role: string;
+      type?: '0' | '1';
+      nextId: string | number | null;
+      count?: number;
+      userName?: string;
+    },
+  ) {
+    const qs = [];
+
+    const { role, type, nextId, count, userName } = params;
+
+    if (role) {
+      qs.push(`role=${role}`);
+    }
+
+    if (type) {
+      qs.push(`type=${type}`);
+    }
+
+    if (userName) {
+      qs.push(`userName=${userName}`);
+    }
+
+    if (nextId) {
+      qs.push(`nextId=${nextId}`);
+    }
+
+    if (count) {
+      qs.push(`count=${count}`);
+    }
+
+    const url = `/v2/rooms/${roomId}/users` + (qs ? `?${qs.join('&')}` : '');
+
+    const res = await this.fetch({
+      url,
+      method: 'GET',
+    });
+    return res.data;
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({

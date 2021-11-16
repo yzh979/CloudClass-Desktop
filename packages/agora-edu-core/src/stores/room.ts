@@ -3,6 +3,7 @@ import {
   EduLogger,
   EduRoleTypeEnum,
   EduRoomType,
+  EduRoomTypeEnum,
   EduSceneType,
   EduStream,
   EduTextMessage,
@@ -14,7 +15,7 @@ import {
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { get } from 'lodash';
+import { debounce, get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -349,6 +350,7 @@ export class RoomStore extends SimpleInterval {
         isOwn: item.sender,
         content: item.text,
         role: item.role,
+        userUuid: item.fromRoomUuid,
       }));
   }
 
@@ -605,6 +607,7 @@ export class RoomStore extends SimpleInterval {
         sender: true,
         messageId: result.messageId,
         fromRoomName: this.roomInfo.userName,
+        fromRoomUuid: this.roomInfo.userUuid,
       };
     } catch (err) {
       this.appStore.fireToast('toast.failed_to_send_chat');
@@ -639,6 +642,7 @@ export class RoomStore extends SimpleInterval {
         sender: true,
         messageId: result.peerMessageId,
         fromRoomName: this.roomInfo.userName,
+        fromRoomUuid: this.roomInfo.userUuid,
       };
     } catch (err) {
       this.appStore.fireToast('toast.failed_to_send_chat');
@@ -1146,34 +1150,36 @@ export class RoomStore extends SimpleInterval {
         if (this.eduManager._rtmWrapper) {
           const prevConnectionState = this.eduManager._rtmWrapper.prevConnectionState;
           if (prevConnectionState === 'RECONNECTING' && newState === 'CONNECTED') {
-            eduSDKApi
-              .reportCameraState({
-                roomUuid: roomUuid,
-                userUuid: this.appStore.roomInfo.userUuid,
-                state: +this.appStore.sceneStore.localCameraDeviceState,
-              })
-              .catch((err) => {
-                BizLogger.info(
-                  `[demo] action in report native device camera state failed, reason: ${err}`,
-                );
-              })
-              .then(() => {
-                BizLogger.info(`[CAMERA] report camera device not working`);
-              });
-            eduSDKApi
-              .reportMicState({
-                roomUuid: roomUuid,
-                userUuid: this.appStore.roomInfo.userUuid,
-                state: +this.appStore.sceneStore.localMicrophoneDeviceState,
-              })
-              .catch((err) => {
-                BizLogger.info(
-                  `[demo] action in report native device camera state failed, reason: ${err}`,
-                );
-              })
-              .then(() => {
-                BizLogger.info(`[CAMERA] report mic device not working`);
-              });
+            if (this.roomInfo.roomType !== EduRoomTypeEnum.RoomBigClass) {
+              eduSDKApi
+                .reportCameraState({
+                  roomUuid: roomUuid,
+                  userUuid: this.appStore.roomInfo.userUuid,
+                  state: +this.appStore.sceneStore.localCameraDeviceState,
+                })
+                .catch((err) => {
+                  BizLogger.info(
+                    `[demo] action in report native device camera state failed, reason: ${err}`,
+                  );
+                })
+                .then(() => {
+                  BizLogger.info(`[CAMERA] report camera device not working`);
+                });
+              eduSDKApi
+                .reportMicState({
+                  roomUuid: roomUuid,
+                  userUuid: this.appStore.roomInfo.userUuid,
+                  state: +this.appStore.sceneStore.localMicrophoneDeviceState,
+                })
+                .catch((err) => {
+                  BizLogger.info(
+                    `[demo] action in report native device camera state failed, reason: ${err}`,
+                  );
+                })
+                .then(() => {
+                  BizLogger.info(`[CAMERA] report mic device not working`);
+                });
+            }
             if (this.appStore.roomStore.isJoiningRoom) {
               this.appStore.roomStore.stopJoining();
             }
@@ -1244,7 +1250,8 @@ export class RoomStore extends SimpleInterval {
       });
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
-        this.sceneStore.userList = roomManager.getFullUserList();
+        // this.sceneStore.userList = roomManager.getFullUserList();
+        this.sceneStore.fullUserList = roomManager.getFullUserList();
         const cause = evt.cause;
         if (cause) {
           if (cause.cmd === 6) {
@@ -1554,50 +1561,58 @@ export class RoomStore extends SimpleInterval {
       // 远端人加入
       roomManager.on('remote-user-added', (evt: any) => {
         runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList();
+          // this.sceneStore.userList = roomManager.getFullUserList();
+          this.sceneStore.fullUserList = roomManager.getFullUserList();
         });
         BizLogger.info('remote-user-added', evt);
       });
       // 远端人更新
-      roomManager.on('remote-user-updated', (evt: any) => {
-        this.sceneStore.userList = roomManager.getFullUserList();
-        const cause = evt.cause;
-        if (cause) {
-          if (cause.cmd === 6) {
-            if (evt.hasOwnProperty('muteChat')) {
-              const muteChat = evt.muteChat;
-              if (muteChat) {
-                this.appStore.fireToast('toast.remote_mute_chat', {
-                  hostName:
-                    evt.operator.userUuid === this.appStore.userUuid
-                      ? 'you'
-                      : evt.operator.userName,
-                  studentName: evt.user.user.userName,
-                });
-              } else {
-                this.appStore.fireToast('toast.remote_unmute_chat', {
-                  hostName:
-                    evt.operator.userUuid === this.appStore.userUuid
-                      ? 'you'
-                      : evt.operator.userName,
-                  studentName: evt.user.user.userName,
-                });
+      roomManager.on('remote-user-updated', (evts: any) => {
+        // this.sceneStore.userList = roomManager.getFullUserList();
+        this.sceneStore.fullUserList = roomManager.getFullUserList();
+        evts.forEach((evt: any) => {
+          const cause = evt.cause;
+          if (cause) {
+            if (cause.cmd === 6) {
+              if (evt.hasOwnProperty('muteChat')) {
+                const muteChat = evt.muteChat;
+                if (muteChat) {
+                  this.appStore.fireToast('toast.remote_mute_chat', {
+                    hostName:
+                      evt.operator.userUuid === this.appStore.userUuid
+                        ? 'you'
+                        : evt.operator.userName,
+                    studentName: evt.user.user.userName,
+                  });
+                } else {
+                  this.appStore.fireToast('toast.remote_unmute_chat', {
+                    hostName:
+                      evt.operator.userUuid === this.appStore.userUuid
+                        ? 'you'
+                        : evt.operator.userName,
+                    studentName: evt.user.user.userName,
+                  });
+                }
               }
             }
           }
-        }
+        });
         // runInAction(() => {
         //   this.sceneStore.userList = roomManager.getFullUserList()
         // })
-        BizLogger.info('remote-user-updated', evt);
+        BizLogger.info('remote-user-updated', evts);
       });
       // 远端人移除
-      roomManager.on('remote-user-removed', (evt: any) => {
-        runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList();
-        });
-        BizLogger.info('remote-user-removed', evt);
-      });
+      roomManager.on(
+        'remote-user-removed',
+        debounce((evt: any) => {
+          runInAction(() => {
+            // this.sceneStore.userList = roomManager.getFullUserList();
+            this.sceneStore.fullUserList = roomManager.getFullUserList();
+          });
+          BizLogger.info('remote-user-removed', evt);
+        }, 1000),
+      );
       // 远端流加入
       roomManager.on('remote-stream-added', (evt: any) => {
         const { stream } = evt;
@@ -1752,6 +1767,7 @@ export class RoomStore extends SimpleInterval {
           account: fromUser.userName,
           role: `${this.getRoleEnumValue(fromUser.role)}`,
           isOwn: false,
+          fromRoomUuid: fromUser.userUuid,
         });
         // if (this.appStore.roomStore.chatCollapse) {
         //   this.incrementUnreadMessageCount()
@@ -1924,7 +1940,8 @@ export class RoomStore extends SimpleInterval {
       //@ts-ignore
       this.roomProperties = roomProperties;
 
-      this.sceneStore.userList = roomManager.getFullUserList();
+      // this.sceneStore.userList = roomManager.getFullUserList();
+      this.sceneStore.fullUserList = roomManager.getFullUserList();
       const streamList = roomManager.getFullStreamList();
       this.sceneStore.updateStreamList(streamList);
       if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {

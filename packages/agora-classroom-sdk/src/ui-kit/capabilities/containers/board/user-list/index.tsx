@@ -231,64 +231,15 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 export const StudentUserListContainer: React.FC<UserListContainerProps> = observer((props) => {
   const [keyword, setKeyword] = useState<string>('');
 
-  const { streamList, localStream, muteVideo, muteAudio, unmuteAudio, unmuteVideo } =
-    useStreamListContext();
+  const { streamList, muteVideo, muteAudio, unmuteAudio, unmuteVideo } = useStreamListContext();
 
   const { addDialog } = useUIStore();
 
-  const { queryMicrophoneDeviceState, queryCameraDeviceState, roomInfo } = useRoomContext();
+  const { roomInfo } = useRoomContext();
 
   const { muteUserChat, unmuteUserChat } = useChatContext();
 
-  const { localUserInfo, teacherInfo, userList, acceptedUserList } = useUserListContext();
-
-  function checkDisable(user: any, role: EduRoleTypeEnum): boolean {
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
-      return false;
-    }
-
-    if (
-      role === EduRoleTypeEnum.student &&
-      roomInfo.userUuid === user.userUuid &&
-      acceptedIds.includes(user.userUuid)
-    ) {
-      return false;
-    }
-    return true;
-  }
-
-  function transformRosterUserInfo(
-    user: any,
-    role: any,
-    stream: any,
-    onPodium: boolean,
-    userList: EduUser[],
-  ) {
-    return {
-      name: user.userName,
-      uid: user.userUuid,
-      micEnabled: stream?.hasAudio ?? false,
-      cameraEnabled: stream?.hasVideo ?? false,
-      onPodium: onPodium,
-      micDevice: queryMicrophoneDeviceState(
-        userList,
-        user?.userUuid ?? '',
-        stream?.streamUuid ?? '',
-      ),
-      cameraDevice: queryCameraDeviceState(
-        userList,
-        user?.userUuid ?? '',
-        stream?.streamUuid ?? '',
-      ),
-      online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
-      hasStream: !!stream,
-      chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
-      disabled: checkDisable(user, role),
-      userType: ['assistant', 'teacher'].includes(role) ? 'teacher' : 'student',
-    };
-  }
-
-  const acceptedIds = acceptedUserList.map((user: any) => user.userUuid);
+  const { localUserInfo, teacherInfo } = useUserListContext();
 
   const { rosterUserList } = useUserListContext();
 

@@ -9,9 +9,28 @@ import { Subject } from 'rxjs';
 import { Room } from 'white-web-sdk';
 import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';
 import { MaterialDataResource } from '../services/upload-service';
-import { StorageCourseWareItem } from '../types';
+import { DeviceStateEnum, StorageCourseWareItem } from '../types';
 
 export type DeviceErrorCallback = (evt: { type: 'video' | 'audio'; error: boolean }) => void;
+
+export type RosterUserInfo = {
+  name: string;
+  uid: string;
+  online: boolean;
+  isLocal: boolean;
+  onPodium: boolean;
+  micDevice: DeviceStateEnum;
+  cameraDevice: DeviceStateEnum;
+  cameraEnabled: boolean;
+  chatEnabled: boolean;
+  micEnabled: boolean;
+  whiteboardGranted: boolean;
+  hasStream: boolean;
+  canCoVideo: boolean;
+  canGrantBoard: boolean;
+  stars: number;
+  disabled: boolean;
+};
 
 export type Resource = {
   file: {
@@ -598,7 +617,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+  queryCameraDeviceState: (userUuid: string, streamUuid: string) => any;
   /**
    * 查询麦克风设备状态
    * @param userList 查询的用户列表
@@ -606,7 +625,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+  queryMicrophoneDeviceState: (userUuid: string, streamUuid: string) => any;
   /**
    * 是否正在加载房间
    * @version v1.1.2
@@ -1033,7 +1052,7 @@ export type UserListContext = {
    * 当前课堂内的所有用户列表
    * @version v1.1.0
    */
-  userList: EduUser[];
+  userList: Map<string, EduUser>;
   /**
    * 同意举手的用户列表
    * @version v1.1.0
@@ -1086,6 +1105,14 @@ export type UserListContext = {
    * @version v1.1.2
    */
   isHost: boolean;
+  /**
+   * 获取用户列表
+   */
+  fetchUserList: (params: {
+    nextId: number | null;
+    count: number;
+    type: '0' | '1';
+  }) => Promise<{ total: number; nextId: number | null; count: number; list: RosterUserInfo[] }>;
 };
 
 export type RecordingContext = {

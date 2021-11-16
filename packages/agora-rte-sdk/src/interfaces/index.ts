@@ -895,11 +895,12 @@ export interface IEduClassroomManager {
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;
-  getStudentCount(): number;
-  getTeacherCount(): number;
-  getTeacherList(): EduUser[];
-  getStudentList(): EduUser[];
-  getFullUserList(): EduUser[];
+  // getStudentCount(): number;
+  // getTeacherCount(): number;
+  // getTeacherList(): EduUser[];
+  // getStudentList(): EduUser[];
+  // getFullUserList(): EduUser[];
+  getFullUserList(): Map<string, EduUser>;
 
   getFullStreamList(): EduStream[];
 

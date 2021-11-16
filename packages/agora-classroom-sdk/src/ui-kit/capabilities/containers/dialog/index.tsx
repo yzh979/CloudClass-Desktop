@@ -10,6 +10,7 @@ import {
   useCloudDriveContext,
   useGlobalContext,
   useMediaContext,
+  EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { GenericError, GenericErrorWrapper } from 'agora-edu-core';
 import classnames from 'classnames';
@@ -21,6 +22,8 @@ import {
   UserListContainer,
   StudentUserListContainer,
 } from '~capabilities/containers/board/user-list';
+import { StudentUserListContainer as StudentLoadMoreListContainer } from '~capabilities/containers/board/user-list/load-more';
+
 import { ScreenShareContainer } from '~capabilities/containers/screen-share';
 import { SettingContainer } from '~capabilities/containers/setting';
 import { Button, MemoryPerf, MemoryPerfProps, Modal, ResourceInfo, t, transI18n } from '~ui-kit';
@@ -156,6 +159,7 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 });
 
 export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const { roomInfo } = useRoomContext();
   const { setTool, room, hasPermission } = useBoardContext();
 
   const { removeDialog } = useUIStore();
@@ -172,7 +176,11 @@ export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }
     removeDialog(id);
   }, [room, removeDialog, setTool, hasPermission]);
 
-  return <StudentUserListContainer onClose={onCancel} />;
+  return roomInfo.roomType === EduRoomTypeEnum.RoomBigClass ? (
+    <StudentLoadMoreListContainer onClose={onCancel} />
+  ) : (
+    <StudentUserListContainer onClose={onCancel} />
+  );
 });
 
 export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {

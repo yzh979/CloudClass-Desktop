@@ -267,10 +267,6 @@ export class EduClassroomManager {
     return this.data.localUser;
   }
 
-  getFullUserList(): EduUser[] {
-    return this.data.userList.map((t: EduUserData) => t.user);
-  }
-
   getFullStreamList(): EduStream[] {
     return this.data.streamList.map((t: EduStreamData) => t.stream);
   }
@@ -287,34 +283,12 @@ export class EduClassroomManager {
     return this.classroom;
   }
 
-  getStudentCount(): number {
-    return this.data.userList.filter((it: EduUserData) => it.user.role === EduRoleType.student)
-      .length;
-  }
-
-  getTeacherCount(): number {
-    return this.data.userList.filter((it: EduUserData) => it.user.role === EduRoleType.teacher)
-      .length;
-  }
-
-  get studentList(): EduUser[] {
-    return this.data.userList
-      .filter((it: EduUserData) => it.user.role === EduRoleType.student)
-      .map((it: EduUserData) => it.user);
-  }
-
-  get teacherList(): EduUser[] {
-    return this.data.userList
-      .filter((it: EduUserData) => it.user.role === EduRoleType.teacher)
-      .map((it: EduUserData) => it.user);
-  }
-
-  getTeacherList(): EduUser[] {
-    return this.teacherList;
-  }
-
-  getStudentList(): EduUser[] {
-    return this.studentList;
+  getFullUserList(): Map<string, EduUser> {
+    let map = new Map<string, EduUser>();
+    this.data.userMap.forEach((value, key) => {
+      map.set(key, value.user);
+    });
+    return map;
   }
 
   syncStreamCoordinator() {

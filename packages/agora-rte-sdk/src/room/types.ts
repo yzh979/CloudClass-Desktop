@@ -76,21 +76,27 @@ export interface EduClassroomManagerEventHandlers {
     operator: OperatorUser;
     cause: CauseType;
   }) => void;
-  'remote-user-added': (evt: {
-    user: EduUserData;
-    operator: OperatorUser;
-    cause: CauseType;
-  }) => void;
-  'remote-user-removed': (evt: {
-    user: EduUserData;
-    operator: OperatorUser;
-    cause: CauseType;
-  }) => void;
-  'remote-user-updated': (evt: {
-    user: EduUserData;
-    operator: OperatorUser;
-    cause: CauseType;
-  }) => void;
+  'remote-user-added': (
+    evt: {
+      user: EduUserData;
+      operator: OperatorUser;
+      cause: CauseType;
+    }[],
+  ) => void;
+  'remote-user-removed': (
+    evt: {
+      user: EduUserData;
+      operator: OperatorUser;
+      cause: CauseType;
+    }[],
+  ) => void;
+  'remote-user-updated': (
+    evt: {
+      user: EduUserData;
+      operator: OperatorUser;
+      cause: CauseType;
+    }[],
+  ) => void;
   'classroom-property-updated': (evt: {
     classroom: ClassRoomProperties;
     operator: OperatorUser;

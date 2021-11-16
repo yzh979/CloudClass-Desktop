@@ -65,7 +65,8 @@ export class SmallClassStore {
 
   @computed
   get onlineUserCount() {
-    return this.sceneStore.userList.filter((it) => ['audience'].includes(it.role)).length;
+    // return this.sceneStore.userList.filter((it) => ['audience'].includes(it.role)).length;
+    return this.sceneStore.audienceList.size;
   }
 
   @computed
@@ -80,7 +81,8 @@ export class SmallClassStore {
 
   @computed
   get teacherInfo(): EduUser | undefined {
-    return this.roomStore.sceneStore.userList.find((user: EduUser) => user.role === 'host');
+    // return this.roomStore.sceneStore.userList.find((user: EduUser) => user.role === 'host');
+    return this.roomStore.sceneStore.teacher;
   }
 
   @computed
@@ -109,13 +111,21 @@ export class SmallClassStore {
             isLocal: false,
             online: this.appStore.sceneStore.queryUserIsOnline(acceptedUser.userUuid),
             onPodium: true,
+            // micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
+            //   this.appStore.sceneStore.userList,
+            //   acceptedUser.userUuid,
+            //   get(stream, 'streamUuid', ''),
+            // ),
+            // cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(
+            //   this.appStore.sceneStore.userList,
+            //   acceptedUser.userUuid,
+            //   get(stream, 'streamUuid', ''),
+            // ),
             micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
-              this.appStore.sceneStore.userList,
               acceptedUser.userUuid,
               get(stream, 'streamUuid', ''),
             ),
             cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(
-              this.appStore.sceneStore.userList,
               acceptedUser.userUuid,
               get(stream, 'streamUuid', ''),
             ),
@@ -274,21 +284,16 @@ export class SmallClassStore {
 
   @computed
   get studentsMap() {
-    // if (this.roomInfo.roomType === EduSceneType.SceneLarge) {
-    const map = {};
-    return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
-      acc[user.userUuid] = {
+    const map: Record<string, any> = {};
+    this.sceneStore.fullUserList.forEach((user: EduUser, key: string) => {
+      map[user.userUuid] = {
         uid: user.userUuid,
         name: user.userName,
         role: user.role,
         userProperties: user.userProperties,
       };
-      return acc;
-    }, map);
-    // } else {
-    //   const studentsMap = get(this.roomStore, 'roomProperties.students', {})
-    //   return studentsMap
-    // }
+    });
+    return map;
   }
 
   @action.bound
@@ -405,17 +410,29 @@ export class SmallClassStore {
   ): RosterUserInfo {
     const isLocal = user.userUuid === this.roomInfo.userUuid;
 
+    // const micDevice = isLocal
+    //   ? this.appStore.sceneStore.localMicrophoneDeviceState
+    //   : this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
+    //       this.appStore.sceneStore.userList,
+    //       user.userUuid,
+    //       get(stream, 'streamUuid', ''),
+    //     );
+    // const cameraDevice = isLocal
+    //   ? this.appStore.sceneStore.localCameraDeviceState
+    //   : this.appStore.sceneStore.queryRemoteCameraDeviceState(
+    //       this.appStore.sceneStore.userList,
+    //       user.userUuid,
+    //       get(stream, 'streamUuid', ''),
+    //     );
     const micDevice = isLocal
       ? this.appStore.sceneStore.localMicrophoneDeviceState
       : this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
-          this.appStore.sceneStore.userList,
           user.userUuid,
           get(stream, 'streamUuid', ''),
         );
     const cameraDevice = isLocal
       ? this.appStore.sceneStore.localCameraDeviceState
       : this.appStore.sceneStore.queryRemoteCameraDeviceState(
-          this.appStore.sceneStore.userList,
           user.userUuid,
           get(stream, 'streamUuid', ''),
         );
@@ -447,9 +464,10 @@ export class SmallClassStore {
   @computed
   get localUserRosterInfo(): RosterUserInfo {
     const localUserUuid = this.roomStore.roomInfo.userUuid;
-    const user = this.roomStore.sceneStore.userList.find(
-      (user: EduUser) => user.userUuid === localUserUuid,
-    );
+    // const user = this.roomStore.sceneStore.userList.find(
+    //   (user: EduUser) => user.userUuid === localUserUuid,
+    // );
+    const user = this.roomStore.sceneStore.fullUserList.get(localUserUuid);
     if (user) {
       const stream = this.roomStore.sceneStore.streamList.find(
         (stream: EduStream) =>
@@ -483,63 +501,47 @@ export class SmallClassStore {
   }
 
   @computed
-  get studentInfoList() {
-    return this.roomStore.sceneStore.userList;
-    // return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
-    //   const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
-    //   if (user) {
-    //     acc.push(user)
-    //   } else {
-    //     acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
-    //   }
-    //   return acc;
-    // }, [])
-  }
-
-  @computed
-  get bigClassUserList() {
+  get rosterUserMap() {
+    let map = new Map<string, RosterUserInfo>();
     const localUserUuid = this.roomStore.roomInfo.userUuid;
-    const userList = this.sceneStore.userList
-      .filter((user: EduUser) => ['audience', 'broadcaster'].includes(user.role))
-      .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: any[], user: EduUser) => {
-        const stream = this.roomStore.sceneStore.streamList.find(
-          (stream: EduStream) =>
-            stream.userInfo.userUuid === user.userUuid &&
-            stream.videoSourceType === EduVideoSourceType.camera,
-        );
-        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
-        acc.push(rosterUser);
-        return acc;
-      }, []);
+    this.sceneStore.audienceList.forEach((user: EduUser, key: string) => {
+      if (user.userUuid === localUserUuid) return;
+      const stream = this.roomStore.sceneStore.streamList.find(
+        (stream: EduStream) =>
+          stream.userInfo.userUuid === user.userUuid &&
+          stream.videoSourceType === EduVideoSourceType.camera,
+      );
+      const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
+      map.set(key, rosterUser);
+    });
 
     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [this.localUserRosterInfo].concat(userList);
+      map.set(this.localUserRosterInfo.uid, this.localUserRosterInfo);
     }
-    return userList;
+    return map;
   }
 
   @computed
   get rosterUserList() {
+    let userlist: RosterUserInfo[] = [];
+
     const localUserUuid = this.roomStore.roomInfo.userUuid;
-    const userList = this.studentInfoList
-      .filter((user: EduUser) => ['audience'].includes(user.role))
-      .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: RosterUserInfo[], user: EduUser) => {
-        const stream = this.roomStore.sceneStore.streamList.find(
-          (stream: EduStream) =>
-            stream.userInfo.userUuid === user.userUuid &&
-            stream.videoSourceType === EduVideoSourceType.camera,
-        );
-        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
-        acc.push(rosterUser);
-        return acc;
-      }, []);
+
+    this.sceneStore.audienceList.forEach((user: EduUser, key: string) => {
+      if (user.userUuid === localUserUuid) return;
+      const stream = this.roomStore.sceneStore.streamList.find(
+        (stream: EduStream) =>
+          stream.userInfo.userUuid === user.userUuid &&
+          stream.videoSourceType === EduVideoSourceType.camera,
+      );
+      const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
+      userlist.push(rosterUser);
+    });
 
     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [this.localUserRosterInfo].concat(userList);
+      return [this.localUserRosterInfo].concat(userlist);
     }
-    return userList;
+    return userlist;
   }
 
   reset() {}
@@ -732,5 +734,50 @@ export class SmallClassStore {
   get hasPrivateConversation() {
     const streamGroups = get(this.roomStore, 'roomProperties.streamGroups', {});
     return Object.values(streamGroups).filter((group) => group !== 'deleted').length > 0;
+  }
+
+  @action.bound
+  async fetchUserList(params: {
+    nextId: number | null;
+    count: number;
+    type: '0' | '1';
+    role?: string;
+    userName?: string;
+  }) {
+    const data = await eduSDKApi.fetchUserList(this.roomInfo.roomUuid, {
+      ...params,
+      role: params.role || '2' /* 2 for students */,
+    });
+
+    const transformedList = (data.list as any[]).map(
+      ({
+        userName,
+        userUuid,
+        streams = [],
+        userProperties,
+      }: {
+        userName: string;
+        userUuid: string;
+        streams: any[];
+        userProperties: any;
+      }) => {
+        const cameraStream = streams.find(
+          (stream: EduStream) => stream.videoSourceType === EduVideoSourceType.camera,
+        );
+
+        return this.transformRosterUserInfo(
+          { userName, userUuid, userProperties } as EduUser,
+          this.roomInfo.userRole,
+          cameraStream,
+        );
+      },
+    );
+
+    return {
+      total: (data.total as number) || 0,
+      count: (data.count as number) || 0,
+      nextId: data.nextId as number,
+      list: transformedList,
+    };
   }
 }

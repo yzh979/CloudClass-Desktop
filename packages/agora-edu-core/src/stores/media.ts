@@ -7,6 +7,7 @@ import {
   EduLogger,
   VideoRenderState,
   MediaEncryptionConfig,
+  EduRoomTypeEnum,
 } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
@@ -322,17 +323,19 @@ export class MediaStore {
       if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
         this.appStore.sceneStore.cameraRenderer.stop();
         this.appStore.sceneStore.resetCameraTrack();
-        eduSDKApi
-          .reportCameraState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 0,
-          })
-          .catch((err: Error) => {
-            BizLogger.info(
-              `[demo] action in report web device camera state failed, reason: ${err}`,
-            );
-          });
+        if (this.appStore.roomInfo.roomType !== EduRoomTypeEnum.RoomBigClass) {
+          eduSDKApi
+            .reportCameraState({
+              roomUuid: this.appStore.roomInfo.roomUuid,
+              userUuid: this.appStore.roomInfo.userUuid,
+              state: 0,
+            })
+            .catch((err: Error) => {
+              BizLogger.info(
+                `[demo] action in report web device camera state failed, reason: ${err}`,
+              );
+            });
+        }
       }
 
       if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
@@ -341,17 +344,19 @@ export class MediaStore {
       }
       if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
         this.appStore.sceneStore.resetMicrophoneTrack();
-        eduSDKApi
-          .reportMicState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 0,
-          })
-          .catch((err: Error) => {
-            BizLogger.info(
-              `[demo] action in report web device camera state failed, reason: ${err}`,
-            );
-          });
+        if (this.appStore.roomInfo.roomType !== EduRoomTypeEnum.RoomBigClass) {
+          eduSDKApi
+            .reportMicState({
+              roomUuid: this.appStore.roomInfo.roomUuid,
+              userUuid: this.appStore.roomInfo.userUuid,
+              state: 0,
+            })
+            .catch((err: Error) => {
+              BizLogger.info(
+                `[demo] action in report web device camera state failed, reason: ${err}`,
+              );
+            });
+        }
       }
 
       if (evt.screen) {
@@ -589,6 +594,7 @@ export class MediaStore {
     reaction(
       () =>
         JSON.stringify([
+          this.appStore.roomInfo.roomType,
           this.appStore.roomInfo.roomUuid,
           this.appStore.roomInfo.userUuid,
           this.appStore.sceneStore.localCameraDeviceState,
@@ -598,6 +604,7 @@ export class MediaStore {
         ]),
       (data: string) => {
         const [
+          roomType,
           roomUuid,
           userUuid,
           localCameraDeviceState,
@@ -605,7 +612,7 @@ export class MediaStore {
           roomJoined,
           cameraEduStream,
         ] = JSON.parse(data);
-        if (roomJoined && roomUuid && userUuid) {
+        if (roomJoined && roomUuid && userUuid && roomType !== EduRoomTypeEnum.RoomBigClass) {
           eduSDKApi
             .reportCameraState({
               roomUuid: roomUuid,
