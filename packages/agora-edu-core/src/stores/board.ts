@@ -8,7 +8,7 @@ import {
 } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, isNumber, uniqBy } from 'lodash';
-import { action, computed, observable, runInAction, reaction } from 'mobx';
+import { action, computed, observable, runInAction, reaction, toJS } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { IframeWrapper, IframeBridge } from '@netless/iframe-bridge';
 import {
@@ -644,7 +644,7 @@ export class BoardStore extends ZoomController {
       ],
     });
     if (setScene) {
-      this.room.putScenes(sceneName, scenes);
+      this.room.putScenes(sceneName, toJS(scenes));
       this.room.setScenePath(scenePath);
     }
   }
@@ -2187,7 +2187,7 @@ export class BoardStore extends ZoomController {
       if (sceneExists) {
         this.room.setScenePath(`/${resource.id}/${firstPath}`);
       } else {
-        this.room.putScenes(`/${resource.id}`, scenes);
+        this.room.putScenes(`/${resource.id}`, toJS(scenes));
         this.room.setScenePath(`/${resource.id}/${firstPath}`);
       }
     }
