@@ -45,7 +45,7 @@ const getLiveRoomPath = (roomType: number) => {
 
 export class AgoraEduCoreSDK {
   static get version(): string {
-    return '1.1.5-rc.11';
+    return '1.1.5-rc.13';
   }
 
   static _debug: boolean = false;
