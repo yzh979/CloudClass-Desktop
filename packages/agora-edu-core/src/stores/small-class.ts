@@ -228,16 +228,15 @@ export class SmallClassStore {
 
   @computed
   get applyCoVideoUserList() {
-    const userList = get(this.roomStore.sceneStore, 'userList', []);
+    const result: any = [];
+    const fullUserList = this.sceneStore.fullUserList;
     const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.progress', []);
     const ids = progressList.map((e: any) => e.userUuid);
-    return userList
-      .filter(({ userUuid }: EduUser) => ids.includes(userUuid))
-      .map(({ userUuid, userName }: EduUser) => ({
-        userUuid,
-        userName,
-        coVideo: false,
-      }));
+    ids.forEach((id: any) => {
+      const user = fullUserList.get(id);
+      result.push(user);
+    });
+    return result;
   }
 
   @computed
