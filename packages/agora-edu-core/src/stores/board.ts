@@ -2,7 +2,7 @@ import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
-import { action, computed, observable, runInAction, reaction } from 'mobx';
+import { action, computed, observable, runInAction, reaction, toJS } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { BuiltinApps, WindowManager } from '@netless/window-manager';
@@ -608,7 +608,7 @@ export class BoardStore extends ZoomController {
       ]
     })
     if (setScene) {
-      this.room.putScenes(sceneName, scenes)
+      this.room.putScenes(sceneName, toJS(scenes))
       this.room.setScenePath(scenePath)
     }
   }
