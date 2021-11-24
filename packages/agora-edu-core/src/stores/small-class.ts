@@ -214,16 +214,28 @@ export class SmallClassStore {
 
   @computed
   get acceptedUserList() {
-    const userList = get(this.roomStore.sceneStore, 'userList', []);
+    // const userList = get(this.roomStore.sceneStore, 'userList', []);
+    const fullUserList = this.roomStore.sceneStore.fullUserList;
     const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.accepted', []);
     const ids = progressList.map((e: any) => e.userUuid);
-    return userList
-      .filter(({ userUuid }: EduUser) => ids.includes(userUuid))
-      .map(({ userUuid, userName }: EduUser) => ({
-        userUuid,
-        userName,
-        coVideo: false,
-      }));
+    const result: any[] = [];
+    fullUserList.forEach((user: EduUser, key) => {
+      if (ids.includes(key)) {
+        result.push({
+          userUuid: key,
+          userName: user.userName,
+          coVideo: false,
+        });
+      }
+    });
+    // return userList
+    //   .filter(({ userUuid }: EduUser) => ids.includes(userUuid))
+    //   .map(({ userUuid, userName }: EduUser) => ({
+    //     userUuid,
+    //     userName,
+    //     coVideo: false,
+    //   }));
+    return result;
   }
 
   @computed

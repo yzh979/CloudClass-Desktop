@@ -306,7 +306,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                 />
               </div>
             ) : null}
-            {userType === 'teacher' ? (
+            {/* {userType === 'teacher' ? (
               <div className="mt-4" style={{ marginTop: 8 }}>
                 <PeopleRadioGroup
                   name="memberType"
@@ -315,7 +315,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                   }}
                 />
               </div>
-            ) : null}
+            ) : null} */}
           </div>
           <Table className="roster-table">
             <TableHeader>
