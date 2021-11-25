@@ -350,7 +350,7 @@ export class BoardStore extends ZoomController {
         disableDeviceInputs: true,
         disableCameraTransform: true,
         disableAutoResize: false,
-        uid: this.appStore.roomStore.roomInfo.roomUuid
+        uid: this.appStore.roomStore.roomInfo.userUuid
       })
     }
   }
@@ -370,7 +370,7 @@ export class BoardStore extends ZoomController {
         disableDeviceInputs: true,
         disableCameraTransform: true,
         disableAutoResize: false,
-        uid: this.appStore.roomStore.roomInfo.roomUuid
+        uid: this.appStore.roomStore.roomInfo.userUuid
       })
       const grantUsers = this.globalState?.grantUsers ?? []
       const follow = this.globalState?.follow ?? false
@@ -1079,7 +1079,7 @@ export class BoardStore extends ZoomController {
       disableNewPencil: false,
     //   wrappedComponents: [IframeWrapper],
     //   invisiblePlugins: [IframeBridge]
-      uid: this.appStore.roomStore.roomInfo.roomUuid,
+      uid: this.appStore.roomStore.roomInfo.userUuid,
       ...this.appStore.params.config.boardOptions
     })
     cursorAdapter.setRoom(this.boardClient.room)
