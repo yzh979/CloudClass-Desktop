@@ -314,38 +314,38 @@ export class EduSDKApi extends ApiBase {
   async startHandsUp(params: {
     roomUuid: string,
     toUserUuid: string,
-    timout?: number
-    retry?: boolean
+    // timout?: number
+    // retry?: boolean
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/processes/handsUp/progress`,
       method: 'POST',
       data: {
         toUserUuid: params.toUserUuid,
-        timeout: params.timout,
-        retry: params.retry,
+        // timeout: params.timout,
+        // retry: params.retry,
       }
     })
     return res.data
   }
 
-  async startWaveArm(params: {
-    roomUuid: string,
-    toUserUuid: string,
-    timout?: number
-    retry?: boolean
-  }) {
-    const res = await this.fetch({
-      url: `/v2/rooms/${params.roomUuid}/processes/waveArm/progress`,
-      method: 'POST',
-      data: {
-        toUserUuid: params.toUserUuid,
-        timeout: params.timout,
-        retry: params.retry,
-      }
-    })
-    return res.data
-  }
+  // async startWaveArm(params: {
+  //   roomUuid: string,
+  //   toUserUuid: string,
+  //   timout?: number
+  //   retry?: boolean
+  // }) {
+  //   const res = await this.fetch({
+  //     url: `/v2/rooms/${params.roomUuid}/processes/waveArm/progress`,
+  //     method: 'POST',
+  //     data: {
+  //       toUserUuid: params.toUserUuid,
+  //       timeout: params.timout,
+  //       retry: params.retry,
+  //     }
+  //   })
+  //   return res.data
+  // }
 
   async dismissHandsUp(params: {
     roomUuid: string,

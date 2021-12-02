@@ -356,7 +356,7 @@ export const MidVideoMarqueeContainer = observer(() => {
           : null
         }
         <CameraPlaceHolder state={stream.holderState} />
-        <CameraWaveArmPlaceHolder state={stream.waveArmState}/>
+        {/* <CameraWaveArmPlaceHolder state={stream.waveArmState}/> */}
         </>
       )
       }))
