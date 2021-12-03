@@ -941,9 +941,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   async stopScreenShare(): Promise<any> {
     if (!this.screenClient) return;
     if (this.screenAudioTrack) {
+      await this.screenClient.unpublish(this.screenAudioTrack);
       this.closeScreenTrack(this.screenAudioTrack);
     }
     if (this.screenVideoTrack) {
+      await this.screenClient.unpublish(this.screenVideoTrack);
       this.closeScreenTrack(this.screenVideoTrack);
     }
     await this.screenClient.leave();
