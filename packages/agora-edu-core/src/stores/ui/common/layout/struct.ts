@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx';
 import { Point } from 'white-web-sdk';
 import { Dimensions, ResizeBounds } from '../../../domain/common/track/type';
-import { convertLocalPositionToRatio, convertRatioToLocalPosition } from './helper';
+import { convertLocalToRatio, convertRatioToLocal } from '../../../domain/common/track/helper';
 export class Track {
   @observable
   private _localVal = {
@@ -57,7 +57,7 @@ export class Track {
     const medX = width - dimensions.width;
     const medY = height - dimensions.height;
 
-    this._ratioVal = convertLocalPositionToRatio(
+    this._ratioVal = convertLocalToRatio(
       position,
       dimensions,
       medX,
@@ -81,7 +81,7 @@ export class Track {
 
   @action.bound
   setRatio(position: Point, dimensions: Dimensions) {
-    this._localVal = convertRatioToLocalPosition(
+    this._localVal = convertRatioToLocal(
       { ratioX: position.x, ratioY: position.y },
       { ratioWidth: dimensions.width, ratioHeight: dimensions.height },
       this._context.outerSize,

@@ -16,6 +16,7 @@ import { AgoraRteEngineConfig } from '../../../../configs';
 
 @Log.attach({ proxyMethods: false })
 export class AgoraRteElectronCameraThread extends AgoraRteThread {
+  //@ts-ignore
   protected logger!: Injectable.Logger;
   canvas?: AgoraRtcVideoCanvas;
   trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
