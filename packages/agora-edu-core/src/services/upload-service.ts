@@ -71,7 +71,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
       convertedPercentage: 100,
       updateTime: data.updateTime,
       access,
-      isUnavailable: false
+      isUnavailable: false,
+      conversion: data?.conversion
     }
   }
   return {
@@ -87,7 +88,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
     updateTime: data.updateTime,
     scenes: data.scenes || data.taskProgress?.convertedFileList,
     access,
-    isUnavailable: data.taskProgress!.convertedPercentage === 100 && data.taskProgress!.currentStep === 'Extracting'
+    isUnavailable: data.taskProgress!.convertedPercentage === 100 && data.taskProgress!.currentStep === 'Extracting',
+    conversion: data?.conversion
   }
 }
 
