@@ -20,7 +20,7 @@ cp .env.example packages/agora-classroom-sdk/.env.dev
 # fill the config with your agora.io development environment
 ```
 
-## How to generate RtmToken using your own AppId and Secret
+## how to generate RtmToken using your own AppId and Secret
 
 ```bash
 # If .env.dev contains `REACT_APP_AGORA_APP_ID` and `REACT_APP_AGORA_APP_CERTIFICATE` configurations, the client will automatically generate an RTM Token for you
