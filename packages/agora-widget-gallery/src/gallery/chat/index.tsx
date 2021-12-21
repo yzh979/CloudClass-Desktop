@@ -10,7 +10,6 @@ import {
   IAgoraWidget,
   MessageItem,
 } from 'agora-edu-core';
-import { AgoraRteEngineConfig } from 'agora-rte-sdk';
 import classnames from 'classnames';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
