@@ -1,5 +1,11 @@
 {
-  "packages": ["packages/*"],
+  "packages": [
+    "packages/agora-chat-widget",
+    "packages/agora-classroom-sdk",
+    "packages/agora-plugin-gallery",
+    "packages/agora-scenario-ui-kit",
+    "agora-widget-gallery"
+  ],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "independent"
