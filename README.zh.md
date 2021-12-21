@@ -25,7 +25,11 @@ cp .env.example packages/agora-classroom-sdk/.env.dev
 
 ## 如何使用自己的 AppId 和 Secret 生成 RtmToken
 
-如果.env.dev 文件中包含 REACT_APP_AGORA_APP_ID 和 REACT_APP_AGORA_APP_CERTIFICATE 配置，客户端会为你自动生成 RTM Token
+```bash
+#如果.env.dev 文件中包含 `REACT_APP_AGORA_APP_ID` 和 `REACT_APP_AGORA_APP_CERTIFICATE` 配置，客户端会为你自动生成 RTM Token
+REACT_APP_AGORA_APP_ID=
+REACT_APP_AGORA_APP_CERTIFICATE=
+```
 
 ## 运行
 
