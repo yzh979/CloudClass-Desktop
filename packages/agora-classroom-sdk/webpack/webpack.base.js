@@ -43,7 +43,6 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@': path.resolve(ROOT_PATH, 'src'),
-      '~core': path.resolve(ROOT_PATH, 'src/core'),
       '~ui-kit': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src'),
       '~components': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components'),
       '~styles': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/styles'),
@@ -52,8 +51,8 @@ module.exports = {
       '~containers': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities/containers'),
       '~hooks': path.resolve(ROOT_PATH, 'src/infra/hooks'),
       '~contexts': path.resolve(ROOT_PATH, 'src/infra/contexts'),
-      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
-      'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
+      // 'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
+      // 'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),
       'agora-widget-gallery': path.resolve(ROOT_PATH, '../agora-widget-gallery/src'),
       'agora-chat-widget': path.resolve(ROOT_PATH, '../agora-chat-widget/src'),
