@@ -41,7 +41,8 @@ export interface PretestProps extends BaseProps {
     onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
     videoComponent?: React.ReactElement,
     volumeComponent?: React.ReactElement,
-    pretestChannel: Subject<any>
+    pretestChannel: Subject<any>,
+    mediaPulledChannel: any
 }
 
 const PretestComponent: React.FC<PretestProps> = ({
@@ -67,6 +68,7 @@ const PretestComponent: React.FC<PretestProps> = ({
     onChangeAudioVolume = (deviceType, value) => { },
     onSelectDevice = (deviceType, value) => { },
     pretestChannel,
+    mediaPulledChannel,
     ...restProps
 }) => {
 
@@ -139,6 +141,16 @@ const PretestComponent: React.FC<PretestProps> = ({
             pretestChannel && pretestChannel.complete()
         }
     }, [pretestChannel])
+    useEffect(() => {
+        mediaPulledChannel && mediaPulledChannel.subscribe({
+            next: (evt: any) => {
+                console.warn("设备插拔了jjjjjjjj", evt);
+            }
+        })
+        return () => {
+            mediaPulledChannel && mediaPulledChannel.complete()
+        }
+    }, [mediaPulledChannel])
 
     const DeviceNotice = (props: any) => {
 

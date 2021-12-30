@@ -408,6 +408,10 @@ export class PretestStore {
           this.updateTestCameraLabel()
         }
         if (videoDeviceInit && cams.length > this._cameraList.length) {
+          // console.warn("插拔了摄像头")
+          this.appStore.mediaPulledNotice$.next({
+            type: '插入了摄像头'
+          });
           const appStore = this.appStore
           if (appStore.isNotInvisible) {
             appStore.mediaStore.pretestNotice.next({
@@ -417,6 +421,12 @@ export class PretestStore {
             })
           }
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+        }
+
+        if (videoDeviceInit && cams.length < this._cameraList.length) {
+          this.appStore.mediaPulledNotice$.next({
+            type: '拔出了摄像头'
+          });
         }
 
         if (this.isElectron && !cams.length) {
@@ -446,6 +456,9 @@ export class PretestStore {
         }
         if (audioDeviceInit && mics.length > this._microphoneList.length) {
           const appStore = this.appStore
+          this.appStore.mediaPulledNotice$.next({
+            type: '插入了麦克风'
+          });
           if (appStore.isNotInvisible) {
             appStore.mediaStore.pretestNotice.next({
               type: 'audio',
@@ -454,6 +467,11 @@ export class PretestStore {
             })
           }
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+        }
+        if (audioDeviceInit && mics.length < this._microphoneList.length){
+          this.appStore.mediaPulledNotice$.next({
+            type: '拔出了麦克风'
+          });
         }
         if (this.isElectron && !mics.length) {
           this.muteMicrophone()

@@ -138,6 +138,8 @@ export class EduScenarioAppStore {
 
   pretestNotice$: Subject<any> = new Subject<any>()
 
+  mediaPulledNotice$: Subject<any> = new Subject<any>()
+
   @computed
   get activeExtApps():IAgoraExtApp[] {
     return this.allExtApps.filter(app => this.activeExtAppIds.includes(app.appIdentifier))

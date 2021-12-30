@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useMediaContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -27,8 +27,7 @@ export const MidClassScenario = observer(() => {
     onLaunchAppPlugin,
     onShutdownAppPlugin
   } = useAppPluginContext()
-
-
+  
   useLayoutEffect(() => {
     if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 1) {
       // 开启倒计时

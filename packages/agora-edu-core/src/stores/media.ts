@@ -230,6 +230,10 @@ export class MediaStore {
     return this.appStore.pretestNotice$
   }
 
+  get mediaPulledNotice() {
+    return this.appStore.mediaPulledNotice$
+  }
+
   // get uiStore() {
   //   return this.appStore.uiStore;
   // }

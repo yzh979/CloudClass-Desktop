@@ -126,6 +126,10 @@ export const PretestContainer = observer(() => {
 
     const [ speakerVolume ] = useState<number>(getAudioPlaybackVolume());
     const [ microphoneVolume ] = useState<number>(getAudioRecordingVolume());
+
+    const {
+        mediaPulledChannel
+    } = useMediaContext()
     return (
         <div className="fixed-container">
             <Modal
@@ -139,6 +143,7 @@ export const PretestContainer = observer(() => {
                 <Pretest
                     //@ts-ignore
                     pretestChannel={pretestNoticeChannel}
+                    mediaPulledChannel={mediaPulledChannel}
                     speakerTestUrl={"https://webdemo.agora.io/pretest_audio.mp3"}
                     isMirror={isMirror}
                     onChangeDevice={onChangeDevice}

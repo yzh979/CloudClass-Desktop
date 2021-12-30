@@ -112,6 +112,7 @@ export const useMediaContext = (): MediaContext => {
         cameraRenderer: sceneStore.cameraRenderer,
         pretestCameraRenderer: pretestStore.cameraRenderer,
         pretestNoticeChannel: appStore.pretestNotice$,
+        mediaPulledChannel: appStore.mediaPulledNotice$,
         // microphoneLevel: pretestStore.microphoneLevel,
         microphoneLevel: 0,
         getCameraList,
