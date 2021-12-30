@@ -6,6 +6,7 @@ import { action, computed, observable, runInAction, reaction, toJS } from 'mobx'
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { BuiltinApps, WindowManager } from '@netless/window-manager';
+import appSlide from  "@netless/app-slide"
 
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase, autorun } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
@@ -951,9 +952,8 @@ export class BoardStore extends ZoomController {
             // 打开这个选项显示 debug 工具栏
             debug: false,
           },
-          src: async () => {
-            const app = await import("@netless/app-slide");
-            return app.default ?? app;
+          src:  () => {
+           return Promise.resolve(appSlide)
           },
         });
       await this.aClassJoinBoard({
