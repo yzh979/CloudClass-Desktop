@@ -55,6 +55,7 @@ export type MaterialDataResource = {
     [key: string]: string,
     type: string,
   },
+  pptURLPrefix?: string,
 }
 
 export const transDataToResource = (data: CourseWareItem, access: MaterialAccess): MaterialDataResource => {
@@ -72,7 +73,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
       updateTime: data.updateTime,
       access,
       isUnavailable: false,
-      conversion: data?.conversion
+      pptURLPrefix: data.pptURLPrefix,
+      conversion: data.conversion
     }
   }
   return {
@@ -89,7 +91,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
     scenes: data.scenes || data.taskProgress?.convertedFileList,
     access,
     isUnavailable: data.taskProgress!.convertedPercentage === 100 && data.taskProgress!.currentStep === 'Extracting',
-    conversion: data?.conversion
+    pptURLPrefix: data.pptURLPrefix,
+    conversion: data.conversion
   }
 }
 

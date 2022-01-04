@@ -2032,19 +2032,23 @@ export class BoardStore extends ZoomController {
 
       if(!this.isResourceAlreadyOpened({ scenePath })){
         if (resource?.conversion?.canvasVersion) { // 判断是否为带 canvasVersion 参数的转换文件
+          const attributes = {
+            taskId: resource.taskUuid,
+          } as any;
+          
+          if(resource.pptURLPrefix) {
+            attributes.url = resource.pptURLPrefix;
+          }
           await this.windowManager?.addApp({
             kind: "Slide",
             options: {
               scenePath: `/ppt${scenePath}`,
               title: resource.name,
             },
-            attributes: {
-              taskId: resource.taskUuid,
-            }
+            attributes
           });
 
         } else {
-
           await this.windowManager?.addApp({
             kind: BuiltinApps.DocsViewer,
             options: {

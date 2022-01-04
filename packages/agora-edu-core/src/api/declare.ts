@@ -112,7 +112,8 @@ export type CourseWareItem = {
   convert?: boolean,
   taskUuid?: string,
   taskToken?: string,
-  taskProgress?: TaskProgressInfo
+  taskProgress?: TaskProgressInfo,
+  pptURLPrefix?: string
 }
 
 export type CourseWareList = CourseWareItem[]
