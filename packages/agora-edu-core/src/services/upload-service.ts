@@ -1,4 +1,4 @@
-import { CourseWareItem } from "../api/declare";
+import { CourseWareItem, TaskProgressInfo } from "../api/declare";
 import { CourseWareUploadResult, CreateMaterialParams } from "../types";
 import { fileSizeConversionUnit } from "../utilities/kit";
 import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
@@ -44,7 +44,7 @@ export type MaterialDataResource = {
   type: string,
   size: string | number,
   taskUuid: string,
-  taskProgress: any,
+  taskProgress?: TaskProgressInfo | null,
   url: string,
   convertedPercentage?: number,
   updateTime: number,
@@ -54,8 +54,7 @@ export type MaterialDataResource = {
   conversion?: {
     [key: string]: string,
     type: string,
-  },
-  pptURLPrefix?: string,
+  }
 }
 
 export const transDataToResource = (data: CourseWareItem, access: MaterialAccess): MaterialDataResource => {
@@ -73,7 +72,6 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
       updateTime: data.updateTime,
       access,
       isUnavailable: false,
-      pptURLPrefix: data.pptURLPrefix,
       conversion: data.conversion
     }
   }
@@ -91,7 +89,6 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
     scenes: data.scenes || data.taskProgress?.convertedFileList,
     access,
     isUnavailable: data.taskProgress!.convertedPercentage === 100 && data.taskProgress!.currentStep === 'Extracting',
-    pptURLPrefix: data.pptURLPrefix,
     conversion: data.conversion
   }
 }

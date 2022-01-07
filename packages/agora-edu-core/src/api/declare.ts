@@ -89,6 +89,7 @@ export type AgoraConvertedFile = {
 export type ConvertedFileList = AgoraConvertedFile[]
 
 export type TaskProgressInfo = {
+  prefix?: string,
   totalPageSize?: number,
   convertedPageSize?: number,
   convertedPercentage?: number,
@@ -113,7 +114,6 @@ export type CourseWareItem = {
   taskUuid?: string,
   taskToken?: string,
   taskProgress?: TaskProgressInfo,
-  pptURLPrefix?: string
 }
 
 export type CourseWareList = CourseWareItem[]

@@ -2034,11 +2034,8 @@ export class BoardStore extends ZoomController {
         if (resource?.conversion?.canvasVersion) { // 判断是否为带 canvasVersion 参数的转换文件
           const attributes = {
             taskId: resource.taskUuid,
-          } as any;
-          
-          if(resource.pptURLPrefix) {
-            attributes.url = resource.pptURLPrefix;
-          }
+            url: resource.taskProgress?.prefix
+          };
           await this.windowManager?.addApp({
             kind: "Slide",
             options: {
