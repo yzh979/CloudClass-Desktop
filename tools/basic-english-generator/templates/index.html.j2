@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础英语850词汇变形生成器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        .header h1 {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        .stats-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            display: block;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .search-filter-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            padding-left: 40px;
+            border-radius: 25px;
+            border: 2px solid #667eea;
+        }
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+        }
+        .filter-group {
+            margin-top: 15px;
+        }
+        .filter-btn {
+            margin: 5px;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
+        }
+        .filter-btn.active {
+            background-color: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .data-table {
+            margin: 0;
+        }
+        .data-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .data-table thead th {
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .data-table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+        .badge-custom {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .rules-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .rule-card {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .rule-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .word-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container main-container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="bi bi-book"></i> 基础英语850词汇变形生成器</h1>
+            <p class="subtitle">根据Ogden规则生成所有语法变形 | 生成时间: {{ generation_time }}</p>
+        </div>
+
+        <!-- 统计面板 -->
+        <div class="stats-panel">
+            <div class="row">
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.total_words }}</span>
+                    <span class="stat-label">总词数</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.nouns }}</span>
+                    <span class="stat-label">名词</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.adjectives }}</span>
+                    <span class="stat-label">形容词</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.verbs }}</span>
+                    <span class="stat-label">动词</span>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.3); margin: 20px 0;">
+            <div class="row">
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.with_plural }}</span>
+                    <span class="stat-label">复数形式</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.with_comparative }}</span>
+                    <span class="stat-label">比较级</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.with_ly }}</span>
+                    <span class="stat-label">副词-ly</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <span class="stat-number">{{ stats.with_un }}</span>
+                    <span class="stat-label">否定un-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索和筛选 -->
+        <div class="search-filter-section">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchInput" class="form-control" placeholder="搜索单词（支持原词或变形）...">
+            </div>
+            <div class="filter-group">
+                <label><strong>按词性筛选：</strong></label><br>
+                <button class="btn btn-outline-primary filter-btn filter-pos active" data-filter="all">全部</button>
+                <button class="btn btn-outline-primary filter-btn filter-pos" data-filter="noun">名词</button>
+                <button class="btn btn-outline-primary filter-btn filter-pos" data-filter="adjective">形容词</button>
+                <button class="btn btn-outline-primary filter-btn filter-pos" data-filter="verb">动词</button>
+                <button class="btn btn-outline-primary filter-btn filter-pos" data-filter="other">其他</button>
+            </div>
+            <div class="filter-group">
+                <label><strong>按变形类型筛选：</strong></label><br>
+                <button class="btn btn-outline-secondary filter-btn filter-type active" data-filter="all">全部</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="plural">有复数</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="comparative">有比较级</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="ing">有-ing</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="ed">有-ed</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="ly">有-ly</button>
+                <button class="btn btn-outline-secondary filter-btn filter-type" data-filter="un">有un-</button>
+            </div>
+        </div>
+
+        <!-- 数据表格 -->
+        <div class="table-container">
+            <div style="max-height: 600px; overflow-y: auto;">
+                <table class="table table-striped table-hover data-table" id="dataTable">
+                    <thead class="sticky-top">
+                        <tr>
+                            <th style="min-width: 100px;">原词</th>
+                            <th style="min-width: 80px;">词性</th>
+                            <th style="min-width: 100px;">中文</th>
+                            <th style="min-width: 100px;">复数</th>
+                            <th style="min-width: 120px;">比较级</th>
+                            <th style="min-width: 120px;">最高级</th>
+                            <th style="min-width: 100px;">-er派生</th>
+                            <th style="min-width: 100px;">-ing派生</th>
+                            <th style="min-width: 100px;">-ed派生</th>
+                            <th style="min-width: 100px;">-ly派生</th>
+                            <th style="min-width: 100px;">否定un-</th>
+                            <th style="min-width: 150px;">动词变位</th>
+                            <th style="min-width: 200px;">变形规则</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        {% for item in data %}
+                        <tr data-pos="{{ item.pos }}" 
+                            data-has-plural="{{ 'yes' if item.plural else 'no' }}"
+                            data-has-comparative="{{ 'yes' if item.comparative else 'no' }}"
+                            data-has-ing="{{ 'yes' if item.ing_form else 'no' }}"
+                            data-has-ed="{{ 'yes' if item.ed_form else 'no' }}"
+                            data-has-ly="{{ 'yes' if item.ly_form else 'no' }}"
+                            data-has-un="{{ 'yes' if item.un_form else 'no' }}"
+                            data-search-text="{{ item.word }} {{ item.chinese }} {{ item.plural }} {{ item.comparative }} {{ item.superlative }} {{ item.er_form }} {{ item.ing_form }} {{ item.ed_form }} {{ item.ly_form }} {{ item.un_form }}">
+                            <td><strong>{{ item.word }}</strong></td>
+                            <td><span class="badge bg-info badge-custom">{{ item.pos }}</span></td>
+                            <td>{{ item.chinese }}</td>
+                            <td>{{ item.plural }}</td>
+                            <td>{{ item.comparative }}</td>
+                            <td>{{ item.superlative }}</td>
+                            <td>{{ item.er_form }}</td>
+                            <td>{{ item.ing_form }}</td>
+                            <td>{{ item.ed_form }}</td>
+                            <td>{{ item.ly_form }}</td>
+                            <td>{{ item.un_form }}</td>
+                            <td>
+                                {% if item.verb_forms %}
+                                <small>
+                                    {% if item.verb_forms.third %}<span class="word-badge">3rd: {{ item.verb_forms.third }}</span>{% endif %}
+                                    {% if item.verb_forms.past %}<span class="word-badge">past: {{ item.verb_forms.past }}</span>{% endif %}
+                                </small>
+                                {% endif %}
+                            </td>
+                            <td><small>{{ item.rules_applied|join('; ') }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div id="noResults" class="no-results" style="display: none;">
+                    <i class="bi bi-search" style="font-size: 48px;"></i>
+                    <p>未找到匹配的结果</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ogden规则说明 -->
+        <div class="rules-section">
+            <h3><i class="bi bi-info-circle"></i> Ogden变形规则说明</h3>
+            <div class="accordion mt-3" id="rulesAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule1">
+                            规则1：名词复数 (-s, -es, -ies)
+                        </button>
+                    </h2>
+                    <div id="rule1" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>一般名词 + s: book → books</li>
+                                <li>以s/x/ch/sh结尾 + es: box → boxes, church → churches</li>
+                                <li>辅音+y结尾变ies: baby → babies</li>
+                                <li>不规则变化: man → men, woman → women等</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule2">
+                            规则2：名词派生词 (-er, -ing, -ed)
+                        </button>
+                    </h2>
+                    <div id="rule2" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li><strong>-er派生：</strong>表示"做...的人/物" (teach → teacher)</li>
+                                <li><strong>-ing派生（名词性）：</strong>表示"...的行为" (build → building)</li>
+                                <li><strong>-ing派生（形容词性）：</strong>表示"正在...的" (interest → interesting)</li>
+                                <li><strong>-ed派生（形容词）：</strong>表示"被...的" (interest → interested)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule3">
+                            规则3：形容词派生副词 (-ly)
+                        </button>
+                    </h2>
+                    <div id="rule3" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>一般形容词 + ly: quick → quickly</li>
+                                <li>以y结尾变ily: happy → happily</li>
+                                <li>以le结尾去e加y: simple → simply</li>
+                                <li>以ic结尾加ally: automatic → automatically</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule4">
+                            规则4：比较级和最高级
+                        </button>
+                    </h2>
+                    <div id="rule4" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>规则变化: -er/-est (small → smaller → smallest)</li>
+                                <li>长词用more/most: beautiful → more beautiful → most beautiful</li>
+                                <li>不规则: good → better → best, bad → worse → worst</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule5">
+                            规则5：否定形容词 (un-)
+                        </button>
+                    </h2>
+                    <div id="rule5" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>大部分形容词可加un-: happy → unhappy, able → unable</li>
+                                <li>颜色形容词不适用（如red, blue等）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule6">
+                            规则6：复合词
+                        </button>
+                    </h2>
+                    <div id="rule6" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>名词+名词: milk + man → milkman</li>
+                                <li>名词+方向词: sun + down → sundown</li>
+                                <li>基于词义生成合理复合词</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule7">
+                            规则7：动词变化
+                        </button>
+                    </h2>
+                    <div id="rule7" class="accordion-collapse collapse" data-bs-parent="#rulesAccordion">
+                        <div class="accordion-body">
+                            <ul>
+                                <li>第三人称单数、过去式、进行时、完成时</li>
+                                <li>包括be/do/have等特殊变位</li>
+                                <li>不规则动词的完整变化表</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 text-muted">
+            <p>© 2024 基础英语850词汇变形生成器 | CloudClass-Desktop项目</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+        const noResults = document.getElementById('noResults');
+        let currentPosFilter = 'all';
+        let currentTypeFilter = 'all';
+
+        searchInput.addEventListener('input', filterTable);
+
+        // 词性筛选
+        document.querySelectorAll('.filter-pos').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-pos').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPosFilter = this.dataset.filter;
+                filterTable();
+            });
+        });
+
+        // 变形类型筛选
+        document.querySelectorAll('.filter-type').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-type').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentTypeFilter = this.dataset.filter;
+                filterTable();
+            });
+        });
+
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = tableBody.querySelectorAll('tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const searchText = row.dataset.searchText.toLowerCase();
+                const pos = row.dataset.pos;
+                
+                // 搜索匹配
+                const matchesSearch = searchText.includes(searchTerm);
+                
+                // 词性匹配
+                let matchesPos = currentPosFilter === 'all';
+                if (!matchesPos) {
+                    if (currentPosFilter === 'other') {
+                        matchesPos = !['noun', 'adjective', 'verb'].includes(pos);
+                    } else {
+                        matchesPos = pos === currentPosFilter;
+                    }
+                }
+                
+                // 变形类型匹配
+                let matchesType = currentTypeFilter === 'all';
+                if (!matchesType) {
+                    switch(currentTypeFilter) {
+                        case 'plural':
+                            matchesType = row.dataset.hasPlural === 'yes';
+                            break;
+                        case 'comparative':
+                            matchesType = row.dataset.hasComparative === 'yes';
+                            break;
+                        case 'ing':
+                            matchesType = row.dataset.hasIng === 'yes';
+                            break;
+                        case 'ed':
+                            matchesType = row.dataset.hasEd === 'yes';
+                            break;
+                        case 'ly':
+                            matchesType = row.dataset.hasLy === 'yes';
+                            break;
+                        case 'un':
+                            matchesType = row.dataset.hasUn === 'yes';
+                            break;
+                    }
+                }
+                
+                if (matchesSearch && matchesPos && matchesType) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // 显示/隐藏"无结果"提示
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+                tableBody.parentElement.parentElement.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                tableBody.parentElement.parentElement.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
