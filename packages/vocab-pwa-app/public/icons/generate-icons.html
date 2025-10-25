@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    canvas { border: 1px solid #ccc; margin: 10px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+    .icon-item { text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>Vocab Learner Icon Generator</h1>
+  <p>Right-click each canvas and "Save image as..." to download the icons</p>
+  <div class="icon-grid" id="icons"></div>
+
+  <script>
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    const iconsContainer = document.getElementById('icons');
+
+    sizes.forEach(size => {
+      const container = document.createElement('div');
+      container.className = 'icon-item';
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      const cornerRadius = size / 8;
+      ctx.fillStyle = '#4f46e5';
+      roundRect(ctx, 0, 0, size, size, cornerRadius);
+      ctx.fill();
+      
+      // Letter "A"
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${size * 0.55}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('A', size / 2, size / 2);
+      
+      // Bottom accent
+      ctx.fillStyle = '#fbbf24';
+      const barHeight = size / 20;
+      const barY = size * 0.85;
+      ctx.fillRect(size * 0.2, barY, size * 0.15, barHeight);
+      ctx.fillRect(size * 0.4, barY, size * 0.3, barHeight);
+      ctx.fillRect(size * 0.75, barY, size * 0.05, barHeight);
+      
+      const label = document.createElement('div');
+      label.textContent = `${size}x${size}`;
+      label.style.marginTop = '5px';
+      
+      container.appendChild(canvas);
+      container.appendChild(label);
+      iconsContainer.appendChild(container);
+    });
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    // Auto-download all icons
+    setTimeout(() => {
+      const canvases = document.querySelectorAll('canvas');
+      canvases.forEach((canvas, index) => {
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `icon-${sizes[index]}x${sizes[index]}.png`;
+          // Uncomment to auto-download:
+          // a.click();
+          URL.revokeObjectURL(url);
+        });
+      });
+    }, 1000);
+  </script>
+</body>
+</html>

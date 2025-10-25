@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="A Progressive Web App for multi-sensory vocabulary learning with audio, spelling, and multiple-choice exercises">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Vocab Learner">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <title>Vocab Learner - Multi-sensory Vocabulary Learning</title>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <button id="menu-btn" class="icon-btn" aria-label="Menu">
+        <span class="hamburger-icon"></span>
+      </button>
+      <h1 class="app-title">Vocab Learner</h1>
+      <button id="profile-btn" class="icon-btn" aria-label="Profile">
+        <span class="profile-icon">👤</span>
+      </button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="screen active">
+        <div class="welcome-content">
+          <div class="welcome-icon">📚</div>
+          <h2>Welcome to Vocab Learner</h2>
+          <p>Multi-sensory vocabulary learning made easy</p>
+          <div class="welcome-actions">
+            <button id="import-btn" class="btn btn-primary">
+              <span class="btn-icon">📁</span>
+              Import Words
+            </button>
+            <button id="start-practice-btn" class="btn btn-secondary" disabled>
+              <span class="btn-icon">🎯</span>
+              Start Practice
+            </button>
+          </div>
+          <div class="quick-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="stat-active">0</div>
+              <div class="stat-label">Active Words</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-familiar">0</div>
+              <div class="stat-label">Familiar</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-difficult">0</div>
+              <div class="stat-label">Difficult</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import Screen -->
+      <div id="import-screen" class="screen">
+        <div class="screen-header">
+          <button class="btn-back" data-back-to="welcome">← Back</button>
+          <h2>Import Vocabulary</h2>
+        </div>
+        <div class="import-content">
+          <div class="import-method">
+            <h3>Upload File</h3>
+            <div class="file-upload-area" id="file-upload-area">
+              <input type="file" id="file-input" accept=".txt,.csv" multiple hidden>
+              <div class="upload-prompt">
+                <span class="upload-icon">📤</span>
+                <p>Click or drag files here</p>
+                <small>Supports .txt and .csv formats</small>
+              </div>
+            </div>
+          </div>
+          <div class="import-method">
+            <h3>Manual Entry</h3>
+            <form id="manual-entry-form">
+              <div class="form-group">
+                <label for="word-english">English Word</label>
+                <input type="text" id="word-english" placeholder="e.g., apple" required>
+              </div>
+              <div class="form-group">
+                <label for="word-chinese">Chinese Meaning</label>
+                <input type="text" id="word-chinese" placeholder="e.g., 苹果" required>
+              </div>
+              <div class="form-group">
+                <label for="word-audio">Audio URL (optional)</label>
+                <input type="text" id="word-audio" placeholder="e.g., /audio/apple.mp3">
+              </div>
+              <button type="submit" class="btn btn-primary">Add Word</button>
+            </form>
+          </div>
+          <div class="import-preview" id="import-preview" style="display: none;">
+            <h3>Preview</h3>
+            <div id="preview-list"></div>
+            <div class="preview-actions">
+              <button id="confirm-import-btn" class="btn btn-primary">Import <span id="import-count">0</span> Words</button>
+              <button id="cancel-import-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Practice Screen -->
+      <div id="practice-screen" class="screen">
+        <div class="practice-header">
+          <button class="btn-back" data-back-to="welcome">← Exit</button>
+          <div class="mode-selector">
+            <button id="mode-toggle-btn" class="btn btn-sm">Change Mode</button>
+          </div>
+        </div>
+        <div class="mode-info">
+          <span id="current-mode-name">Spelling Practice</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+          <span class="progress-text" id="progress-text">0 / 0 (0%)</span>
+        </div>
+        <div class="practice-content" id="practice-content">
+          <!-- Dynamic content based on mode -->
+        </div>
+      </div>
+
+      <!-- Word Bank Screen -->
+      <div id="wordbank-screen" class="screen">
+        <div class="screen-header">
+          <button class="btn-back" data-back-to="welcome">← Back</button>
+          <h2>Word Banks</h2>
+        </div>
+        <div class="wordbank-tabs">
+          <button class="tab-btn active" data-category="active">Active (<span id="tab-count-active">0</span>)</button>
+          <button class="tab-btn" data-category="familiar">Familiar (<span id="tab-count-familiar">0</span>)</button>
+          <button class="tab-btn" data-category="difficult">Difficult (<span id="tab-count-difficult">0</span>)</button>
+        </div>
+        <div class="wordbank-controls">
+          <input type="search" id="word-search" placeholder="Search words..." class="search-input">
+          <button id="export-btn" class="btn btn-sm">Export</button>
+        </div>
+        <div class="wordbank-list" id="wordbank-list">
+          <!-- Dynamic word list -->
+        </div>
+      </div>
+
+      <!-- Settings Screen -->
+      <div id="settings-screen" class="screen">
+        <div class="screen-header">
+          <button class="btn-back" data-back-to="welcome">← Back</button>
+          <h2>Settings</h2>
+        </div>
+        <div class="settings-content">
+          <section class="settings-section">
+            <h3>Audio Settings</h3>
+            <div class="setting-item">
+              <label for="audio-speed">Audio Speed</label>
+              <select id="audio-speed">
+                <option value="0.5">0.5x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="auto-play-audio">Auto-play Audio</label>
+              <input type="checkbox" id="auto-play-audio" checked>
+            </div>
+          </section>
+          <section class="settings-section">
+            <h3>Practice Settings</h3>
+            <div class="setting-item">
+              <label for="words-per-session">Words per Session</label>
+              <input type="number" id="words-per-session" value="20" min="5" max="100">
+            </div>
+            <div class="setting-item">
+              <label for="shuffle-words">Shuffle Words</label>
+              <input type="checkbox" id="shuffle-words" checked>
+            </div>
+          </section>
+          <section class="settings-section">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+              <label for="theme">Theme</label>
+              <select id="theme">
+                <option value="auto">Auto</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="font-size">Font Size</label>
+              <select id="font-size">
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+          </section>
+          <section class="settings-section">
+            <h3>Data Management</h3>
+            <button id="export-all-btn" class="btn btn-secondary">Export All Data</button>
+            <button id="clear-data-btn" class="btn btn-danger">Clear All Data</button>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+      <button class="nav-btn" data-screen="welcome" aria-label="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" data-screen="practice" aria-label="Practice">
+        <span class="nav-icon">🎯</span>
+        <span class="nav-label">Practice</span>
+      </button>
+      <button class="nav-btn" data-screen="wordbank" aria-label="Word Bank">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">Words</span>
+      </button>
+      <button class="nav-btn" data-screen="settings" aria-label="Settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <!-- Side Menu (Desktop) -->
+    <aside id="side-menu" class="side-menu">
+      <nav class="side-nav">
+        <button class="side-nav-btn" data-screen="welcome">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="side-nav-btn" data-screen="import">
+          <span class="nav-icon">📁</span>
+          <span class="nav-label">Import</span>
+        </button>
+        <button class="side-nav-btn" data-screen="practice">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-label">Practice</span>
+        </button>
+        <button class="side-nav-btn" data-screen="wordbank">
+          <span class="nav-icon">📚</span>
+          <span class="nav-label">Word Bank</span>
+        </button>
+        <button class="side-nav-btn" data-screen="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Floating Action Button (Mobile) -->
+    <button id="fab" class="fab" aria-label="Mode Switcher">
+      <span class="fab-icon">🔄</span>
+    </button>
+
+    <!-- Modal for Mode Selection -->
+    <div id="mode-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Select Learning Mode</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <button class="mode-option" data-mode="spelling">
+            <span class="mode-icon">✍️</span>
+            <span class="mode-name">Spelling Practice</span>
+            <span class="mode-desc">Type the English word</span>
+          </button>
+          <button class="mode-option" data-mode="cn-to-en">
+            <span class="mode-icon">🇨🇳→🇬🇧</span>
+            <span class="mode-name">Chinese to English</span>
+            <span class="mode-desc">Choose English from Chinese</span>
+          </button>
+          <button class="mode-option" data-mode="en-to-cn">
+            <span class="mode-icon">🇬🇧→🇨🇳</span>
+            <span class="mode-name">English to Chinese</span>
+            <span class="mode-desc">Choose Chinese from English</span>
+          </button>
+          <button class="mode-option" data-mode="audio-to-en">
+            <span class="mode-icon">🔊→🇬🇧</span>
+            <span class="mode-name">Audio to English</span>
+            <span class="mode-desc">Listen and choose English</span>
+          </button>
+          <button class="mode-option" data-mode="audio-to-cn">
+            <span class="mode-icon">🔊→🇨🇳</span>
+            <span class="mode-name">Audio to Chinese</span>
+            <span class="mode-desc">Listen and choose Chinese</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</body>
+</html>
