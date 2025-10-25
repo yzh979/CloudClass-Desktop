@@ -1,0 +1,26 @@
+hello	你好
+goodbye	再见
+thank you	谢谢
+please	请
+sorry	对不起
+yes	是
+no	不是
+good	好
+bad	坏
+big	大
+small	小
+hot	热
+cold	冷
+happy	快乐
+sad	悲伤
+beautiful	美丽
+ugly	丑陋
+fast	快
+slow	慢
+new	新的
+old	旧的
+young	年轻
+easy	容易
+difficult	困难
+clean	干净
+dirty	脏
